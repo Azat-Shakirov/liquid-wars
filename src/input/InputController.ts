@@ -217,7 +217,7 @@ export class InputController {
     const isHuman = node.ownerId === this.engine.world.humanPlayerId;
 
     if (isDoubleClick && this.session.selectedNodeIds.size > 0) {
-      // Double-click — send 100% from selection to this target.
+      // Double-click on a target — send 100% from selection to it.
       const sources = Array.from(this.session.selectedNodeIds).filter((id) => id !== nodeId);
       if (sources.length > 0) {
         this.engine.sendUnits(sources, nodeId, 1.0);
@@ -236,10 +236,12 @@ export class InputController {
         this.session.selectedNodeIds.clear();
         this.session.selectedNodeIds.add(nodeId);
       }
-    } else {
-      // Click on enemy/neutral with no double-click → clear selection.
-      this.session.selectedNodeIds.clear();
     }
+    // Click on hostile/neutral target with no double-click → no-op.
+    // Selection is preserved so the second click within DOUBLE_CLICK_MS
+    // can fire the double-click branch above (the "send 100%" gesture).
+    // Clicking empty space (nodeId === null, handled earlier) is what
+    // actually clears the selection.
   }
 
   private commitBoxSelect(start: Vec2, end: Vec2): void {

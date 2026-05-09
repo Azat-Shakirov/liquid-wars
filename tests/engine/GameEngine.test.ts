@@ -46,4 +46,29 @@ describe('GameEngine', () => {
     expect(n1.maxUnits).toBe(50); // barracks level 1
     expect(n1.ownerId).toBe('p1');
   });
+
+  it('sendUnits(fraction=1.0) drains the source to zero', () => {
+    const engine = new GameEngine(level, content);
+    const n1 = engine.world.nodes.get('n1')!;
+    const startUnits = n1.units;
+    expect(startUnits).toBeGreaterThan(0);
+
+    const result = engine.sendUnits(['n1'], 'n2', 1.0);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.groupsCreated).toBe(1);
+
+    // sendUnits floors the integer count and subtracts from float units
+    // (§4.2 displays floor; internal stays float). A fresh world has no
+    // production yet, so source.units should be 0 after a 100% send.
+    expect(engine.world.nodes.get('n1')!.units).toBe(0);
+
+    // The created UnitGroup has count = floor(startUnits) and is owned
+    // by the source's owner (frozen at send-time per §4.3).
+    expect(engine.world.unitGroups.length).toBe(1);
+    const ug = engine.world.unitGroups[0]!;
+    expect(ug.ownerId).toBe('p1');
+    expect(ug.count).toBe(Math.floor(startUnits));
+    expect(ug.fromNodeId).toBe('n1');
+    expect(ug.toNodeId).toBe('n2');
+  });
 });
