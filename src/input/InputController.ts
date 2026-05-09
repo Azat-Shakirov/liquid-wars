@@ -2,24 +2,34 @@
 //
 //   Click on owned node            → select (replace)
 //   Shift-click on owned node      → toggle in selection
-//   Drag from owned node           → send 50% from source(s) to target
-//   Shift-drag from owned node     → send 100% (fast 100% gesture)
-//   Drag from empty                → box-select all owned-by-human inside box
-//   Click on multi-select target   → send 50% (deferred — see below)
+//   Drag from owned node           → send 50%; the same target can be
+//                                    tapped within DOUBLE_CLICK_MS to
+//                                    finish the gesture as 100% total
+//                                    ("drag + tap = 100%")
+//   Shift-drag from owned node     → send 100% in one motion
+//   Drag from empty                → box-select owned-by-human inside box
+//   Click on multi-select target   → send 50% (deferred for double-click
+//                                    upgrade — see below)
 //   Double-click on target with    → send 100% from selection
 //     selection (single OR multi)
 //   Click on empty space           → clear selection
 //   Click on hostile/neutral with  → no-op (preserves selection so a
 //     ≤ 1 sources                    follow-up double-click can fire 100%)
 //
-// Multi-select 50% click vs double-click 100% conflict resolution:
-// the first click with selection.size >= 2 on a non-selected target is
-// *deferred* by DOUBLE_CLICK_MS. If a second click on the same target
-// arrives within the window, the deferred 50% is cancelled and a 100%
-// send fires instead. If the timer expires, the 50% commits. This is
-// the only way to make both gestures coexist without one swallowing
-// the other (the auto-deselect from item 2 means a fired 50% would
-// otherwise leave nothing for the double-click to act on).
+// Two upgrade mechanisms support the "fast 100% without explicit
+// selection" gestures:
+//
+// 1. dragUpgrade — set by a plain drag-release. A tap on the same
+//    target within DOUBLE_CLICK_MS issues a 100% send from the drag
+//    sources (which is 50% of the original units, the other half
+//    having gone with the drag itself). Net effect: drag + tap = 100%.
+//
+// 2. deferredClick — used for multi-select click-to-send. The first
+//    click with selection.size >= 2 on a non-selected target stages
+//    a 50% send; a second click on the same target within
+//    DOUBLE_CLICK_MS upgrades to 100%. The auto-deselect from item 2
+//    means a fired 50% would otherwise leave nothing for a follow-up
+//    double-click to act on, so we hold the action.
 //
 // Hit-testing uses size-by-level metrics from render/shapes (input layer is
 // allowed to import from render — only engine/ is forbidden from doing so).
@@ -55,10 +65,17 @@ interface DeferredClick {
   timer: ReturnType<typeof setTimeout>;
 }
 
+interface DragUpgrade {
+  sources: NodeId[];
+  target: NodeId;
+  expiresAt: number;
+}
+
 export class InputController {
   private state: GestureState = { kind: 'idle' };
   private lastClick: { nodeId: NodeId | null; time: number } | null = null;
   private deferredClick: DeferredClick | null = null;
+  private dragUpgrade: DragUpgrade | null = null;
 
   private readonly handlePointerDown: (e: PointerEvent) => void;
   private readonly handlePointerMove: (e: PointerEvent) => void;
@@ -89,6 +106,7 @@ export class InputController {
       clearTimeout(this.deferredClick.timer);
       this.deferredClick = null;
     }
+    this.dragUpgrade = null;
     this.canvas.removeEventListener('pointerdown', this.handlePointerDown);
     this.canvas.removeEventListener('pointermove', this.handlePointerMove);
     this.canvas.removeEventListener('pointerup', this.handlePointerUp);
@@ -200,10 +218,22 @@ export class InputController {
     } else if (this.state.kind === 'drag-send') {
       const targetId = this.pickNodeAt(x, y);
       if (targetId && this.state.sources.length > 0) {
-        // Shift-drag = 100% (fast 100% gesture); plain drag = 50%.
         const fraction = this.state.shiftKey ? 1.0 : 0.5;
         const result = this.engine.sendUnits(this.state.sources, targetId, fraction);
         if (result.ok) this.session.selectedNodeIds.clear();
+        if (result.ok && fraction < 1.0) {
+          // Plain drag-release primes a tap-to-upgrade window. A
+          // single tap on the target within DOUBLE_CLICK_MS issues
+          // 100% of the source's CURRENT units (= the remaining 50%
+          // of the original), totalling 100% sent across two waves.
+          this.dragUpgrade = {
+            sources: [...this.state.sources],
+            target: targetId,
+            expiresAt: performance.now() + DOUBLE_CLICK_MS,
+          };
+        } else {
+          this.dragUpgrade = null;
+        }
       }
       this.session.drag = null;
     } else if (this.state.kind === 'box-select') {
@@ -230,6 +260,27 @@ export class InputController {
   // ── Click resolution ──────────────────────────────────────────────
 
   private handleClick(nodeId: NodeId | null, shiftKey: boolean): void {
+    // Case A0: drag-upgrade window — a tap on the recently dragged
+    // target completes the gesture as 100% by sending the remaining
+    // half. No selection is required.
+    if (this.dragUpgrade && nodeId !== null && this.dragUpgrade.target === nodeId) {
+      const now = performance.now();
+      if (now < this.dragUpgrade.expiresAt) {
+        const sources = this.dragUpgrade.sources;
+        const target = this.dragUpgrade.target;
+        this.dragUpgrade = null;
+        this.lastClick = null;
+        if (this.deferredClick) {
+          clearTimeout(this.deferredClick.timer);
+          this.deferredClick = null;
+        }
+        const result = this.engine.sendUnits(sources, target, 1.0);
+        if (result.ok) this.session.selectedNodeIds.clear();
+        return;
+      }
+      this.dragUpgrade = null; // expired
+    }
+
     // Case A: a deferred multi-select 50% click is pending.
     if (this.deferredClick) {
       const same = this.deferredClick.nodeId === nodeId;
