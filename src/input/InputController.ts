@@ -172,7 +172,8 @@ export class InputController {
     } else if (this.state.kind === 'drag-send') {
       const targetId = this.pickNodeAt(x, y);
       if (targetId && this.state.sources.length > 0) {
-        this.engine.sendUnits(this.state.sources, targetId, 0.5);
+        const result = this.engine.sendUnits(this.state.sources, targetId, 0.5);
+        if (result.ok) this.session.selectedNodeIds.clear();
       }
       this.session.drag = null;
     } else if (this.state.kind === 'box-select') {
@@ -220,7 +221,8 @@ export class InputController {
       // Double-click on a target — send 100% from selection to it.
       const sources = Array.from(this.session.selectedNodeIds).filter((id) => id !== nodeId);
       if (sources.length > 0) {
-        this.engine.sendUnits(sources, nodeId, 1.0);
+        const result = this.engine.sendUnits(sources, nodeId, 1.0);
+        if (result.ok) this.session.selectedNodeIds.clear();
       }
       return;
     }
