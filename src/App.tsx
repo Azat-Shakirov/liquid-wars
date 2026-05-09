@@ -1,9 +1,11 @@
-// App — loads content, builds the engine for a chosen level, and runs the
-// fixed-timestep frame loop (§3.4).
+// App — loads content, builds the engine for a chosen level, runs the
+// fixed-timestep frame loop (§3.4), and wires the input gesture machine.
 //
-// Phase 1 (intermediate): InputController is still the Phase 0 click-ripple
-// version. NodeView, UnitGroupView, SelectionBoxView all render correctly.
-// Gestures (select, send, box-select, double-click) land in the next commit.
+// Keyboard:
+//   R — restart current level
+//   N — advance to next level (only when won)
+//
+// Level selection: ?level=N query param, default 1.
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from './engine/GameEngine';
@@ -25,6 +27,12 @@ function pickLevelId(): number {
   return 1;
 }
 
+function gotoLevel(id: number): void {
+  const url = new URL(window.location.href);
+  url.searchParams.set('level', String(id));
+  window.location.href = url.toString();
+}
+
 export default function App() {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -37,18 +45,39 @@ export default function App() {
     let rafId = 0;
     let renderer: PixiRenderer | null = null;
     let input: InputController | null = null;
+    let engineRef: GameEngine | null = null;
+    let availableLevels: number[] = [];
+    let currentLevelId = 1;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.repeat) return;
+      const key = e.key.toLowerCase();
+      if (key === 'r') {
+        gotoLevel(currentLevelId);
+      } else if (key === 'n') {
+        if (engineRef && engineRef.world.status === 'won') {
+          const next = nextLevelId(currentLevelId, availableLevels);
+          if (next !== null) gotoLevel(next);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKey);
 
     (async () => {
       let engine: GameEngine;
       let content: ReturnType<typeof loadContent>;
       try {
         content = loadContent();
-        const levelId = pickLevelId();
-        const level = content.levels[levelId];
+        availableLevels = Object.keys(content.levels).map(Number).sort((a, b) => a - b);
+        currentLevelId = pickLevelId();
+        const level = content.levels[currentLevelId];
         if (!level) {
-          throw new Error(`Level ${levelId} not found. Available: ${Object.keys(content.levels).join(', ')}`);
+          throw new Error(
+            `Level ${currentLevelId} not found. Available: ${availableLevels.join(', ')}`,
+          );
         }
         engine = new GameEngine(level, content);
+        engineRef = engine;
       } catch (err) {
         setError((err as Error).message);
         return;
@@ -62,11 +91,7 @@ export default function App() {
       renderer = r;
       const session = createSessionState();
 
-      input = new InputController(r.app.canvas, {
-        onClick: (x, y) => {
-          r.addClickRipple(x, y, performance.now());
-        },
-      });
+      input = new InputController(r.app.canvas, engine, session);
 
       let lastTime = performance.now();
       let accumulator = 0;
@@ -91,6 +116,7 @@ export default function App() {
 
     return () => {
       cancelled = true;
+      window.removeEventListener('keydown', handleKey);
       if (rafId) cancelAnimationFrame(rafId);
       input?.destroy();
       renderer?.destroy();
@@ -109,10 +135,26 @@ export default function App() {
         }}
       />
       {error && (
-        <div style={{ position: 'fixed', top: 20, left: 20, color: '#ff8a8a', fontFamily: 'monospace' }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 20,
+            left: 20,
+            color: '#ff8a8a',
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
           {error}
         </div>
       )}
     </>
   );
+}
+
+function nextLevelId(current: number, available: number[]): number | null {
+  const idx = available.indexOf(current);
+  if (idx === -1) return null;
+  if (idx + 1 >= available.length) return null;
+  return available[idx + 1] ?? null;
 }
