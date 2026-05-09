@@ -1,0 +1,9 @@
+{
+  "id": "water",
+  "name": "Water",
+  "color": "#3da9fc",
+  "description": "Default. Standard production.",
+  "effects": [
+    { "type": "productionMultiplier", "value": 1.0 }
+  ]
+}

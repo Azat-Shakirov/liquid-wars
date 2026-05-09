@@ -1,0 +1,27 @@
+{
+  "id": 3,
+  "name": "Outnumbered",
+  "tutorialKey": null,
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": { "width": 1280, "height": 720, "background": "stone" },
+  "terrain": { "walls": [] },
+  "players": [
+    { "id": "p1", "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai", "color": "#e63946", "aiConfigId": "easy" }
+  ],
+  "nodes": [
+    { "id": "n1", "position": [180, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 25 },
+    { "id": "n2", "position": [430, 200],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 12 },
+    { "id": "n3", "position": [430, 520],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 12 },
+    { "id": "n4", "position": [680, 360],  "ownerId": null,  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 18 },
+    { "id": "n5", "position": [930, 200],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 22 },
+    { "id": "n6", "position": [930, 520],  "ownerId": "ai1", "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 15 },
+    { "id": "n7", "position": [1100, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 22 }
+  ],
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": {
+    "time": [240000, 180000, 120000],
+    "units": [120, 80, 50]
+  }
+}

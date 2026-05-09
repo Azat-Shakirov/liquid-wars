@@ -1,9 +1,16 @@
 // World — root container for all engine state. Shape per §4.1.
+// Phase 1: instantiates Nodes from a LevelDef + ContentLibrary.
 
-import type { LevelConfig, NodeId, PlayerId } from '../types';
+import type { LiquidId, NodeId, NodeTypeId, PlayerId, Vec2 } from '../types';
 import type { Node } from './entities/Node';
 import type { UnitGroup } from './entities/UnitGroup';
 import type { ActiveSpellEffect } from './entities/Spell';
+import type {
+  ContentLibrary,
+  LevelDef,
+  NodeTypeDef,
+} from './content/ContentLibrary';
+import { vec2FromTuple } from './content/ContentLibrary';
 import { createRNG, type SeededRNG } from './rng';
 
 export interface Player {
@@ -19,24 +26,91 @@ export interface World {
   tick: number;
   rng: SeededRNG;
   players: Player[];
+  humanPlayerId: PlayerId | null;
   nodes: Map<NodeId, Node>;
+  // Insertion-order array for stable iteration when systems need positional
+  // semantics (combat ordering by id, etc.). Mirrors `nodes` keys.
+  nodeOrder: NodeId[];
   unitGroups: UnitGroup[];
   activeSpellEffects: ActiveSpellEffect[];
-  config: LevelConfig;
+  level: LevelDef;
   status: GameStatus;
   elapsedMs: number;
+  nextUnitGroupId: number;
 }
 
-export function createWorld(config: LevelConfig, seed = 1): World {
+function nodeTypeLevelStats(
+  def: NodeTypeDef,
+  level: number,
+): { maxUnits: number; productionRate: number } {
+  const lv = def.levels.find((l) => l.level === level);
+  if (!lv) {
+    throw new Error(`NodeType '${def.id}' has no level ${level} configured.`);
+  }
+  return {
+    maxUnits: lv.maxUnits,
+    productionRate: lv.productionRate ?? 0,
+  };
+}
+
+export function buildWorldFromLevel(
+  level: LevelDef,
+  content: ContentLibrary,
+  seed = 1,
+): World {
+  const players: Player[] = level.players.map((p) => ({
+    id: p.id,
+    type: p.type,
+    color: p.color,
+    ...(p.aiConfigId !== undefined ? { aiConfigId: p.aiConfigId } : {}),
+  }));
+
+  const human = players.find((p) => p.type === 'human') ?? null;
+
+  const nodes = new Map<NodeId, Node>();
+  const nodeOrder: NodeId[] = [];
+
+  for (const ndef of level.nodes) {
+    const typeDef = content.nodeTypes[ndef.nodeType as NodeTypeId];
+    if (!typeDef) throw new Error(`Level ${level.id} references unknown nodeType '${ndef.nodeType}'`);
+    if (!content.liquids[ndef.liquidType as LiquidId]) {
+      throw new Error(`Level ${level.id} references unknown liquid '${ndef.liquidType}'`);
+    }
+    const stats = nodeTypeLevelStats(typeDef, ndef.level);
+    const pos: Vec2 = vec2FromTuple(ndef.position);
+    const node: Node = {
+      id: ndef.id,
+      position: pos,
+      previousPosition: { ...pos },
+      ownerId: ndef.ownerId,
+      nodeType: ndef.nodeType,
+      level: ndef.level,
+      liquidType: ndef.liquidType,
+      units: ndef.units,
+      maxUnits: stats.maxUnits,
+      productionProgress: 0,
+      spellQueue: null,
+      attackCooldownMs: 0,
+      isFrozen: false,
+      frozenUntilTick: 0,
+      poisonStacks: [],
+    };
+    nodes.set(node.id, node);
+    nodeOrder.push(node.id);
+  }
+
   return {
     tick: 0,
     rng: createRNG(seed),
-    players: [],
-    nodes: new Map(),
+    players,
+    humanPlayerId: human ? human.id : null,
+    nodes,
+    nodeOrder,
     unitGroups: [],
     activeSpellEffects: [],
-    config,
+    level,
     status: 'playing',
     elapsedMs: 0,
+    nextUnitGroupId: 1,
   };
 }

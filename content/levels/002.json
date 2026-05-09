@@ -1,0 +1,25 @@
+{
+  "id": 2,
+  "name": "Three Way",
+  "tutorialKey": null,
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": { "width": 1280, "height": 720, "background": "stone" },
+  "terrain": { "walls": [] },
+  "players": [
+    { "id": "p1", "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai", "color": "#e63946", "aiConfigId": "easy" }
+  ],
+  "nodes": [
+    { "id": "n1", "position": [200, 540], "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 20 },
+    { "id": "n2", "position": [420, 220], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
+    { "id": "n3", "position": [640, 540], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
+    { "id": "n4", "position": [860, 220], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
+    { "id": "n5", "position": [1080, 540],"ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 20 }
+  ],
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": {
+    "time": [180000, 120000, 90000],
+    "units": [80, 50, 30]
+  }
+}
