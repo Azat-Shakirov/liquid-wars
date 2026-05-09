@@ -2,11 +2,24 @@
 //
 //   Click on owned node            → select (replace)
 //   Shift-click on owned node      → toggle in selection
-//   Drag from owned node           → send 50% from source(s) to release target
-//   Drag from selection (any)      → send 50% from each selected source
+//   Drag from owned node           → send 50% from source(s) to target
+//   Shift-drag from owned node     → send 100% (fast 100% gesture)
 //   Drag from empty                → box-select all owned-by-human inside box
-//   Double-click on any target     → send 100% from selection (if non-empty)
-//   Click on empty / hostile node  → clear selection
+//   Click on multi-select target   → send 50% (deferred — see below)
+//   Double-click on target with    → send 100% from selection
+//     selection (single OR multi)
+//   Click on empty space           → clear selection
+//   Click on hostile/neutral with  → no-op (preserves selection so a
+//     ≤ 1 sources                    follow-up double-click can fire 100%)
+//
+// Multi-select 50% click vs double-click 100% conflict resolution:
+// the first click with selection.size >= 2 on a non-selected target is
+// *deferred* by DOUBLE_CLICK_MS. If a second click on the same target
+// arrives within the window, the deferred 50% is cancelled and a 100%
+// send fires instead. If the timer expires, the 50% commits. This is
+// the only way to make both gestures coexist without one swallowing
+// the other (the auto-deselect from item 2 means a fired 50% would
+// otherwise leave nothing for the double-click to act on).
 //
 // Hit-testing uses size-by-level metrics from render/shapes (input layer is
 // allowed to import from render — only engine/ is forbidden from doing so).
@@ -32,11 +45,20 @@ type GestureState =
       pointerId: number;
     }
   | { kind: 'box-select'; pointerId: number; startX: number; startY: number }
-  | { kind: 'drag-send'; pointerId: number; sources: NodeId[] };
+  | { kind: 'drag-send'; pointerId: number; sources: NodeId[]; shiftKey: boolean };
+
+interface DeferredClick {
+  nodeId: NodeId;
+  selectionSnapshot: Set<NodeId>;
+  shiftKey: boolean;
+  action: ClickAction;
+  timer: ReturnType<typeof setTimeout>;
+}
 
 export class InputController {
   private state: GestureState = { kind: 'idle' };
   private lastClick: { nodeId: NodeId | null; time: number } | null = null;
+  private deferredClick: DeferredClick | null = null;
 
   private readonly handlePointerDown: (e: PointerEvent) => void;
   private readonly handlePointerMove: (e: PointerEvent) => void;
@@ -63,6 +85,10 @@ export class InputController {
   }
 
   destroy(): void {
+    if (this.deferredClick) {
+      clearTimeout(this.deferredClick.timer);
+      this.deferredClick = null;
+    }
     this.canvas.removeEventListener('pointerdown', this.handlePointerDown);
     this.canvas.removeEventListener('pointermove', this.handlePointerMove);
     this.canvas.removeEventListener('pointerup', this.handlePointerUp);
@@ -123,6 +149,7 @@ export class InputController {
           kind: 'drag-send',
           pointerId: this.state.pointerId,
           sources,
+          shiftKey: this.state.shiftKey,
         };
         this.session.drag = {
           fromNodeIds: sources,
@@ -173,7 +200,9 @@ export class InputController {
     } else if (this.state.kind === 'drag-send') {
       const targetId = this.pickNodeAt(x, y);
       if (targetId && this.state.sources.length > 0) {
-        const result = this.engine.sendUnits(this.state.sources, targetId, 0.5);
+        // Shift-drag = 100% (fast 100% gesture); plain drag = 50%.
+        const fraction = this.state.shiftKey ? 1.0 : 0.5;
+        const result = this.engine.sendUnits(this.state.sources, targetId, fraction);
         if (result.ok) this.session.selectedNodeIds.clear();
       }
       this.session.drag = null;
@@ -201,6 +230,37 @@ export class InputController {
   // ── Click resolution ──────────────────────────────────────────────
 
   private handleClick(nodeId: NodeId | null, shiftKey: boolean): void {
+    // Case A: a deferred multi-select 50% click is pending.
+    if (this.deferredClick) {
+      const same = this.deferredClick.nodeId === nodeId;
+      clearTimeout(this.deferredClick.timer);
+
+      if (same && nodeId !== null) {
+        // Second tap of a double-click on the same target — upgrade to 100%.
+        // Re-resolve using the original selection snapshot so the source
+        // list matches what the user saw at first click time.
+        const snap = this.deferredClick.selectionSnapshot;
+        const upgradedAction = resolveClick(
+          this.engine.world,
+          snap,
+          nodeId,
+          shiftKey,
+          /* isDoubleClick */ true,
+        );
+        this.deferredClick = null;
+        this.lastClick = null;
+        this.applyClickAction(upgradedAction);
+        return;
+      }
+
+      // Different target — commit the pending 50% before processing the
+      // new click as a fresh click.
+      const pending = this.deferredClick;
+      this.deferredClick = null;
+      this.applyClickAction(pending.action);
+      // Fall through to handle the new click normally.
+    }
+
     const now = performance.now();
     const isDoubleClick =
       this.lastClick !== null &&
@@ -215,6 +275,38 @@ export class InputController {
       shiftKey,
       isDoubleClick,
     );
+
+    // Defer multi-select 50% sends. The first click in a sequence stages
+    // the action; if a second click on the same target arrives within
+    // DOUBLE_CLICK_MS the deferred call becomes a 100% send instead.
+    // Only multi-select 50% (selection.size >= 2) can be upgraded —
+    // single-select clicks on hostile/neutral are already no-ops, so
+    // the lastClick path handles those.
+    if (
+      action.kind === 'send' &&
+      action.fraction === 0.5 &&
+      this.session.selectedNodeIds.size >= 2 &&
+      nodeId !== null &&
+      !isDoubleClick
+    ) {
+      const snapshot = new Set(this.session.selectedNodeIds);
+      const targetId = nodeId;
+      const timer = setTimeout(() => {
+        if (this.deferredClick && this.deferredClick.nodeId === targetId) {
+          this.deferredClick = null;
+          this.applyClickAction(action);
+        }
+      }, DOUBLE_CLICK_MS);
+      this.deferredClick = {
+        nodeId: targetId,
+        selectionSnapshot: snapshot,
+        shiftKey,
+        action,
+        timer,
+      };
+      return;
+    }
+
     this.applyClickAction(action);
   }
 
