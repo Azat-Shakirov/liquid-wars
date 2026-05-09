@@ -1,18 +1,19 @@
 // App — loads content, builds the engine for a chosen level, and runs the
 // fixed-timestep frame loop (§3.4).
 //
-// Phase 1 (intermediate): render layer is still the Phase 0 click-ripple
-// PixiRenderer. NodeView/UnitGroupView/InputController gestures land in the
-// next commits. Engine ticks and AI run regardless — visuals catch up.
+// Phase 1 (intermediate): InputController is still the Phase 0 click-ripple
+// version. NodeView, UnitGroupView, SelectionBoxView all render correctly.
+// Gestures (select, send, box-select, double-click) land in the next commit.
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from './engine/GameEngine';
 import { loadContent } from './engine/content/ContentLoader';
 import { PixiRenderer } from './render/PixiRenderer';
 import { InputController } from './input/InputController';
+import { createSessionState } from './render/SessionState';
 import { TICK_MS } from './types';
 
-const MAX_FRAME_MS = 250; // hard cap to avoid spiral-of-death after a long pause
+const MAX_FRAME_MS = 250;
 
 function pickLevelId(): number {
   const params = new URLSearchParams(window.location.search);
@@ -39,8 +40,9 @@ export default function App() {
 
     (async () => {
       let engine: GameEngine;
+      let content: ReturnType<typeof loadContent>;
       try {
-        const content = loadContent();
+        content = loadContent();
         const levelId = pickLevelId();
         const level = content.levels[levelId];
         if (!level) {
@@ -52,12 +54,14 @@ export default function App() {
         return;
       }
 
-      const r = await PixiRenderer.create(host);
+      const r = await PixiRenderer.create(host, content);
       if (cancelled) {
         r.destroy();
         return;
       }
       renderer = r;
+      const session = createSessionState();
+
       input = new InputController(r.app.canvas, {
         onClick: (x, y) => {
           r.addClickRipple(x, y, performance.now());
@@ -78,7 +82,7 @@ export default function App() {
         }
 
         const alpha = accumulator / TICK_MS;
-        r.render(engine.world, alpha, now);
+        r.render(engine.world, session, alpha, now);
         rafId = requestAnimationFrame(frame);
       };
 
