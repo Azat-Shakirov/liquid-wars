@@ -16,21 +16,33 @@ export interface LiquidDef {
   effects: LiquidEffect[];
 }
 
-export interface BarracksLevel {
+export interface NodeTypeLevel {
   level: number;
-  productionRate: number; // units per second
+  // Production-capable types (Barracks, House) set this. Lab/Tower omit.
+  productionRate?: number; // units per second
   maxUnits: number;
+  // Within-type upgrade cost (in units, paid from the node) to reach
+  // THIS level from the level below.
   upgradeCost?: number;
+  // Cost to upgrade a House INTO this type at level 1.
   upgradeCostFromHouse?: number;
+  // Tower-specific level fields.
+  attackRate?: number;
+  attackRange?: number;
+  attackDamage?: number;
+  // Lab-specific level fields.
+  concoctSpeed?: number;
+  unlockedSpells?: string[];
 }
 
 export interface NodeTypeDef {
   id: NodeTypeId;
   shape: string;
-  levels: BarracksLevel[];
-  // Tower-specific (Phase 2+); typed loosely to avoid speculative shape:
+  levels: NodeTypeLevel[];
+  // Tower-specific.
   sendSpeedPenalty?: number;
   producesUnits?: boolean;
+  // House-specific — which types it can be upgraded into.
   upgradeTargets?: NodeTypeId[];
 }
 

@@ -22,6 +22,10 @@ export type SendResult =
   | { ok: true; groupsCreated: number }
   | { ok: false; reason: string };
 
+export type UpgradeResult =
+  | { ok: true; newType: NodeTypeId; newLevel: number; cost: number }
+  | { ok: false; reason: string };
+
 const BASE_UNIT_SPEED_PX_PER_MS = 0.12; // ~120px/sec — Phase 1 baseline.
 
 export class GameEngine {
@@ -130,6 +134,61 @@ export class GameEngine {
     return groupsCreated > 0
       ? { ok: true, groupsCreated }
       : { ok: false, reason: 'no eligible source' };
+  }
+
+  // Upgrade a node — within-type level up (Barracks 2→3, etc.) or House
+  // conversion into Barracks/Lab/Tower at level 1. Cost in units, paid
+  // from the node. Instant per §6.3.
+  //
+  //   targetType undefined  → within-type level up to (current level + 1).
+  //   targetType set        → House conversion; only valid on Houses.
+  upgradeNode(nodeId: NodeId, targetType?: NodeTypeId): UpgradeResult {
+    if (this.world.status !== 'playing') return { ok: false, reason: 'not playing' };
+    const node = this.world.nodes.get(nodeId);
+    if (!node) return { ok: false, reason: 'unknown node' };
+    if (node.ownerId === null) return { ok: false, reason: 'unowned' };
+    if (node.isFrozen) return { ok: false, reason: 'frozen' };
+
+    const currentTypeDef = this.content.nodeTypes[node.nodeType];
+    if (!currentTypeDef) return { ok: false, reason: 'unknown current type' };
+
+    if (targetType !== undefined && targetType !== node.nodeType) {
+      // House conversion path.
+      if (node.nodeType !== 'house') return { ok: false, reason: 'only Houses can convert' };
+      const allowed = currentTypeDef.upgradeTargets ?? [];
+      if (!allowed.includes(targetType)) return { ok: false, reason: 'invalid target type' };
+      const targetTypeDef = this.content.nodeTypes[targetType];
+      if (!targetTypeDef) return { ok: false, reason: 'unknown target type' };
+      const lv1 = targetTypeDef.levels.find((l) => l.level === 1);
+      if (!lv1) return { ok: false, reason: 'target has no level 1' };
+      const cost = lv1.upgradeCostFromHouse ?? Infinity;
+      if (!Number.isFinite(cost)) return { ok: false, reason: 'no upgradeCostFromHouse defined' };
+      if (node.units < cost) return { ok: false, reason: 'insufficient units' };
+
+      node.units -= cost;
+      node.nodeType = targetType;
+      node.level = 1;
+      node.maxUnits = lv1.maxUnits;
+      node.units = Math.min(node.units, node.maxUnits);
+      // Reset type-specific transient state.
+      node.spellQueue = null;
+      node.attackCooldownMs = 0;
+      return { ok: true, newType: targetType, newLevel: 1, cost };
+    }
+
+    // Within-type level up.
+    const nextLevel = node.level + 1;
+    const nextLv = currentTypeDef.levels.find((l) => l.level === nextLevel);
+    if (!nextLv) return { ok: false, reason: 'already at max level' };
+    const cost = nextLv.upgradeCost ?? Infinity;
+    if (!Number.isFinite(cost)) return { ok: false, reason: 'no upgradeCost defined' };
+    if (node.units < cost) return { ok: false, reason: 'insufficient units' };
+
+    node.units -= cost;
+    node.level = nextLevel;
+    node.maxUnits = nextLv.maxUnits;
+    node.units = Math.min(node.units, node.maxUnits);
+    return { ok: true, newType: node.nodeType, newLevel: nextLevel, cost };
   }
 
   private computeSpeedForSource(nodeType: NodeTypeId, liquidId: LiquidId): number {

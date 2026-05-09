@@ -129,8 +129,23 @@ export class InputController {
     if (e.button !== 0 && e.button !== 2) return;
     const { x, y } = this.localCoords(e);
 
-    // Right-click — Phase 1 has no spell/upgrade menu; reserved for Phase 2.
-    if (e.button === 2) return;
+    // Right-click on an owned node opens the context menu (upgrade /
+    // spell). Click anywhere else dismisses any open menu.
+    if (e.button === 2) {
+      const nodeId = this.pickNodeAt(x, y);
+      if (nodeId) {
+        const node = this.engine.world.nodes.get(nodeId);
+        if (node && node.ownerId === this.engine.world.humanPlayerId) {
+          this.session.contextMenu = { nodeId, position: { x, y } };
+          return;
+        }
+      }
+      this.session.contextMenu = null;
+      return;
+    }
+
+    // Any left-click dismisses an open context menu.
+    this.session.contextMenu = null;
 
     const downNodeId = this.pickNodeAt(x, y);
     this.state = {

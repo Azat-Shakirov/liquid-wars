@@ -37,9 +37,39 @@ export const barracks: NodeTypeDef = {
   id: 'barracks',
   shape: 'roundedSquare',
   levels: [
-    { level: 1, productionRate: 0.4, maxUnits: 50 },
-    { level: 2, productionRate: 0.8, maxUnits: 75 },
-    { level: 3, productionRate: 1.2, maxUnits: 100 },
+    { level: 1, productionRate: 0.4, maxUnits: 50, upgradeCostFromHouse: 5 },
+    { level: 2, productionRate: 0.8, maxUnits: 75, upgradeCost: 5 },
+    { level: 3, productionRate: 1.2, maxUnits: 100, upgradeCost: 10 },
+  ],
+};
+
+export const tower: NodeTypeDef = {
+  id: 'tower',
+  shape: 'hexagon',
+  producesUnits: false,
+  sendSpeedPenalty: 0.6,
+  levels: [
+    { level: 1, attackRate: 0.4, attackRange: 200, attackDamage: 1, maxUnits: 30, upgradeCostFromHouse: 10 },
+    { level: 2, attackRate: 0.8, attackRange: 220, attackDamage: 1, maxUnits: 50, upgradeCost: 10 },
+  ],
+};
+
+export const lab: NodeTypeDef = {
+  id: 'lab',
+  shape: 'triangle',
+  producesUnits: false,
+  levels: [
+    { level: 1, concoctSpeed: 1.0, unlockedSpells: ['freeze'], maxUnits: 60, upgradeCostFromHouse: 10 },
+    { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'poison'], maxUnits: 90, upgradeCost: 20 },
+  ],
+};
+
+export const house: NodeTypeDef = {
+  id: 'house',
+  shape: 'circle',
+  upgradeTargets: ['barracks', 'lab', 'tower'],
+  levels: [
+    { level: 1, productionRate: 0.2, maxUnits: 20 },
   ],
 };
 
@@ -54,7 +84,7 @@ export const easyAI: AIPersonalityDef = {
 export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLibrary {
   return {
     liquids: { water, blood, ink, ...(overrides.liquids ?? {}) },
-    nodeTypes: { barracks, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
+    nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
     ai: { easy: easyAI, ...(overrides.ai ?? {}) },
     levels: { ...(overrides.levels ?? {}) },
   };
@@ -67,6 +97,7 @@ export interface NodeSeed {
   level?: number;
   liquid?: string;
   units: number;
+  type?: 'barracks' | 'tower' | 'lab' | 'house';
 }
 
 export function makeLevel(nodeSeeds: NodeSeed[], opts: {
@@ -94,7 +125,7 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
       id: n.id,
       position: n.position,
       ownerId: n.ownerId,
-      nodeType: 'barracks',
+      nodeType: n.type ?? 'barracks',
       level: n.level ?? 1,
       liquidType: n.liquid ?? 'water',
       units: n.units,

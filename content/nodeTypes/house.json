@@ -1,0 +1,8 @@
+{
+  "id": "house",
+  "shape": "circle",
+  "upgradeTargets": ["barracks", "lab", "tower"],
+  "levels": [
+    { "level": 1, "productionRate": 0.2, "maxUnits": 20 }
+  ]
+}

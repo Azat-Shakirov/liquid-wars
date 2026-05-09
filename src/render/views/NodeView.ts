@@ -10,12 +10,30 @@ import { Container, Graphics, Text } from 'pixi.js';
 import type { Node } from '../../engine/entities/Node';
 import type { ContentLibrary } from '../../engine/content/ContentLibrary';
 import type { World, Player } from '../../engine/World';
-import { colorFromHex, metricsForType } from '../shapes';
+import { colorFromHex, hexagonPoints, metricsForType, trianglePoints, type ShapeKind } from '../shapes';
 import { buildLiquidPolyPoints } from '../liquidAnimator';
 
 const NEUTRAL_OUTLINE = 0x666666;
 const SELECTION_COLOR = 0xffffff;
 const CHROME_BG = 0x1c1c22;
+
+function drawShape(g: Graphics, kind: ShapeKind, size: number, cornerRadius: number): void {
+  const half = size / 2;
+  switch (kind) {
+    case 'roundedSquare':
+      g.roundRect(-half, -half, size, size, cornerRadius);
+      return;
+    case 'circle':
+      g.circle(0, 0, half);
+      return;
+    case 'hexagon':
+      g.poly(hexagonPoints(size));
+      return;
+    case 'triangle':
+      g.poly(trianglePoints(size));
+      return;
+  }
+}
 
 export class NodeView {
   readonly container: Container;
@@ -82,6 +100,7 @@ export class NodeView {
     const size = metrics.size;
     const half = size / 2;
     const radius = metrics.cornerRadius;
+    const kind = metrics.kind;
 
     const owner = node.ownerId
       ? world.players.find((p: Player) => p.id === node.ownerId)
@@ -91,31 +110,28 @@ export class NodeView {
     const liquidDef = content.liquids[node.liquidType];
     const liquidColor = liquidDef ? colorFromHex(liquidDef.color) : 0x3da9fc;
 
-    // Selection ring (drawn even at size 0 if selected, else cleared).
+    // Selection ring — outline at the same shape, padded outward by 6px.
     this.selectionRing.clear();
     if (selected) {
-      this.selectionRing
-        .roundRect(-half - 6, -half - 6, size + 12, size + 12, radius + 6)
-        .stroke({ color: SELECTION_COLOR, width: 2, alpha: 0.85 });
+      drawShape(this.selectionRing, kind, size + 12, radius + 6);
+      this.selectionRing.stroke({ color: SELECTION_COLOR, width: 2, alpha: 0.85 });
     }
 
-    // Chrome — bg fill + owner-color stroke.
-    this.chrome
-      .clear()
-      .roundRect(-half, -half, size, size, radius)
-      .fill({ color: CHROME_BG, alpha: 0.95 })
-      .roundRect(-half, -half, size, size, radius)
-      .stroke({ color: ownerColor, width: 2.5, alpha: 0.95 });
+    // Chrome — bg fill + owner-color stroke, drawn in the node's shape.
+    this.chrome.clear();
+    drawShape(this.chrome, kind, size, radius);
+    this.chrome.fill({ color: CHROME_BG, alpha: 0.95 });
+    drawShape(this.chrome, kind, size, radius);
+    this.chrome.stroke({ color: ownerColor, width: 2.5, alpha: 0.95 });
 
     // Liquid mask — same shape, slightly inset so it sits cleanly inside.
     const inset = 2;
     if (size !== this.currentSize) {
       this.currentSize = size;
     }
-    this.liquidMask
-      .clear()
-      .roundRect(-half + inset, -half + inset, size - inset * 2, size - inset * 2, Math.max(2, radius - inset))
-      .fill({ color: 0xffffff });
+    this.liquidMask.clear();
+    drawShape(this.liquidMask, kind, size - inset * 2, Math.max(2, radius - inset));
+    this.liquidMask.fill({ color: 0xffffff });
 
     // Liquid wavy fill.
     const fillRatio = node.maxUnits > 0 ? node.units / node.maxUnits : 0;
