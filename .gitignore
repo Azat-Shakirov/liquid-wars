@@ -55,3 +55,12 @@ $RECYCLE.BIN/
 
 # Project artifacts
 .claude/session-end.log
+
+# Private — never commit to public repo.
+# Spec, agent-instruction file, and session log are kept local only.
+# The session log is mirrored to a private "memory" repo as
+# liquid-wars-records.txt; SPEC.md and CLAUDE.md stay local.
+SPEC.md
+CLAUDE.md
+records.txt
+liquid-wars-records.txt
