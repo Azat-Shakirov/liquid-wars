@@ -170,6 +170,7 @@ export class PixiRenderer {
 
   private drawHints(world: World, session: SessionState): void {
     this.hintGraphics.clear();
+
     if (session.drag) {
       const targetNode = session.drag.overTargetId
         ? world.nodes.get(session.drag.overTargetId) ?? null
@@ -193,8 +194,38 @@ export class PixiRenderer {
             .stroke({ color, width: 2, alpha: 0.9 });
         }
       }
-    } else if (session.hoveredNodeId) {
-      // Faint highlight on the hovered node when not dragging.
+      return;
+    }
+
+    // Multi-select preview — when two or more nodes are selected and the
+    // cursor is over a non-selected target, preview the click-to-send.
+    if (
+      session.selectedNodeIds.size >= 2 &&
+      session.hoveredNodeId &&
+      !session.selectedNodeIds.has(session.hoveredNodeId)
+    ) {
+      const hovered = world.nodes.get(session.hoveredNodeId);
+      if (hovered) {
+        for (const sid of session.selectedNodeIds) {
+          const source = world.nodes.get(sid);
+          if (!source) continue;
+          const owner = source.ownerId
+            ? world.players.find((p) => p.id === source.ownerId)
+            : undefined;
+          const color = owner ? colorFromHex(owner.color) : 0xffffff;
+          this.hintGraphics
+            .moveTo(source.position.x, source.position.y)
+            .lineTo(hovered.position.x, hovered.position.y)
+            .stroke({ color, width: 1.5, alpha: 0.45 });
+        }
+        this.hintGraphics
+          .circle(hovered.position.x, hovered.position.y, 22)
+          .stroke({ color: 0xffffff, width: 2, alpha: 0.55 });
+        return;
+      }
+    }
+
+    if (session.hoveredNodeId) {
       const hovered = world.nodes.get(session.hoveredNodeId);
       if (hovered) {
         this.hintGraphics

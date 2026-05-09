@@ -15,6 +15,7 @@ import type { GameEngine } from '../engine/GameEngine';
 import type { NodeId, Vec2 } from '../types';
 import type { SessionState } from '../render/SessionState';
 import { metricsForType } from '../render/shapes';
+import { resolveClick, type ClickAction } from './clickResolver';
 
 const DEAD_ZONE_PX = 5;
 const DOUBLE_CLICK_MS = 350;
@@ -207,43 +208,40 @@ export class InputController {
       now - this.lastClick.time < DOUBLE_CLICK_MS;
     this.lastClick = { nodeId, time: now };
 
-    if (nodeId === null) {
-      this.session.selectedNodeIds.clear();
-      return;
-    }
+    const action = resolveClick(
+      this.engine.world,
+      this.session.selectedNodeIds,
+      nodeId,
+      shiftKey,
+      isDoubleClick,
+    );
+    this.applyClickAction(action);
+  }
 
-    const node = this.engine.world.nodes.get(nodeId);
-    if (!node) return;
-
-    const isHuman = node.ownerId === this.engine.world.humanPlayerId;
-
-    if (isDoubleClick && this.session.selectedNodeIds.size > 0) {
-      // Double-click on a target — send 100% from selection to it.
-      const sources = Array.from(this.session.selectedNodeIds).filter((id) => id !== nodeId);
-      if (sources.length > 0) {
-        const result = this.engine.sendUnits(sources, nodeId, 1.0);
-        if (result.ok) this.session.selectedNodeIds.clear();
-      }
-      return;
-    }
-
-    if (isHuman) {
-      if (shiftKey) {
-        if (this.session.selectedNodeIds.has(nodeId)) {
-          this.session.selectedNodeIds.delete(nodeId);
-        } else {
-          this.session.selectedNodeIds.add(nodeId);
-        }
-      } else {
+  private applyClickAction(action: ClickAction): void {
+    switch (action.kind) {
+      case 'noop':
+        return;
+      case 'clear-selection':
         this.session.selectedNodeIds.clear();
-        this.session.selectedNodeIds.add(nodeId);
+        return;
+      case 'select-replace':
+        this.session.selectedNodeIds.clear();
+        this.session.selectedNodeIds.add(action.nodeId);
+        return;
+      case 'select-toggle':
+        if (this.session.selectedNodeIds.has(action.nodeId)) {
+          this.session.selectedNodeIds.delete(action.nodeId);
+        } else {
+          this.session.selectedNodeIds.add(action.nodeId);
+        }
+        return;
+      case 'send': {
+        const result = this.engine.sendUnits(action.sources, action.target, action.fraction);
+        if (result.ok) this.session.selectedNodeIds.clear();
+        return;
       }
     }
-    // Click on hostile/neutral target with no double-click → no-op.
-    // Selection is preserved so the second click within DOUBLE_CLICK_MS
-    // can fire the double-click branch above (the "send 100%" gesture).
-    // Clicking empty space (nodeId === null, handled earlier) is what
-    // actually clears the selection.
   }
 
   private commitBoxSelect(start: Vec2, end: Vec2): void {
