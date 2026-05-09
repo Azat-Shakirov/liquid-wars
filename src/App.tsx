@@ -14,6 +14,11 @@ import { PixiRenderer } from './render/PixiRenderer';
 import { InputController } from './input/InputController';
 import { createSessionState } from './render/SessionState';
 import { TICK_MS } from './types';
+import { UnitBar } from './ui/UnitBar';
+import { useHudStore } from './store/hudStore';
+import { computePlayerTotals } from './store/computeTotals';
+
+const HUD_POLL_MS = 100;
 
 const MAX_FRAME_MS = 250;
 
@@ -43,6 +48,7 @@ export default function App() {
 
     let cancelled = false;
     let rafId = 0;
+    let hudIntervalId: ReturnType<typeof setInterval> | null = null;
     let renderer: PixiRenderer | null = null;
     let input: InputController | null = null;
     let engineRef: GameEngine | null = null;
@@ -93,6 +99,16 @@ export default function App() {
 
       input = new InputController(r.app.canvas, engine, session);
 
+      // HUD polling — push per-player totals into the Zustand store every
+      // 100ms, but only when they actually change. Keeps React out of
+      // the per-tick render path (§3.1).
+      const pushTotals = (): void => {
+        if (!engineRef) return;
+        useHudStore.getState().setTotals(computePlayerTotals(engineRef.world));
+      };
+      pushTotals();
+      hudIntervalId = setInterval(pushTotals, HUD_POLL_MS);
+
       let lastTime = performance.now();
       let accumulator = 0;
 
@@ -118,6 +134,8 @@ export default function App() {
       cancelled = true;
       window.removeEventListener('keydown', handleKey);
       if (rafId) cancelAnimationFrame(rafId);
+      if (hudIntervalId !== null) clearInterval(hudIntervalId);
+      useHudStore.getState().reset();
       input?.destroy();
       renderer?.destroy();
     };
@@ -125,6 +143,7 @@ export default function App() {
 
   return (
     <>
+      <UnitBar />
       <div
         ref={hostRef}
         style={{

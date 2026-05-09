@@ -9,11 +9,10 @@ import type { Player, World } from '../../src/engine/World';
 import { vec2Distance } from '../../src/engine/path';
 import type { Node } from '../../src/engine/entities/Node';
 import type {
-  AIPersonalityDef,
   ContentLibrary,
   LevelDef,
 } from '../../src/engine/content/ContentLibrary';
-import { makeContent, easyAI } from '../fixtures/content';
+import { makeContent } from '../fixtures/content';
 import level001 from '../../content/levels/001.json';
 import level002 from '../../content/levels/002.json';
 import level003 from '../../content/levels/003.json';
@@ -113,8 +112,6 @@ function optimalGreedyDecide(
 function loadLevel(raw: unknown): LevelDef {
   return raw as LevelDef;
 }
-
-const personality: AIPersonalityDef = easyAI;
 
 interface SimResult {
   status: 'won' | 'lost' | 'timeout';
