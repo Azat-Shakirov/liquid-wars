@@ -2,11 +2,15 @@
 // metadata, returns an action describing what should happen. InputController
 // applies the action; tests cover this function directly without DOM events.
 //
-// Phase 1 click-resolution rules:
+// Click-resolution rules:
 //
 //   nodeId === null                        → clear selection
-//   click on owned (no shift)              → select-replace
 //   click on owned (shift)                 → select-toggle
+//   click on owned, in multi-selection     → send 50% (100% on double-click)
+//                                            from all OTHER selected nodes
+//                                            (own-target redistribute)
+//   click on owned, only one selected      → no-op (selected node clicked again)
+//   click on owned, not in selection       → select-replace
 //   click on hostile/neutral
 //     • double-click + selection.size>=1   → send 100% (target excluded
 //                                            from sources if it was selected)
@@ -56,5 +60,19 @@ export function resolveClick(
   }
 
   if (shiftKey) return { kind: 'select-toggle', nodeId };
+
+  // Own-target redistribute: clicking a selected own node with 2+ selected
+  // pours from every OTHER selected node into it. Double-click upgrades
+  // to a full 100% drain. Replaces the old "click selected = narrow" rule
+  // (narrow by clicking empty space then re-selecting).
+  if (selection.has(nodeId)) {
+    if (selection.size >= 2) {
+      const sources = [...selection].filter((id) => id !== nodeId);
+      const fraction = isDoubleClick ? 1.0 : 0.5;
+      return { kind: 'send', sources, target: nodeId, fraction };
+    }
+    return { kind: 'noop' };
+  }
+
   return { kind: 'select-replace', nodeId };
 }

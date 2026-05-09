@@ -102,11 +102,31 @@ describe('resolveClick', () => {
     }
   });
 
-  it('multi-select but cursor is on a SELECTED node — no-op (not a send)', () => {
-    // Clicking a selected own node should narrow selection (select-replace),
-    // not send to itself.
+  it('multi-select + click on a SELECTED own node redistributes 50% from others', () => {
     const action = resolveClick(world, sel('h1', 'h2'), 'h1', false, false);
-    expect(action).toEqual({ kind: 'select-replace', nodeId: 'h1' });
+    expect(action.kind).toBe('send');
+    if (action.kind === 'send') {
+      expect(action.fraction).toBe(0.5);
+      expect(action.target).toBe('h1');
+      expect(action.sources).toEqual(['h2']);
+    }
+  });
+
+  it('multi-select + double-click on a SELECTED own node redistributes 100%', () => {
+    const action = resolveClick(world, sel('h1', 'h2'), 'h1', false, true);
+    expect(action.kind).toBe('send');
+    if (action.kind === 'send') {
+      expect(action.fraction).toBe(1.0);
+      expect(action.target).toBe('h1');
+      expect(action.sources).toEqual(['h2']);
+    }
+  });
+
+  it('single-select + click on the only selected own node is a no-op', () => {
+    // Narrowing-by-click is dropped: clicking the one selected node
+    // does nothing (selection unchanged).
+    const action = resolveClick(world, sel('h1'), 'h1', false, false);
+    expect(action).toEqual({ kind: 'noop' });
   });
 
   it('shift-click on owned with multi-select toggles', () => {
