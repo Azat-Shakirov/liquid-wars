@@ -157,7 +157,13 @@ export function GameView({ levelId }: GameViewProps) {
         }
 
         const alpha = pausedRef.current ? 0 : accumulator / TICK_MS;
-        r.render(engine.world, session, alpha, now);
+        r.render(
+          engine.world,
+          session,
+          alpha,
+          now,
+          engine.towerInterceptSystem.recentShots,
+        );
         rafId = requestAnimationFrame(frame);
       };
 

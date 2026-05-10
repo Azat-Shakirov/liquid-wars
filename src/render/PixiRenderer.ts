@@ -14,6 +14,7 @@
 import { Application, Container, Graphics, Text } from 'pixi.js';
 import type { World } from '../engine/World';
 import type { ContentLibrary } from '../engine/content/ContentLibrary';
+import type { TowerShot } from '../engine/systems/TowerInterceptSystem';
 import { NodeView } from './views/NodeView';
 import { UnitGroupView } from './views/UnitGroupView';
 import { SelectionBoxView } from './views/SelectionBoxView';
@@ -26,8 +27,18 @@ interface ClickRipple {
   birthMs: number;
 }
 
+interface RenderedBeam {
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+  color: number;
+  birthMs: number;
+}
+
 const RIPPLE_LIFE_MS = 600;
 const RIPPLE_MAX_RADIUS = 28;
+const BEAM_LIFE_MS = 220;
 
 export class PixiRenderer {
   readonly app: Application;
@@ -35,14 +46,18 @@ export class PixiRenderer {
   private readonly content: ContentLibrary;
 
   private readonly bgLayer: Container;
+  private readonly rangeLayer: Container;
   private readonly hintLayer: Container;
   private readonly nodeLayer: Container;
   private readonly unitLayer: Container;
+  private readonly beamLayer: Container;
   private readonly boxLayer: Container;
   private readonly hudLayer: Container;
 
   private readonly hintGraphics: Graphics;
   private readonly rippleGraphics: Graphics;
+  private readonly rangeGraphics: Graphics;
+  private readonly beamGraphics: Graphics;
   private readonly selectionBoxView: SelectionBoxView;
   private readonly hudText: Text;
   private readonly statusText: Text;
@@ -50,6 +65,10 @@ export class PixiRenderer {
   private readonly nodeViews = new Map<string, NodeView>();
   private readonly unitViews = new Map<string, UnitGroupView>();
   private readonly ripples: ClickRipple[] = [];
+  private readonly beams: RenderedBeam[] = [];
+  // Dedupe key per shot — `${firedAtTick}-${fromNodeId}` is unique
+  // because a single tower fires at most once per tick.
+  private ingestedShotKeys = new Set<string>();
 
   private constructor(app: Application, host: HTMLElement, content: ContentLibrary) {
     this.app = app;
@@ -57,16 +76,20 @@ export class PixiRenderer {
     this.content = content;
 
     this.bgLayer = new Container();
+    this.rangeLayer = new Container();
     this.hintLayer = new Container();
     this.nodeLayer = new Container();
     this.unitLayer = new Container();
+    this.beamLayer = new Container();
     this.boxLayer = new Container();
     this.hudLayer = new Container();
 
     this.app.stage.addChild(this.bgLayer);
+    this.app.stage.addChild(this.rangeLayer);
     this.app.stage.addChild(this.hintLayer);
     this.app.stage.addChild(this.nodeLayer);
     this.app.stage.addChild(this.unitLayer);
+    this.app.stage.addChild(this.beamLayer);
     this.app.stage.addChild(this.boxLayer);
     this.app.stage.addChild(this.hudLayer);
 
@@ -75,6 +98,12 @@ export class PixiRenderer {
 
     this.rippleGraphics = new Graphics();
     this.hintLayer.addChild(this.rippleGraphics);
+
+    this.rangeGraphics = new Graphics();
+    this.rangeLayer.addChild(this.rangeGraphics);
+
+    this.beamGraphics = new Graphics();
+    this.beamLayer.addChild(this.beamGraphics);
 
     this.selectionBoxView = new SelectionBoxView();
     this.boxLayer.addChild(this.selectionBoxView.graphic);
@@ -117,13 +146,94 @@ export class PixiRenderer {
     return new PixiRenderer(app, host, content);
   }
 
-  render(world: World, session: SessionState, alpha: number, nowMs: number): void {
+  render(
+    world: World,
+    session: SessionState,
+    alpha: number,
+    nowMs: number,
+    recentTowerShots: ReadonlyArray<TowerShot> = [],
+  ): void {
     this.syncNodes(world, session, nowMs, alpha);
     this.syncUnitGroups(world, alpha);
     this.drawHints(world, session);
+    this.drawTowerRanges(world, session);
+    this.ingestTowerShots(recentTowerShots, world, nowMs);
+    this.drawTowerBeams(nowMs);
     this.selectionBoxView.update(session.boxSelect);
     this.drawRipples(nowMs);
     this.updateHud(world);
+  }
+
+  private drawTowerRanges(world: World, session: SessionState): void {
+    this.rangeGraphics.clear();
+    if (session.selectedNodeIds.size === 0) return;
+    for (const id of session.selectedNodeIds) {
+      const n = world.nodes.get(id);
+      if (!n || n.nodeType !== 'tower') continue;
+      const def = this.content.nodeTypes[n.nodeType];
+      const lv = def?.levels.find((l) => l.level === n.level);
+      const range = lv?.attackRange;
+      if (range === undefined || range <= 0) continue;
+      const owner = n.ownerId
+        ? world.players.find((p) => p.id === n.ownerId)
+        : undefined;
+      const color = owner ? colorFromHex(owner.color) : 0xffffff;
+      this.rangeGraphics
+        .circle(n.position.x, n.position.y, range)
+        .fill({ color, alpha: 0.04 })
+        .circle(n.position.x, n.position.y, range)
+        .stroke({ color, width: 1, alpha: 0.35 });
+    }
+  }
+
+  private ingestTowerShots(
+    shots: ReadonlyArray<TowerShot>,
+    world: World,
+    nowMs: number,
+  ): void {
+    if (shots.length === 0) return;
+    for (const shot of shots) {
+      const key = `${shot.firedAtTick}-${shot.fromNodeId}`;
+      if (this.ingestedShotKeys.has(key)) continue;
+      this.ingestedShotKeys.add(key);
+      const tower = world.nodes.get(shot.fromNodeId);
+      const owner = tower?.ownerId
+        ? world.players.find((p) => p.id === tower.ownerId)
+        : undefined;
+      const color = owner ? colorFromHex(owner.color) : 0xffffff;
+      this.beams.push({
+        fromX: shot.fromPos.x,
+        fromY: shot.fromPos.y,
+        toX: shot.toPos.x,
+        toY: shot.toPos.y,
+        color,
+        birthMs: nowMs,
+      });
+    }
+    // Bound the dedupe set so it doesn't grow forever during long sessions.
+    if (this.ingestedShotKeys.size > 4096) {
+      this.ingestedShotKeys = new Set(
+        Array.from(this.ingestedShotKeys).slice(-1024),
+      );
+    }
+  }
+
+  private drawTowerBeams(nowMs: number): void {
+    this.beamGraphics.clear();
+    for (let i = this.beams.length - 1; i >= 0; i--) {
+      const b = this.beams[i]!;
+      const age = nowMs - b.birthMs;
+      if (age > BEAM_LIFE_MS) {
+        this.beams.splice(i, 1);
+        continue;
+      }
+      const t = age / BEAM_LIFE_MS;
+      const alpha = 1 - t;
+      this.beamGraphics
+        .moveTo(b.fromX, b.fromY)
+        .lineTo(b.toX, b.toY)
+        .stroke({ color: b.color, width: 2, alpha: alpha * 0.85 });
+    }
   }
 
   private syncNodes(world: World, session: SessionState, nowMs: number, alpha: number): void {

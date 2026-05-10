@@ -9,6 +9,7 @@ import { buildWorldFromLevel, type World } from './World';
 import { pathTotalDistance, vec2Distance } from './path';
 import { ProductionSystem } from './systems/ProductionSystem';
 import { MovementSystem } from './systems/MovementSystem';
+import { TowerInterceptSystem } from './systems/TowerInterceptSystem';
 import { CombatSystem } from './systems/CombatSystem';
 import { WinConditionSystem } from './systems/WinConditionSystem';
 import type { UnitGroup } from './entities/UnitGroup';
@@ -33,14 +34,17 @@ export class GameEngine {
   readonly systems: System[];
   readonly content: ContentLibrary;
   readonly ais: AIController[];
+  readonly towerInterceptSystem: TowerInterceptSystem;
 
   constructor(level: LevelDef, content: ContentLibrary, seed = 1) {
     registerCoreEffects();
     this.content = content;
     this.world = buildWorldFromLevel(level, content, seed);
+    this.towerInterceptSystem = new TowerInterceptSystem(content);
     this.systems = [
       new ProductionSystem(content),
       new MovementSystem(),
+      this.towerInterceptSystem,
       new CombatSystem(content),
       new WinConditionSystem(),
     ];
