@@ -1,0 +1,8 @@
+{
+  "id": "recruit",
+  "name": "Recruit",
+  "concoctTimeMs": 9000,
+  "unitCost": 50,
+  "minLabLevel": 3,
+  "effect": { "type": "recruit" }
+}

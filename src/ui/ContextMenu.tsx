@@ -1,23 +1,26 @@
-// Right-click context menu for an owned node. Phase 2 currently
-// surfaces upgrade options; spell options will be added in Slice C.
+// Right-click context menu for an owned node. Surfaces:
+//   - Upgrade options (within-type or House conversion).
+//   - Lab spell options (concoct / cancel / cast) per SPEC §7.4.
 
 import type { GameEngine } from '../engine/GameEngine';
-import type { ContextMenuRequest } from '../render/SessionState';
+import type { ContextMenuRequest, SessionState } from '../render/SessionState';
 
 interface ContextMenuProps {
   engine: GameEngine;
   request: ContextMenuRequest;
+  session: SessionState;
   onClose: () => void;
 }
 
-interface UpgradeOption {
+interface MenuOption {
   label: string;
-  cost: number;
+  cost?: number;
   affordable: boolean;
   onPick: () => void;
+  emphasis?: 'cast' | 'cancel';
 }
 
-export function ContextMenu({ engine, request, onClose }: ContextMenuProps) {
+export function ContextMenu({ engine, request, session, onClose }: ContextMenuProps) {
   const node = engine.world.nodes.get(request.nodeId);
   if (!node || node.ownerId !== engine.world.humanPlayerId) {
     return null;
@@ -26,10 +29,69 @@ export function ContextMenu({ engine, request, onClose }: ContextMenuProps) {
   const typeDef = engine.content.nodeTypes[node.nodeType];
   if (!typeDef) return null;
 
-  const options: UpgradeOption[] = [];
+  const options: MenuOption[] = [];
 
+  // Lab spell controls take precedence over upgrade controls when busy.
+  if (node.nodeType === 'lab') {
+    const queue = node.spellQueue;
+    if (queue && queue.state === 'concocting') {
+      const spell = engine.content.spells[queue.spellId];
+      const pct = Math.round(queue.progress * 100);
+      options.push({
+        label: `Cancel ${spell?.name ?? queue.spellId} (${pct}%)`,
+        affordable: true,
+        emphasis: 'cancel',
+        onPick: () => {
+          engine.cancelConcoction(node.id);
+          onClose();
+        },
+      });
+    } else if (queue && queue.state === 'ready') {
+      const spell = engine.content.spells[queue.spellId];
+      options.push({
+        label: `Cast ${spell?.name ?? queue.spellId}…`,
+        affordable: true,
+        emphasis: 'cast',
+        onPick: () => {
+          // Enter targeting mode. The next left-click on any node
+          // calls engine.castSpell via InputController.
+          session.targetingFromLabId = node.id;
+          onClose();
+        },
+      });
+      options.push({
+        label: 'Cancel',
+        affordable: true,
+        emphasis: 'cancel',
+        onPick: () => {
+          engine.cancelConcoction(node.id);
+          onClose();
+        },
+      });
+    } else {
+      // Idle Lab — list spells unlocked at this Lab's level.
+      const lv = typeDef.levels.find((l) => l.level === node.level);
+      const unlocked = lv?.unlockedSpells ?? [];
+      for (const sid of unlocked) {
+        const spell = engine.content.spells[sid];
+        if (!spell) continue;
+        const cost = spell.unitCost;
+        options.push({
+          label: `Concoct ${spell.name}`,
+          cost,
+          affordable: node.units >= cost,
+          onPick: () => {
+            engine.startConcoction(node.id, sid);
+            onClose();
+          },
+        });
+      }
+    }
+  }
+
+  // Upgrade options. House conversion (only on Houses) or within-type
+  // level up (any other type when not at max level).
   if (node.nodeType === 'house') {
-    // House conversion options.
     const targets = typeDef.upgradeTargets ?? [];
     for (const t of targets) {
       const targetDef = engine.content.nodeTypes[t];
@@ -48,7 +110,6 @@ export function ContextMenu({ engine, request, onClose }: ContextMenuProps) {
       });
     }
   } else {
-    // Within-type level up.
     const nextLv = typeDef.levels.find((l) => l.level === node.level + 1);
     if (nextLv && nextLv.upgradeCost !== undefined) {
       const cost = nextLv.upgradeCost;
@@ -67,7 +128,7 @@ export function ContextMenu({ engine, request, onClose }: ContextMenuProps) {
   if (options.length === 0) {
     return (
       <MenuShell pos={request.position} onClose={onClose}>
-        <div style={emptyRow}>No upgrades available</div>
+        <div style={emptyRow}>Nothing available</div>
       </MenuShell>
     );
   }
@@ -83,10 +144,16 @@ export function ContextMenu({ engine, request, onClose }: ContextMenuProps) {
             ...rowStyle,
             opacity: opt.affordable ? 1 : 0.45,
             cursor: opt.affordable ? 'pointer' : 'not-allowed',
+            color:
+              opt.emphasis === 'cast'
+                ? '#9be29b'
+                : opt.emphasis === 'cancel'
+                ? '#ffb38a'
+                : '#e8e8e8',
           }}
         >
           <span>{opt.label}</span>
-          <span style={costStyle}>{opt.cost}u</span>
+          {opt.cost !== undefined && <span style={costStyle}>{opt.cost}u</span>}
         </button>
       ))}
     </MenuShell>

@@ -38,6 +38,33 @@ export const NodeTypeSchema = z.object({
   upgradeTargets: z.array(z.enum(['house', 'barracks', 'lab', 'tower'])).optional(),
 });
 
+export const SpellEffectSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('freeze'),
+    params: z.object({ durationMs: z.number().positive() }),
+  }),
+  z.object({
+    type: z.literal('poison'),
+    params: z.object({
+      drainPerSecond: z.number().positive(),
+      durationMs: z.number().positive(),
+    }),
+  }),
+  z.object({
+    type: z.literal('recruit'),
+    params: z.object({}).optional(),
+  }),
+]);
+
+export const SpellSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  concoctTimeMs: z.number().positive(),
+  unitCost: z.number().positive(),
+  minLabLevel: z.number().int().positive(),
+  effect: SpellEffectSchema,
+});
+
 export const AIPersonalitySchema = z.object({
   id: z.string().min(1),
   decisionIntervalMs: z.number().positive(),

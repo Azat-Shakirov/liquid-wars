@@ -1,7 +1,7 @@
 // ContentLibrary — typed shape of all loaded JSON content. Engine code reads
 // from this struct; the loader builds it from disk via Vite import.meta.glob.
 
-import type { LiquidId, NodeTypeId, PlayerId, Vec2 } from '../../types';
+import type { LiquidId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
 
 export interface LiquidEffect {
   type: string;
@@ -44,6 +44,20 @@ export interface NodeTypeDef {
   producesUnits?: boolean;
   // House-specific — which types it can be upgraded into.
   upgradeTargets?: NodeTypeId[];
+}
+
+export type SpellEffectDef =
+  | { type: 'freeze'; params: { durationMs: number } }
+  | { type: 'poison'; params: { drainPerSecond: number; durationMs: number } }
+  | { type: 'recruit'; params?: Record<string, never> };
+
+export interface SpellDef {
+  id: SpellId;
+  name: string;
+  concoctTimeMs: number;
+  unitCost: number;
+  minLabLevel: number;
+  effect: SpellEffectDef;
 }
 
 export interface AIPersonalityDef {
@@ -97,6 +111,7 @@ export interface LevelDef {
 export interface ContentLibrary {
   liquids: Record<LiquidId, LiquidDef>;
   nodeTypes: Record<NodeTypeId, NodeTypeDef>;
+  spells: Record<SpellId, SpellDef>;
   ai: Record<string, AIPersonalityDef>;
   levels: Record<number, LevelDef>;
 }

@@ -130,8 +130,10 @@ export class InputController {
     const { x, y } = this.localCoords(e);
 
     // Right-click on an owned node opens the context menu (upgrade /
-    // spell). Click anywhere else dismisses any open menu.
+    // spell). Click anywhere else dismisses any open menu — and also
+    // cancels spell-targeting mode if it was active.
     if (e.button === 2) {
+      this.session.targetingFromLabId = null;
       const nodeId = this.pickNodeAt(x, y);
       if (nodeId) {
         const node = this.engine.world.nodes.get(nodeId);
@@ -140,6 +142,19 @@ export class InputController {
           return;
         }
       }
+      this.session.contextMenu = null;
+      return;
+    }
+
+    // Spell targeting mode: a Lab is 'ready' and the next left-click
+    // on any node casts on that target. Consume the click; do not
+    // fall through to selection / send / drag.
+    if (this.session.targetingFromLabId !== null) {
+      const targetId = this.pickNodeAt(x, y);
+      if (targetId) {
+        this.engine.castSpell(this.session.targetingFromLabId, targetId);
+      }
+      this.session.targetingFromLabId = null;
       this.session.contextMenu = null;
       return;
     }

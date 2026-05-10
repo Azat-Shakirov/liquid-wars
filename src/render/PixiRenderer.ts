@@ -238,6 +238,7 @@ export class PixiRenderer {
 
   private syncNodes(world: World, session: SessionState, nowMs: number, alpha: number): void {
     const present = new Set<string>();
+    const targetingId = session.targetingFromLabId;
     for (const id of world.nodeOrder) {
       const node = world.nodes.get(id);
       if (!node) continue;
@@ -248,7 +249,15 @@ export class PixiRenderer {
         this.nodeViews.set(id, view);
         this.nodeLayer.addChild(view.container);
       }
-      view.update(node, world, this.content, session.selectedNodeIds.has(id), nowMs, alpha);
+      view.update(
+        node,
+        world,
+        this.content,
+        session.selectedNodeIds.has(id),
+        nowMs,
+        alpha,
+        targetingId === id,
+      );
     }
     for (const [id, view] of this.nodeViews) {
       if (!present.has(id)) {

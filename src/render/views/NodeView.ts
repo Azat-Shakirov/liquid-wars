@@ -42,6 +42,7 @@ export class NodeView {
   private readonly liquidLayer: Container;
   private readonly liquid: Graphics;
   private readonly liquidMask: Graphics;
+  private readonly effectsLayer: Graphics;
   private readonly pips: Graphics;
   private readonly unitsLabel: Text;
   private readonly nodeId: string;
@@ -57,6 +58,7 @@ export class NodeView {
     this.liquidLayer = new Container();
     this.liquid = new Graphics();
     this.liquidMask = new Graphics();
+    this.effectsLayer = new Graphics();
     this.pips = new Graphics();
 
     this.liquidLayer.addChild(this.liquid);
@@ -78,6 +80,7 @@ export class NodeView {
     this.container.addChild(this.selectionRing);
     this.container.addChild(this.chrome);
     this.container.addChild(this.liquidLayer);
+    this.container.addChild(this.effectsLayer);
     this.container.addChild(this.pips);
     this.container.addChild(this.unitsLabel);
   }
@@ -89,6 +92,7 @@ export class NodeView {
     selected: boolean,
     nowMs: number,
     alpha: number,
+    targetingFromHere = false,
   ): void {
     // Position interpolation (§3.4). In Phase 1 nodes don't move, but the lerp
     // is wired in for free.
@@ -159,6 +163,65 @@ export class NodeView {
 
     // Units number — floor(units) per §4.2.
     this.unitsLabel.text = Math.floor(node.units).toString();
+
+    // ── Spell / status effects layer ─────────────────────────────────
+    this.effectsLayer.clear();
+
+    // Concoction progress arc on Lab.
+    if (node.spellQueue && node.spellQueue.state === 'concocting') {
+      const r = half + 5;
+      const startAngle = -Math.PI / 2;
+      const endAngle = startAngle + Math.PI * 2 * node.spellQueue.progress;
+      this.effectsLayer
+        .arc(0, 0, r, startAngle, endAngle)
+        .stroke({ color: 0xc6a8ff, width: 2.5, alpha: 0.9 });
+      // Faint full ring as track.
+      this.effectsLayer
+        .circle(0, 0, r)
+        .stroke({ color: 0xc6a8ff, width: 1, alpha: 0.18 });
+    }
+
+    // Ready: pulsing outer ring.
+    if (node.spellQueue && node.spellQueue.state === 'ready') {
+      const pulse = 0.55 + 0.4 * Math.sin(nowMs * 0.008);
+      const r = half + 6;
+      this.effectsLayer
+        .circle(0, 0, r)
+        .stroke({ color: 0xc6a8ff, width: 2.5, alpha: pulse });
+      // Inner solid ring as steady indicator.
+      this.effectsLayer
+        .circle(0, 0, half + 2)
+        .stroke({ color: 0xc6a8ff, width: 1.5, alpha: 0.55 });
+    }
+
+    // Targeting source — distinct emphasis so the player remembers
+    // which Lab is awaiting a target click.
+    if (targetingFromHere) {
+      const breath = 0.7 + 0.3 * Math.sin(nowMs * 0.012);
+      drawShape(this.effectsLayer, kind, size + 16, radius + 8);
+      this.effectsLayer.stroke({ color: 0x9be29b, width: 2.5, alpha: breath });
+    }
+
+    // Frozen overlay — translucent cyan over the chrome shape.
+    if (node.isFrozen) {
+      drawShape(this.effectsLayer, kind, size, radius);
+      this.effectsLayer.fill({ color: 0x9fdcff, alpha: 0.32 });
+      drawShape(this.effectsLayer, kind, size, radius);
+      this.effectsLayer.stroke({ color: 0xcdefff, width: 1.5, alpha: 0.85 });
+    }
+
+    // Poison indicator — small green dots circling the perimeter,
+    // count = stack count (capped at 4).
+    if (node.poisonStacks.length > 0) {
+      const stackCount = Math.min(4, node.poisonStacks.length);
+      const r = half + 9;
+      for (let i = 0; i < stackCount; i++) {
+        const a = (Math.PI * 2 * i) / stackCount + nowMs * 0.001;
+        const x = Math.cos(a) * r;
+        const y = Math.sin(a) * r;
+        this.effectsLayer.circle(x, y, 2.5).fill({ color: 0x6dc26d, alpha: 0.95 });
+      }
+    }
   }
 
   destroy(): void {

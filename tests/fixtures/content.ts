@@ -7,6 +7,7 @@ import type {
   LevelDef,
   LiquidDef,
   NodeTypeDef,
+  SpellDef,
 } from '../../src/engine/content/ContentLibrary';
 
 export const water: LiquidDef = {
@@ -61,6 +62,7 @@ export const lab: NodeTypeDef = {
   levels: [
     { level: 1, concoctSpeed: 1.0, unlockedSpells: ['freeze'], maxUnits: 60, upgradeCostFromHouse: 10 },
     { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'poison'], maxUnits: 90, upgradeCost: 20 },
+    { level: 3, concoctSpeed: 1.6, unlockedSpells: ['freeze', 'poison', 'recruit'], maxUnits: 120, upgradeCost: 35 },
   ],
 };
 
@@ -71,6 +73,33 @@ export const house: NodeTypeDef = {
   levels: [
     { level: 1, productionRate: 0.2, maxUnits: 20 },
   ],
+};
+
+export const freezeSpell: SpellDef = {
+  id: 'freeze',
+  name: 'Freeze',
+  concoctTimeMs: 4000,
+  unitCost: 25,
+  minLabLevel: 1,
+  effect: { type: 'freeze', params: { durationMs: 5000 } },
+};
+
+export const poisonSpell: SpellDef = {
+  id: 'poison',
+  name: 'Poison',
+  concoctTimeMs: 6000,
+  unitCost: 35,
+  minLabLevel: 2,
+  effect: { type: 'poison', params: { drainPerSecond: 2, durationMs: 8000 } },
+};
+
+export const recruitSpell: SpellDef = {
+  id: 'recruit',
+  name: 'Recruit',
+  concoctTimeMs: 9000,
+  unitCost: 50,
+  minLabLevel: 3,
+  effect: { type: 'recruit' },
 };
 
 export const easyAI: AIPersonalityDef = {
@@ -85,6 +114,7 @@ export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLib
   return {
     liquids: { water, blood, ink, ...(overrides.liquids ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
+    spells: { freeze: freezeSpell, poison: poisonSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
     ai: { easy: easyAI, ...(overrides.ai ?? {}) },
     levels: { ...(overrides.levels ?? {}) },
   };

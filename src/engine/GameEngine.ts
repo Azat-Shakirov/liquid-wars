@@ -1,16 +1,18 @@
 // GameEngine — owns World, runs the deterministic 60Hz tick (§3.1, §8).
 // Engine code remains pure TS: no PIXI, no DOM, no React. (§2 hard rule.)
 
-import { TICK_MS, type LiquidId, type NodeId, type NodeTypeId } from '../types';
+import { TICK_MS, type LiquidId, type NodeId, type NodeTypeId, type SpellId } from '../types';
 import type { ContentLibrary, LevelDef } from './content/ContentLibrary';
 import { effectValueForLiquid } from './effects/EffectRegistry';
 import { registerCoreEffects } from './effects/registerCoreEffects';
 import { buildWorldFromLevel, type World } from './World';
 import { pathTotalDistance, vec2Distance } from './path';
 import { ProductionSystem } from './systems/ProductionSystem';
+import { SpellConcoctionSystem } from './systems/SpellConcoctionSystem';
 import { MovementSystem } from './systems/MovementSystem';
 import { TowerInterceptSystem } from './systems/TowerInterceptSystem';
 import { CombatSystem } from './systems/CombatSystem';
+import { EffectSystem } from './systems/EffectSystem';
 import { WinConditionSystem } from './systems/WinConditionSystem';
 import type { UnitGroup } from './entities/UnitGroup';
 import { AIController } from './ai/AIController';
@@ -25,6 +27,10 @@ export type SendResult =
 
 export type UpgradeResult =
   | { ok: true; newType: NodeTypeId; newLevel: number; cost: number }
+  | { ok: false; reason: string };
+
+export type SpellResult =
+  | { ok: true }
   | { ok: false; reason: string };
 
 const BASE_UNIT_SPEED_PX_PER_MS = 0.12; // ~120px/sec — Phase 1 baseline.
@@ -43,9 +49,11 @@ export class GameEngine {
     this.towerInterceptSystem = new TowerInterceptSystem(content);
     this.systems = [
       new ProductionSystem(content),
+      new SpellConcoctionSystem(content),
       new MovementSystem(),
       this.towerInterceptSystem,
       new CombatSystem(content),
+      new EffectSystem(),
       new WinConditionSystem(),
     ];
     this.ais = [];
@@ -193,6 +201,109 @@ export class GameEngine {
     node.maxUnits = nextLv.maxUnits;
     node.units = Math.min(node.units, node.maxUnits);
     return { ok: true, newType: node.nodeType, newLevel: nextLevel, cost };
+  }
+
+  // ──────────────────────────────────────────────────────────────────
+  // Spell commands (§7).
+  // ──────────────────────────────────────────────────────────────────
+
+  startConcoction(labNodeId: NodeId, spellId: SpellId): SpellResult {
+    if (this.world.status !== 'playing') return { ok: false, reason: 'not playing' };
+    const lab = this.world.nodes.get(labNodeId);
+    if (!lab) return { ok: false, reason: 'unknown lab' };
+    if (lab.nodeType !== 'lab') return { ok: false, reason: 'not a lab' };
+    if (lab.ownerId === null) return { ok: false, reason: 'unowned' };
+    if (lab.isFrozen) return { ok: false, reason: 'frozen' };
+    if (lab.spellQueue !== null) return { ok: false, reason: 'lab busy' };
+
+    const spell = this.content.spells[spellId];
+    if (!spell) return { ok: false, reason: 'unknown spell' };
+    if (spell.minLabLevel > lab.level) return { ok: false, reason: 'lab level too low' };
+    if (lab.units < spell.unitCost) return { ok: false, reason: 'insufficient units' };
+
+    lab.spellQueue = { spellId, state: 'concocting', progress: 0 };
+    return { ok: true };
+  }
+
+  cancelConcoction(labNodeId: NodeId): SpellResult {
+    const lab = this.world.nodes.get(labNodeId);
+    if (!lab) return { ok: false, reason: 'unknown lab' };
+    if (lab.nodeType !== 'lab') return { ok: false, reason: 'not a lab' };
+    if (lab.spellQueue === null) return { ok: false, reason: 'nothing to cancel' };
+    lab.spellQueue = null;
+    return { ok: true };
+  }
+
+  // Casts a 'ready' spell from `labNodeId` onto `targetNodeId`. Pays
+  // the unit cost from the lab and applies the effect (§7.2 + §7.3).
+  castSpell(labNodeId: NodeId, targetNodeId: NodeId): SpellResult {
+    if (this.world.status !== 'playing') return { ok: false, reason: 'not playing' };
+    const lab = this.world.nodes.get(labNodeId);
+    if (!lab) return { ok: false, reason: 'unknown lab' };
+    if (lab.nodeType !== 'lab') return { ok: false, reason: 'not a lab' };
+    if (lab.ownerId === null) return { ok: false, reason: 'unowned' };
+    if (lab.isFrozen) return { ok: false, reason: 'lab frozen' };
+    if (!lab.spellQueue || lab.spellQueue.state !== 'ready') {
+      return { ok: false, reason: 'spell not ready' };
+    }
+
+    const spell = this.content.spells[lab.spellQueue.spellId];
+    if (!spell) {
+      lab.spellQueue = null;
+      return { ok: false, reason: 'unknown spell' };
+    }
+    if (lab.units < spell.unitCost) {
+      // Cost-violation drop, same as SpellConcoctionSystem would do.
+      lab.spellQueue = null;
+      return { ok: false, reason: 'insufficient units' };
+    }
+
+    const target = this.world.nodes.get(targetNodeId);
+    if (!target) return { ok: false, reason: 'unknown target' };
+
+    // Apply effect.
+    switch (spell.effect.type) {
+      case 'freeze': {
+        // §7.2 — target becomes neutral; current units stay; frozen
+        // for durationMs. Cancels any in-progress concoction on
+        // the target. Clears poison.
+        const ticks = Math.max(1, Math.round(spell.effect.params.durationMs / TICK_MS));
+        target.ownerId = null;
+        target.isFrozen = true;
+        target.frozenUntilTick = this.world.tick + ticks;
+        target.spellQueue = null;
+        target.poisonStacks = [];
+        target.productionProgress = 0;
+        target.attackCooldownMs = 0;
+        break;
+      }
+      case 'poison': {
+        // §7.2 — target loses drainPerSecond units for durationMs.
+        // Drain handled by EffectSystem.
+        const ticks = Math.max(1, Math.round(spell.effect.params.durationMs / TICK_MS));
+        target.poisonStacks.push({
+          sourcePlayerId: lab.ownerId,
+          drainPerSecond: spell.effect.params.drainPerSecond,
+          expiresTick: this.world.tick + ticks,
+        });
+        break;
+      }
+      case 'recruit': {
+        // §7.2 — target flips to caster; units preserved; ends poison;
+        // cancels target's concoction.
+        target.ownerId = lab.ownerId;
+        target.spellQueue = null;
+        target.poisonStacks = [];
+        // Preserve units count per spec; don't clamp to maxUnits since
+        // recruit doesn't add units, only flips.
+        break;
+      }
+    }
+
+    // Pay cost from the Lab.
+    lab.units -= spell.unitCost;
+    lab.spellQueue = null;
+    return { ok: true };
   }
 
   private computeSpeedForSource(nodeType: NodeTypeId, liquidId: LiquidId): number {

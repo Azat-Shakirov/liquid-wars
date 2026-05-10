@@ -65,6 +65,11 @@ export function GameView({ levelId }: GameViewProps) {
       if (e.repeat) return;
       const key = e.key.toLowerCase();
       if (key === 'escape') {
+        // Cancel spell-targeting first if active; otherwise pause.
+        if (sessionRef.current && sessionRef.current.targetingFromLabId !== null) {
+          sessionRef.current.targetingFromLabId = null;
+          return;
+        }
         togglePause();
         return;
       }
@@ -206,10 +211,11 @@ export function GameView({ levelId }: GameViewProps) {
           }}
         />
       )}
-      {!paused && ctxMenu && engineRefForMenu.current && (
+      {!paused && ctxMenu && engineRefForMenu.current && sessionRef.current && (
         <ContextMenu
           engine={engineRefForMenu.current}
           request={ctxMenu}
+          session={sessionRef.current}
           onClose={() => {
             if (sessionRef.current) sessionRef.current.contextMenu = null;
             setCtxMenu(null);

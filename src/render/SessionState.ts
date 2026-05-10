@@ -30,6 +30,10 @@ export interface SessionState {
   drag: DragState | null;
   boxSelect: BoxSelectState | null;
   contextMenu: ContextMenuRequest | null;
+  // When set, the player has a 'ready' Lab queued for casting. The
+  // next left-click on any node fires `engine.castSpell(labId, target)`
+  // and clears this. Right-click anywhere or Esc also clears it.
+  targetingFromLabId: NodeId | null;
 }
 
 export function createSessionState(): SessionState {
@@ -39,5 +43,6 @@ export function createSessionState(): SessionState {
     drag: null,
     boxSelect: null,
     contextMenu: null,
+    targetingFromLabId: null,
   };
 }
