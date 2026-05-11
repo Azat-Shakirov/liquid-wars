@@ -3,9 +3,13 @@
 // cancel concoction). Right-click no longer opens a separate menu;
 // hover IS the menu.
 //
-// Stays open while the cursor is over the panel itself so its
-// buttons remain usable when the cursor leaves the node to click
-// them. Last-hovered node is "pinned" until a new hover replaces it.
+// Visibility:
+//   • Cursor over a node → panel shows for that node.
+//   • Cursor over the panel itself → panel stays for the same node
+//     (so the cursor can leave the node and click a button).
+//   • Cursor over neither → after HIDE_DELAY_MS the panel disappears.
+//     The delay is enough to span the small visual gap between the
+//     node and the panel so quick cursor traversals don't dismiss it.
 
 import { useEffect, useRef, useState } from 'react';
 import type { GameEngine } from '../engine/GameEngine';
@@ -26,18 +30,43 @@ const BASE_UNIT_SPEED_PX_PER_SEC = 120;
 const PANEL_WIDTH = 240;
 const PANEL_OFFSET_PX = 14;
 const VIEWPORT_PAD = 8;
+const HIDE_DELAY_MS = 180;
 
 export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Props) {
-  const [, setPanelHover] = useState(false);
   const [pinnedId, setPinnedId] = useState<NodeId | null>(null);
+  const panelHoverRef = useRef(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [panelHeight, setPanelHeight] = useState(0);
 
+  const cancelHide = () => {
+    if (hideTimerRef.current !== null) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  };
+
+  const scheduleHide = () => {
+    cancelHide();
+    hideTimerRef.current = setTimeout(() => {
+      hideTimerRef.current = null;
+      setPinnedId(null);
+    }, HIDE_DELAY_MS);
+  };
+
+  // Hover changed: if a node is now hovered, pin it (and cancel any
+  // pending hide). If not, start the hide countdown UNLESS the
+  // cursor is currently over the panel itself.
   useEffect(() => {
     if (hoveredNodeId !== null) {
+      cancelHide();
       setPinnedId(hoveredNodeId);
+    } else if (!panelHoverRef.current) {
+      scheduleHide();
     }
   }, [hoveredNodeId]);
+
+  useEffect(() => () => cancelHide(), []);
 
   // Force a re-render every 250ms so live values (units, concoction
   // progress, bleed drain) refresh without React having to subscribe
@@ -102,8 +131,17 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Prop
   return (
     <div
       ref={panelRef}
-      onMouseEnter={() => setPanelHover(true)}
-      onMouseLeave={() => setPanelHover(false)}
+      onMouseEnter={() => {
+        panelHoverRef.current = true;
+        cancelHide();
+      }}
+      onMouseLeave={() => {
+        panelHoverRef.current = false;
+        // Hide unless the cursor is now back on a node (engine hover
+        // will re-pin it on the next poll). Always schedule — the
+        // hover-effect cancels if it sees a non-null hoveredNodeId.
+        scheduleHide();
+      }}
       style={{ ...panelStyle, top, left }}
     >
       <div style={headerStyle}>
