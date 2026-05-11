@@ -1,0 +1,9 @@
+{
+  "id": "blood",
+  "name": "Blood",
+  "color": "#a01010",
+  "description": "Attackers from blood nodes capture for 70% of the usual unit cost.",
+  "effects": [
+    { "type": "captureCostMultiplier", "value": 0.7 }
+  ]
+}

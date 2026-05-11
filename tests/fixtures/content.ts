@@ -34,6 +34,22 @@ export const ink: LiquidDef = {
   effects: [{ type: 'incomingDamageMultiplier', value: 0.33 }],
 };
 
+export const slime: LiquidDef = {
+  id: 'slime',
+  name: 'Slime',
+  color: '#5cd65c',
+  description: 'Faster spell concoction.',
+  effects: [{ type: 'spellSpeedMultiplier', value: 2.0 }],
+};
+
+export const venom: LiquidDef = {
+  id: 'venom',
+  name: 'Venom',
+  color: '#7a3da9',
+  description: 'Faster unit travel.',
+  effects: [{ type: 'travelSpeedMultiplier', value: 1.4 }],
+};
+
 export const barracks: NodeTypeDef = {
   id: 'barracks',
   shape: 'roundedSquare',
@@ -117,7 +133,7 @@ export const easyAI: AIPersonalityDef = {
 
 export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLibrary {
   return {
-    liquids: { water, blood, ink, ...(overrides.liquids ?? {}) },
+    liquids: { water, blood, ink, slime, venom, ...(overrides.liquids ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
     spells: { freeze: freezeSpell, bleed: bleedSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
     ai: { easy: easyAI, ...(overrides.ai ?? {}) },

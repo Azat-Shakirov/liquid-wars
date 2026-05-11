@@ -1,0 +1,9 @@
+{
+  "id": "venom",
+  "name": "Venom",
+  "color": "#7a3da9",
+  "description": "Units sent from venom nodes travel 40% faster.",
+  "effects": [
+    { "type": "travelSpeedMultiplier", "value": 1.4 }
+  ]
+}

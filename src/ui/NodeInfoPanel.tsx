@@ -14,7 +14,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { GameEngine } from '../engine/GameEngine';
 import type { SessionState } from '../render/SessionState';
-import type { NodeId } from '../types';
+import type { LiquidId, NodeId } from '../types';
 
 interface Props {
   engine: GameEngine;
@@ -151,6 +151,8 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Prop
         </span>
         <span style={ownerLabelStyle}>{ownerLabel}</span>
       </div>
+
+      {renderLiquidChip(engine, node.liquidType as LiquidId)}
 
       <div style={rowStyle}>
         <span>Units</span>
@@ -334,6 +336,20 @@ function capitalize(s: string): string {
   return s.length === 0 ? s : s[0]!.toUpperCase() + s.slice(1);
 }
 
+function renderLiquidChip(engine: GameEngine, liquidId: LiquidId) {
+  const liquid = engine.content.liquids[liquidId];
+  if (!liquid) return null;
+  return (
+    <div style={liquidChipStyle}>
+      <span style={{ ...liquidSwatchStyle, background: liquid.color }} />
+      <div style={liquidTextStyle}>
+        <div style={liquidNameStyle}>{liquid.name}</div>
+        <div style={liquidDescStyle}>{liquid.description}</div>
+      </div>
+    </div>
+  );
+}
+
 function spellLabel(engine: GameEngine, id: string, state: 'concocting' | 'ready'): string {
   const sp = engine.content.spells[id];
   return `${state === 'ready' ? 'Spell ready' : 'Concocting'}: ${sp?.name ?? id}`;
@@ -423,4 +439,41 @@ const buttonStyle: React.CSSProperties = {
 const costStyle: React.CSSProperties = {
   opacity: 0.7,
   marginLeft: 8,
+};
+
+const liquidChipStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  gap: 8,
+  marginBottom: 8,
+  padding: '6px 8px',
+  background: 'rgba(255,255,255,0.04)',
+  borderRadius: 4,
+};
+
+const liquidSwatchStyle: React.CSSProperties = {
+  display: 'inline-block',
+  width: 14,
+  height: 14,
+  borderRadius: 3,
+  marginTop: 1,
+  border: '1px solid rgba(255,255,255,0.18)',
+  flexShrink: 0,
+};
+
+const liquidTextStyle: React.CSSProperties = {
+  flex: 1,
+  minWidth: 0,
+};
+
+const liquidNameStyle: React.CSSProperties = {
+  fontSize: 12,
+  fontWeight: 600,
+};
+
+const liquidDescStyle: React.CSSProperties = {
+  fontSize: 11,
+  opacity: 0.65,
+  lineHeight: 1.35,
+  marginTop: 1,
 };
