@@ -55,6 +55,51 @@ describe('Tower defenseRate (divisor)', () => {
     expect(Math.round(tower.units)).toBe(10);
   });
 
+  it('L3 tower divides by 4 (defenseRate curve middle)', () => {
+    const level = makeLevel([
+      { id: 't1', position: [400, 300], ownerId: 'p1',  units: 0,  type: 'tower',    level: 3 },
+      { id: 's1', position: [402, 300], ownerId: 'ai1', units: 40, type: 'barracks', level: 5 },
+    ]);
+    const engine = new GameEngine(level, content);
+    const tower = engine.world.nodes.get('t1')!;
+    tower.attackCooldownMs = 99999;
+    engine.sendUnits(['s1'], 't1', 1.0);
+    for (let i = 0; i < 30; i++) engine.tick();
+    // 40 / 4 = 10 effective; tower 0 → flips with 10 units.
+    expect(tower.ownerId).toBe('ai1');
+    expect(Math.round(tower.units)).toBe(10);
+  });
+
+  it('L5 tower divides hostile arrivals by 5.5', () => {
+    const level = makeLevel([
+      { id: 't1', position: [400, 300], ownerId: 'p1',  units: 0,  type: 'tower',    level: 5 },
+      { id: 's1', position: [402, 300], ownerId: 'ai1', units: 33, type: 'barracks', level: 5 },
+    ]);
+    const engine = new GameEngine(level, content);
+    const tower = engine.world.nodes.get('t1')!;
+    tower.attackCooldownMs = 99999;
+    engine.sendUnits(['s1'], 't1', 1.0);
+    for (let i = 0; i < 30; i++) engine.tick();
+    // 33 / 5.5 = 6 effective; tower 0 → flips with 6 units.
+    expect(tower.ownerId).toBe('ai1');
+    expect(tower.units).toBeCloseTo(6, 5);
+  });
+
+  it('neutral tower does NOT divide (no owner = no defenders)', () => {
+    const level = makeLevel([
+      { id: 't1', position: [400, 300], ownerId: null,  units: 0, type: 'tower',    level: 1 },
+      { id: 's1', position: [402, 300], ownerId: 'ai1', units: 8, type: 'barracks', level: 1 },
+      { id: 's2', position: [800, 300], ownerId: 'p1',  units: 5, type: 'barracks', level: 1 },
+    ]);
+    const engine = new GameEngine(level, content);
+    const tower = engine.world.nodes.get('t1')!;
+    engine.sendUnits(['s1'], 't1', 1.0);
+    for (let i = 0; i < 30; i++) engine.tick();
+    // 8 incoming with no division (neutral) → captured by ai1 with 8 units.
+    expect(tower.ownerId).toBe('ai1');
+    expect(tower.units).toBeCloseTo(8, 0);
+  });
+
   it('small attack still gets divided (no flip if defender holds)', () => {
     const level = makeLevel([
       { id: 't1', position: [400, 300], ownerId: 'p1',  units: 5, type: 'tower',    level: 1 },

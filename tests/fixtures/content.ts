@@ -52,8 +52,11 @@ export const tower: NodeTypeDef = {
   producesUnits: false,
   sendSpeedPenalty: 0.6,
   levels: [
-    { level: 1, attackRate: 0.4, attackRange: 200, attackDamage: 1, defenseRate: 2, maxUnits: 30, upgradeCostFromHouse: 10 },
-    { level: 2, attackRate: 0.8, attackRange: 220, attackDamage: 1, defenseRate: 3, maxUnits: 50, upgradeCost: 10 },
+    { level: 1, attackRate: 0.4, attackRange: 200, attackDamage: 1, defenseRate: 2,   maxUnits: 30,  upgradeCostFromHouse: 10 },
+    { level: 2, attackRate: 0.8, attackRange: 220, attackDamage: 1, defenseRate: 3,   maxUnits: 50,  upgradeCost: 10 },
+    { level: 3, attackRate: 1.2, attackRange: 240, attackDamage: 2, defenseRate: 4,   maxUnits: 75,  upgradeCost: 15 },
+    { level: 4, attackRate: 1.6, attackRange: 260, attackDamage: 2, defenseRate: 5,   maxUnits: 100, upgradeCost: 20 },
+    { level: 5, attackRate: 2.0, attackRange: 300, attackDamage: 3, defenseRate: 5.5, maxUnits: 150, upgradeCost: 25 },
   ],
 };
 
