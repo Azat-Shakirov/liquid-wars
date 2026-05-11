@@ -12,6 +12,8 @@ import { TICK_MS } from '../types';
 import { UnitBar } from './UnitBar';
 import { PauseMenu } from './PauseMenu';
 import { ContextMenu } from './ContextMenu';
+import { NodeInfoPanel } from './NodeInfoPanel';
+import type { NodeId } from '../types';
 import { useHudStore } from '../store/hudStore';
 import { useSessionStore } from '../store/sessionStore';
 import { useProgressStore } from '../store/progressStore';
@@ -29,6 +31,7 @@ export function GameView({ levelId }: GameViewProps) {
   const [error, setError] = useState<string | null>(null);
   const [restartCounter, setRestartCounter] = useState(0);
   const [ctxMenu, setCtxMenu] = useState<ContextMenuRequest | null>(null);
+  const [hoveredId, setHoveredId] = useState<NodeId | null>(null);
   const engineRefForMenu = useRef<GameEngine | null>(null);
   const sessionRef = useRef<SessionState | null>(null);
   const paused = useSessionStore((s) => s.paused);
@@ -128,11 +131,17 @@ export function GameView({ levelId }: GameViewProps) {
           return req;
         });
       };
+      const pollHover = (): void => {
+        const id = session.hoveredNodeId;
+        setHoveredId((prev) => (prev === id ? prev : id));
+      };
       pushTotals();
       pollMenu();
+      pollHover();
       hudIntervalId = setInterval(() => {
         pushTotals();
         pollMenu();
+        pollHover();
       }, HUD_POLL_MS);
 
       let lastTime = performance.now();
@@ -186,6 +195,7 @@ export function GameView({ levelId }: GameViewProps) {
       sessionRef.current = null;
       engineRefForMenu.current = null;
       setCtxMenu(null);
+      setHoveredId(null);
       setPaused(false);
     };
   }, [levelId, restartCounter, togglePause, startLevel, recordCompletion, setPaused]);
@@ -220,6 +230,13 @@ export function GameView({ levelId }: GameViewProps) {
             if (sessionRef.current) sessionRef.current.contextMenu = null;
             setCtxMenu(null);
           }}
+        />
+      )}
+      {!paused && engineRefForMenu.current && sessionRef.current && (
+        <NodeInfoPanel
+          engine={engineRefForMenu.current}
+          session={sessionRef.current}
+          hoveredNodeId={hoveredId}
         />
       )}
       {error && (

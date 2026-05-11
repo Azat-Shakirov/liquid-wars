@@ -264,38 +264,34 @@ export class GameEngine {
     // Apply effect.
     switch (spell.effect.type) {
       case 'freeze': {
-        // §7.2 — target becomes neutral; current units stay; frozen
-        // for durationMs. Cancels any in-progress concoction on
-        // the target. Clears poison.
-        const ticks = Math.max(1, Math.round(spell.effect.params.durationMs / TICK_MS));
+        // Freeze (per user spec patch): pure neutralization. Target
+        // becomes neutral; units preserved. Recruit-but-to-neutral.
+        // Cancels target's concoction since neutral nodes don't concoct.
         target.ownerId = null;
-        target.isFrozen = true;
-        target.frozenUntilTick = this.world.tick + ticks;
         target.spellQueue = null;
-        target.poisonStacks = [];
         target.productionProgress = 0;
-        target.attackCooldownMs = 0;
         break;
       }
-      case 'poison': {
-        // §7.2 — target loses drainPerSecond units for durationMs.
-        // Drain handled by EffectSystem.
-        const ticks = Math.max(1, Math.round(spell.effect.params.durationMs / TICK_MS));
+      case 'bleed': {
+        // Bleed (per user spec patch): permanent until target is
+        // captured by a non-owner. Stops production (handled in
+        // ProductionSystem) and drains drainPerSecond units/sec
+        // (handled in EffectSystem). expiresTick set to a sentinel
+        // value past any reachable tick so EffectSystem treats it
+        // as permanent; CombatSystem clears stacks on capture.
         target.poisonStacks.push({
           sourcePlayerId: lab.ownerId,
           drainPerSecond: spell.effect.params.drainPerSecond,
-          expiresTick: this.world.tick + ticks,
+          expiresTick: Number.MAX_SAFE_INTEGER,
         });
         break;
       }
       case 'recruit': {
-        // §7.2 — target flips to caster; units preserved; ends poison;
+        // §7.2 — target flips to caster; units preserved; ends bleed;
         // cancels target's concoction.
         target.ownerId = lab.ownerId;
         target.spellQueue = null;
         target.poisonStacks = [];
-        // Preserve units count per spec; don't clamp to maxUnits since
-        // recruit doesn't add units, only flips.
         break;
       }
     }

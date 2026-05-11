@@ -30,6 +30,10 @@ export interface NodeTypeLevel {
   attackRate?: number;
   attackRange?: number;
   attackDamage?: number;
+  // Flat reduction subtracted from incoming UnitGroup count when
+  // a group arrives at this Tower (per SPEC patch — Tower defends
+  // itself against arrivals; interception in flight is separate).
+  defenseRate?: number;
   // Lab-specific level fields.
   concoctSpeed?: number;
   unlockedSpells?: string[];
@@ -47,8 +51,8 @@ export interface NodeTypeDef {
 }
 
 export type SpellEffectDef =
-  | { type: 'freeze'; params: { durationMs: number } }
-  | { type: 'poison'; params: { drainPerSecond: number; durationMs: number } }
+  | { type: 'freeze'; params?: Record<string, never> }
+  | { type: 'bleed'; params: { drainPerSecond: number } }
   | { type: 'recruit'; params?: Record<string, never> };
 
 export interface SpellDef {

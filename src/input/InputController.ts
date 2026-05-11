@@ -257,16 +257,25 @@ export class InputController {
     } else if (this.state.kind === 'drag-send') {
       const targetId = this.pickNodeAt(x, y);
       if (targetId && this.state.sources.length > 0) {
-        const fraction = this.state.shiftKey ? 1.0 : 0.5;
-        if (fraction === 1.0) {
-          // Shift-drag: commit 100% immediately, no upgrade window.
-          const result = this.engine.sendUnits(this.state.sources, targetId, fraction);
-          if (result.ok) this.session.selectedNodeIds.clear();
+        // Drag-cast: a drag whose only source is a Lab with a 'ready'
+        // spell casts on the drop target instead of sending units.
+        // Mirrors send-troops gesture so the player doesn't have to
+        // detour through the right-click menu.
+        const castResult = this.tryDragCast(this.state.sources, targetId);
+        if (castResult === 'cast') {
+          this.session.selectedNodeIds.clear();
         } else {
-          // Plain drag: defer the 50% so a tap on the same target
-          // within DOUBLE_CLICK_MS upgrades the gesture to a single
-          // 100% wave (rather than stacking a second 50% wave).
-          this.scheduleDeferredDragSend([...this.state.sources], targetId);
+          const fraction = this.state.shiftKey ? 1.0 : 0.5;
+          if (fraction === 1.0) {
+            // Shift-drag: commit 100% immediately, no upgrade window.
+            const result = this.engine.sendUnits(this.state.sources, targetId, fraction);
+            if (result.ok) this.session.selectedNodeIds.clear();
+          } else {
+            // Plain drag: defer the 50% so a tap on the same target
+            // within DOUBLE_CLICK_MS upgrades the gesture to a single
+            // 100% wave (rather than stacking a second 50% wave).
+            this.scheduleDeferredDragSend([...this.state.sources], targetId);
+          }
         }
       }
       this.session.drag = null;
@@ -391,6 +400,19 @@ export class InputController {
     }
 
     this.applyClickAction(action);
+  }
+
+  // Returns 'cast' if the drag was treated as a spell cast (single-
+  // source Lab with a ready spell), or 'none' to fall through to the
+  // normal send-units path.
+  private tryDragCast(sources: NodeId[], targetId: NodeId): 'cast' | 'none' {
+    if (sources.length !== 1) return 'none';
+    const source = this.engine.world.nodes.get(sources[0]!);
+    if (!source) return 'none';
+    if (source.nodeType !== 'lab') return 'none';
+    if (!source.spellQueue || source.spellQueue.state !== 'ready') return 'none';
+    this.engine.castSpell(source.id, targetId);
+    return 'cast';
   }
 
   private scheduleDeferredDragSend(sources: NodeId[], target: NodeId): void {

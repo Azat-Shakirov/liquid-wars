@@ -50,8 +50,8 @@ export const tower: NodeTypeDef = {
   producesUnits: false,
   sendSpeedPenalty: 0.6,
   levels: [
-    { level: 1, attackRate: 0.4, attackRange: 200, attackDamage: 1, maxUnits: 30, upgradeCostFromHouse: 10 },
-    { level: 2, attackRate: 0.8, attackRange: 220, attackDamage: 1, maxUnits: 50, upgradeCost: 10 },
+    { level: 1, attackRate: 0.4, attackRange: 200, attackDamage: 1, defenseRate: 2, maxUnits: 30, upgradeCostFromHouse: 10 },
+    { level: 2, attackRate: 0.8, attackRange: 220, attackDamage: 1, defenseRate: 3, maxUnits: 50, upgradeCost: 10 },
   ],
 };
 
@@ -61,8 +61,8 @@ export const lab: NodeTypeDef = {
   producesUnits: false,
   levels: [
     { level: 1, concoctSpeed: 1.0, unlockedSpells: ['freeze'], maxUnits: 60, upgradeCostFromHouse: 10 },
-    { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'poison'], maxUnits: 90, upgradeCost: 20 },
-    { level: 3, concoctSpeed: 1.6, unlockedSpells: ['freeze', 'poison', 'recruit'], maxUnits: 120, upgradeCost: 35 },
+    { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'bleed'], maxUnits: 90, upgradeCost: 20 },
+    { level: 3, concoctSpeed: 1.6, unlockedSpells: ['freeze', 'bleed', 'recruit'], maxUnits: 120, upgradeCost: 35 },
   ],
 };
 
@@ -78,25 +78,25 @@ export const house: NodeTypeDef = {
 export const freezeSpell: SpellDef = {
   id: 'freeze',
   name: 'Freeze',
-  concoctTimeMs: 4000,
+  concoctTimeMs: 15000,
   unitCost: 25,
   minLabLevel: 1,
-  effect: { type: 'freeze', params: { durationMs: 5000 } },
+  effect: { type: 'freeze' },
 };
 
-export const poisonSpell: SpellDef = {
-  id: 'poison',
-  name: 'Poison',
-  concoctTimeMs: 6000,
+export const bleedSpell: SpellDef = {
+  id: 'bleed',
+  name: 'Bleed',
+  concoctTimeMs: 15000,
   unitCost: 35,
   minLabLevel: 2,
-  effect: { type: 'poison', params: { drainPerSecond: 2, durationMs: 8000 } },
+  effect: { type: 'bleed', params: { drainPerSecond: 1 } },
 };
 
 export const recruitSpell: SpellDef = {
   id: 'recruit',
   name: 'Recruit',
-  concoctTimeMs: 9000,
+  concoctTimeMs: 15000,
   unitCost: 50,
   minLabLevel: 3,
   effect: { type: 'recruit' },
@@ -114,7 +114,7 @@ export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLib
   return {
     liquids: { water, blood, ink, ...(overrides.liquids ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
-    spells: { freeze: freezeSpell, poison: poisonSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
+    spells: { freeze: freezeSpell, bleed: bleedSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
     ai: { easy: easyAI, ...(overrides.ai ?? {}) },
     levels: { ...(overrides.levels ?? {}) },
   };

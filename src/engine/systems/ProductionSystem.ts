@@ -18,6 +18,7 @@ export class ProductionSystem {
       if (!node) continue;
       if (node.ownerId === null) continue;        // neutral nodes do not produce
       if (node.isFrozen) continue;                 // frozen nodes paused (§7.2)
+      if (node.poisonStacks.length > 0) continue; // bleeding nodes cannot produce (user spec patch)
       if (node.units >= node.maxUnits) continue;   // capped
 
       const typeDef = this.content.nodeTypes[node.nodeType as NodeTypeId];

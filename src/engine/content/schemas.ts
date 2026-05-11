@@ -25,6 +25,7 @@ export const NodeTypeLevelSchema = z.object({
   attackRate: z.number().nonnegative().optional(),
   attackRange: z.number().nonnegative().optional(),
   attackDamage: z.number().nonnegative().optional(),
+  defenseRate: z.number().nonnegative().optional(),
   concoctSpeed: z.number().nonnegative().optional(),
   unlockedSpells: z.array(z.string()).optional(),
 });
@@ -41,13 +42,12 @@ export const NodeTypeSchema = z.object({
 export const SpellEffectSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('freeze'),
-    params: z.object({ durationMs: z.number().positive() }),
+    params: z.object({}).optional(),
   }),
   z.object({
-    type: z.literal('poison'),
+    type: z.literal('bleed'),
     params: z.object({
       drainPerSecond: z.number().positive(),
-      durationMs: z.number().positive(),
     }),
   }),
   z.object({

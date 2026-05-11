@@ -1,8 +1,8 @@
 {
   "id": "freeze",
   "name": "Freeze",
-  "concoctTimeMs": 4000,
+  "concoctTimeMs": 15000,
   "unitCost": 25,
   "minLabLevel": 1,
-  "effect": { "type": "freeze", "params": { "durationMs": 5000 } }
+  "effect": { "type": "freeze" }
 }

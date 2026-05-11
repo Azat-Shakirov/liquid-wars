@@ -3,8 +3,8 @@
   "shape": "triangle",
   "producesUnits": false,
   "levels": [
-    { "level": 1, "concoctSpeed": 1.0, "unlockedSpells": ["freeze"],                       "maxUnits": 60,  "upgradeCostFromHouse": 10 },
-    { "level": 2, "concoctSpeed": 1.3, "unlockedSpells": ["freeze", "poison"],             "maxUnits": 90,  "upgradeCost": 20 },
-    { "level": 3, "concoctSpeed": 1.6, "unlockedSpells": ["freeze", "poison", "recruit"],  "maxUnits": 120, "upgradeCost": 35 }
+    { "level": 1, "concoctSpeed": 1.0, "unlockedSpells": ["freeze"],                      "maxUnits": 60,  "upgradeCostFromHouse": 10 },
+    { "level": 2, "concoctSpeed": 1.3, "unlockedSpells": ["freeze", "bleed"],             "maxUnits": 90,  "upgradeCost": 20 },
+    { "level": 3, "concoctSpeed": 1.6, "unlockedSpells": ["freeze", "bleed", "recruit"],  "maxUnits": 120, "upgradeCost": 35 }
   ]
 }

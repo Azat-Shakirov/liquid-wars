@@ -76,6 +76,22 @@ export class CombatSystem {
       effectiveCount *= effectValueForLiquid(defenderLiquid, 'incomingDamageMultiplier');
     }
 
+    // Step 1b: Tower per-arrival defense (user spec patch). Towers
+    // shave a flat defenseRate off HOSTILE incoming counts only;
+    // friendly reinforcements are top-ups and pass through. Neutral
+    // towers don't defend.
+    const hostileArrival =
+      target.ownerId !== null && target.ownerId !== ug.ownerId;
+    if (hostileArrival && target.nodeType === 'tower') {
+      const def = this.content.nodeTypes[target.nodeType];
+      const lv = def?.levels.find((l) => l.level === target.level);
+      const defenseRate = lv?.defenseRate ?? 0;
+      if (defenseRate > 0) {
+        effectiveCount = Math.max(0, effectiveCount - defenseRate);
+      }
+    }
+    if (effectiveCount <= 0) return;
+
     // Step 2: friendly arrival — top up.
     if (target.ownerId !== null && target.ownerId === ug.ownerId) {
       target.units = Math.min(target.maxUnits, target.units + effectiveCount);

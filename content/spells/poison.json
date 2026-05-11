@@ -1,8 +1,0 @@
-{
-  "id": "poison",
-  "name": "Poison",
-  "concoctTimeMs": 6000,
-  "unitCost": 35,
-  "minLabLevel": 2,
-  "effect": { "type": "poison", "params": { "drainPerSecond": 2, "durationMs": 8000 } }
-}
