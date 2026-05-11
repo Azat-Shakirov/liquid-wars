@@ -49,8 +49,12 @@ describe('GameEngine.upgradeNode', () => {
 
   it('blocks within-type upgrade at max level', () => {
     const engine = buildEngine();
-    // Push b2 to L3 first (fixture barracks has 3 levels), then try again.
-    engine.upgradeNode('b2');
+    const b2 = engine.world.nodes.get('b2')!;
+    // Park b2 at the max barracks level for the fixture (L5) and
+    // give it plenty of units, then attempt one more upgrade.
+    b2.level = 5;
+    b2.maxUnits = 200;
+    b2.units = 100;
     const result = engine.upgradeNode('b2');
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toMatch(/max level/i);

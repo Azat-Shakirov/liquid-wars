@@ -29,7 +29,7 @@ function ug(over: Partial<UnitGroup>): UnitGroup {
 }
 
 describe('CombatSystem', () => {
-  it('friendly arrival tops up units, capped at maxUnits', () => {
+  it('friendly arrival tops up units; overflow allowed (drains via ProductionSystem)', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'p1', units: 45 },
@@ -40,7 +40,9 @@ describe('CombatSystem', () => {
 
     sys.update(world, TICK_MS);
 
-    expect(world.nodes.get('b')!.units).toBe(50); // capped
+    // Per the user spec patch arrivals no longer clamp to maxUnits;
+    // ProductionSystem drains the excess at 1 unit/sec.
+    expect(world.nodes.get('b')!.units).toBe(55);
     expect(world.unitGroups.length).toBe(0);
   });
 

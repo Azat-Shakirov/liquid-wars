@@ -129,20 +129,11 @@ export class InputController {
     if (e.button !== 0 && e.button !== 2) return;
     const { x, y } = this.localCoords(e);
 
-    // Right-click on an owned node opens the context menu (upgrade /
-    // spell). Click anywhere else dismisses any open menu — and also
-    // cancels spell-targeting mode if it was active.
+    // Right-click is reserved as a safety dismiss for spell-targeting
+    // mode. The right-click context menu was removed in favor of the
+    // hover panel — there's nothing else to open here.
     if (e.button === 2) {
       this.session.targetingFromLabId = null;
-      const nodeId = this.pickNodeAt(x, y);
-      if (nodeId) {
-        const node = this.engine.world.nodes.get(nodeId);
-        if (node && node.ownerId === this.engine.world.humanPlayerId) {
-          this.session.contextMenu = { nodeId, position: { x, y } };
-          return;
-        }
-      }
-      this.session.contextMenu = null;
       return;
     }
 
@@ -155,12 +146,8 @@ export class InputController {
         this.engine.castSpell(this.session.targetingFromLabId, targetId);
       }
       this.session.targetingFromLabId = null;
-      this.session.contextMenu = null;
       return;
     }
-
-    // Any left-click dismisses an open context menu.
-    this.session.contextMenu = null;
 
     const downNodeId = this.pickNodeAt(x, y);
     this.state = {

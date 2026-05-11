@@ -16,6 +16,17 @@ export class ProductionSystem {
     for (const id of world.nodeOrder) {
       const node = world.nodes.get(id);
       if (!node) continue;
+
+      // Over-capacity drain (user spec patch): nodes that exceed
+      // their maxUnits leak 1 unit/sec until they're back at the
+      // cap. Applies to any owner including neutrals — units don't
+      // belong to a player after a cap is breached, they just rot.
+      // Skip production this tick if we drained.
+      if (node.units > node.maxUnits) {
+        node.units = Math.max(node.maxUnits, node.units - 1 * dtSec);
+        continue;
+      }
+
       if (node.ownerId === null) continue;        // neutral nodes do not produce
       if (node.isFrozen) continue;                 // frozen nodes paused (§7.2)
       if (node.poisonStacks.length > 0) continue; // bleeding nodes cannot produce (user spec patch)

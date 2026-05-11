@@ -38,9 +38,11 @@ export const barracks: NodeTypeDef = {
   id: 'barracks',
   shape: 'roundedSquare',
   levels: [
-    { level: 1, productionRate: 0.4, maxUnits: 50, upgradeCostFromHouse: 5 },
-    { level: 2, productionRate: 0.8, maxUnits: 75, upgradeCost: 5 },
+    { level: 1, productionRate: 0.4, maxUnits: 50,  upgradeCostFromHouse: 5 },
+    { level: 2, productionRate: 0.8, maxUnits: 75,  upgradeCost: 5 },
     { level: 3, productionRate: 1.2, maxUnits: 100, upgradeCost: 10 },
+    { level: 4, productionRate: 1.6, maxUnits: 150, upgradeCost: 20 },
+    { level: 5, productionRate: 2.0, maxUnits: 200, upgradeCost: 30 },
   ],
 };
 

@@ -1,12 +1,13 @@
-// NodeInfoPanel — pinned info panel for the currently-hovered node.
-// Lives top-right of the GameView; updates from session.hoveredNodeId.
+// NodeInfoPanel — info card anchored above the currently-hovered
+// node, with all of its actionable controls (upgrade, spell concoct,
+// cancel concoction). Right-click no longer opens a separate menu;
+// hover IS the menu.
 //
-// Stays open while the cursor is over the panel itself so its buttons
-// (upgrade, spell concoct) remain usable. When the cursor leaves the
-// panel and no node is hovered, the panel reverts to whichever node
-// was hovered last and stays visible — clicking empty canvas dismisses.
+// Stays open while the cursor is over the panel itself so its
+// buttons remain usable when the cursor leaves the node to click
+// them. Last-hovered node is "pinned" until a new hover replaces it.
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { GameEngine } from '../engine/GameEngine';
 import type { SessionState } from '../render/SessionState';
 import type { NodeId } from '../types';
@@ -16,17 +17,22 @@ interface Props {
   session: SessionState;
   // Polled value from GameView. May be null when nothing is hovered.
   hoveredNodeId: NodeId | null;
+  // The PIXI canvas element — used to compute screen coords for the
+  // anchor. Allowed to be null briefly during mount/unmount.
+  canvasEl: HTMLCanvasElement | null;
 }
 
 const BASE_UNIT_SPEED_PX_PER_SEC = 120;
+const PANEL_WIDTH = 240;
+const PANEL_OFFSET_PX = 14;
+const VIEWPORT_PAD = 8;
 
-export function NodeInfoPanel({ engine, session, hoveredNodeId }: Props) {
-  const [panelHover, setPanelHover] = useState(false);
+export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Props) {
+  const [, setPanelHover] = useState(false);
   const [pinnedId, setPinnedId] = useState<NodeId | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const [panelHeight, setPanelHeight] = useState(0);
 
-  // When a new node is hovered, lock it in. When hover clears AND the
-  // cursor is not over the panel, keep the previous lock; new hovers
-  // replace it.
   useEffect(() => {
     if (hoveredNodeId !== null) {
       setPinnedId(hoveredNodeId);
@@ -41,7 +47,15 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId }: Props) {
     const id = setInterval(() => force((n) => n + 1), 250);
     return () => clearInterval(id);
   }, []);
-  void panelHover; // referenced via setPanelHover
+
+  // Track panel height so we can flip below the node when the
+  // anchor doesn't have headroom. Recomputed each render via ref.
+  useEffect(() => {
+    if (panelRef.current) {
+      const h = panelRef.current.offsetHeight;
+      if (h !== panelHeight) setPanelHeight(h);
+    }
+  });
 
   if (!pinnedId) return null;
   const node = engine.world.nodes.get(pinnedId);
@@ -67,11 +81,30 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId }: Props) {
   // Spells available to a Lab at its current level.
   const spellsAvailable: string[] = lv?.unlockedSpells ?? [];
 
+  // Anchor the panel above the node in viewport coords. If the node
+  // sits too close to the top to fit the panel, flip below. Clamp
+  // horizontally so it stays on-screen.
+  const rect = canvasEl?.getBoundingClientRect();
+  const nodeScreenX = (rect?.left ?? 0) + node.position.x;
+  const nodeScreenY = (rect?.top ?? 0) + node.position.y;
+  const nodeHalfHeight = 36; // approximate half-size for shape clearance
+  const panelH = panelHeight || 200;
+  const aboveTop = nodeScreenY - nodeHalfHeight - PANEL_OFFSET_PX - panelH;
+  const fitsAbove = aboveTop >= VIEWPORT_PAD;
+  const top = fitsAbove
+    ? aboveTop
+    : nodeScreenY + nodeHalfHeight + PANEL_OFFSET_PX;
+  const rawLeft = nodeScreenX - PANEL_WIDTH / 2;
+  const maxLeft = (rect?.right ?? window.innerWidth) - PANEL_WIDTH - VIEWPORT_PAD;
+  const minLeft = (rect?.left ?? 0) + VIEWPORT_PAD;
+  const left = Math.max(minLeft, Math.min(maxLeft, rawLeft));
+
   return (
     <div
+      ref={panelRef}
       onMouseEnter={() => setPanelHover(true)}
       onMouseLeave={() => setPanelHover(false)}
-      style={panelStyle}
+      style={{ ...panelStyle, top, left }}
     >
       <div style={headerStyle}>
         <span style={{ ...dotStyle, background: ownerColor }} />
@@ -270,9 +303,7 @@ function spellLabel(engine: GameEngine, id: string, state: 'concocting' | 'ready
 
 const panelStyle: React.CSSProperties = {
   position: 'fixed',
-  top: 56,
-  right: 16,
-  width: 240,
+  width: PANEL_WIDTH,
   background: 'rgba(20, 22, 28, 0.96)',
   border: '1px solid rgba(255,255,255,0.15)',
   borderRadius: 6,

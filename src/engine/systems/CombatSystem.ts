@@ -77,9 +77,10 @@ export class CombatSystem {
     }
 
     // Step 1b: Tower per-arrival defense (user spec patch). Towers
-    // shave a flat defenseRate off HOSTILE incoming counts only;
-    // friendly reinforcements are top-ups and pass through. Neutral
-    // towers don't defend.
+    // divide HOSTILE incoming counts by defenseRate (a divisor, like
+    // an Ink-style multiplier — rate 2 means a 20-unit attack hits
+    // for 10). Friendly reinforcements pass through unmodified.
+    // Neutral towers don't defend.
     const hostileArrival =
       target.ownerId !== null && target.ownerId !== ug.ownerId;
     if (hostileArrival && target.nodeType === 'tower') {
@@ -87,14 +88,17 @@ export class CombatSystem {
       const lv = def?.levels.find((l) => l.level === target.level);
       const defenseRate = lv?.defenseRate ?? 0;
       if (defenseRate > 0) {
-        effectiveCount = Math.max(0, effectiveCount - defenseRate);
+        effectiveCount = effectiveCount / defenseRate;
       }
     }
     if (effectiveCount <= 0) return;
 
-    // Step 2: friendly arrival — top up.
+    // Step 2: friendly arrival — top up. Don't clamp to maxUnits;
+    // ProductionSystem drains overflow at 1 unit/sec until the
+    // node is back at the cap (user spec patch). This means
+    // friendly reinforcements never silently vanish on overflow.
     if (target.ownerId !== null && target.ownerId === ug.ownerId) {
-      target.units = Math.min(target.maxUnits, target.units + effectiveCount);
+      target.units = target.units + effectiveCount;
       return;
     }
 
@@ -113,10 +117,11 @@ export class CombatSystem {
       return;
     }
 
-    // Ownership flips.
+    // Ownership flips. Don't clamp the remainder to maxUnits —
+    // ProductionSystem will drain any overflow at 1 unit/sec.
     const remaining = -target.units; // positive remainder
     target.ownerId = ug.ownerId;
-    target.units = Math.min(target.maxUnits, remaining);
+    target.units = remaining;
     target.liquidType = ug.sourceLiquid;
     target.spellQueue = null;
     target.poisonStacks = [];

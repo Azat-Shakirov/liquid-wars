@@ -7,11 +7,10 @@ import { GameEngine } from '../engine/GameEngine';
 import { loadContent } from '../engine/content/ContentLoader';
 import { PixiRenderer } from '../render/PixiRenderer';
 import { InputController } from '../input/InputController';
-import { createSessionState, type ContextMenuRequest, type SessionState } from '../render/SessionState';
+import { createSessionState, type SessionState } from '../render/SessionState';
 import { TICK_MS } from '../types';
 import { UnitBar } from './UnitBar';
 import { PauseMenu } from './PauseMenu';
-import { ContextMenu } from './ContextMenu';
 import { NodeInfoPanel } from './NodeInfoPanel';
 import type { NodeId } from '../types';
 import { useHudStore } from '../store/hudStore';
@@ -30,8 +29,8 @@ export function GameView({ levelId }: GameViewProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [restartCounter, setRestartCounter] = useState(0);
-  const [ctxMenu, setCtxMenu] = useState<ContextMenuRequest | null>(null);
   const [hoveredId, setHoveredId] = useState<NodeId | null>(null);
+  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
   const engineRefForMenu = useRef<GameEngine | null>(null);
   const sessionRef = useRef<SessionState | null>(null);
   const paused = useSessionStore((s) => s.paused);
@@ -114,33 +113,21 @@ export function GameView({ levelId }: GameViewProps) {
       const session = createSessionState();
       sessionRef.current = session;
       engineRefForMenu.current = engine;
+      setCanvasEl(r.app.canvas);
       input = new InputController(r.app.canvas, engine, session);
 
       const pushTotals = (): void => {
         if (!engineRef) return;
         useHudStore.getState().setTotals(computePlayerTotals(engineRef.world));
       };
-      const pollMenu = (): void => {
-        const req = session.contextMenu;
-        setCtxMenu((prev) => {
-          if (prev === req) return prev;
-          if (prev && req && prev.nodeId === req.nodeId &&
-              prev.position.x === req.position.x && prev.position.y === req.position.y) {
-            return prev;
-          }
-          return req;
-        });
-      };
       const pollHover = (): void => {
         const id = session.hoveredNodeId;
         setHoveredId((prev) => (prev === id ? prev : id));
       };
       pushTotals();
-      pollMenu();
       pollHover();
       hudIntervalId = setInterval(() => {
         pushTotals();
-        pollMenu();
         pollHover();
       }, HUD_POLL_MS);
 
@@ -194,7 +181,7 @@ export function GameView({ levelId }: GameViewProps) {
       renderer?.destroy();
       sessionRef.current = null;
       engineRefForMenu.current = null;
-      setCtxMenu(null);
+      setCanvasEl(null);
       setHoveredId(null);
       setPaused(false);
     };
@@ -221,22 +208,12 @@ export function GameView({ levelId }: GameViewProps) {
           }}
         />
       )}
-      {!paused && ctxMenu && engineRefForMenu.current && sessionRef.current && (
-        <ContextMenu
-          engine={engineRefForMenu.current}
-          request={ctxMenu}
-          session={sessionRef.current}
-          onClose={() => {
-            if (sessionRef.current) sessionRef.current.contextMenu = null;
-            setCtxMenu(null);
-          }}
-        />
-      )}
       {!paused && engineRefForMenu.current && sessionRef.current && (
         <NodeInfoPanel
           engine={engineRefForMenu.current}
           session={sessionRef.current}
           hoveredNodeId={hoveredId}
+          canvasEl={canvasEl}
         />
       )}
       {error && (

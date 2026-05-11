@@ -181,14 +181,15 @@ export class GameEngine {
       node.nodeType = targetType;
       node.level = 1;
       node.maxUnits = lv1.maxUnits;
-      node.units = Math.min(node.units, node.maxUnits);
-      // Reset type-specific transient state.
+      // No clamp on conversion — if the new type has a smaller cap,
+      // ProductionSystem drains the overflow at 1 unit/sec.
       node.spellQueue = null;
       node.attackCooldownMs = 0;
       return { ok: true, newType: targetType, newLevel: 1, cost };
     }
 
-    // Within-type level up.
+    // Within-type level up. (maxUnits only goes up across levels of
+    // the same type, so no overflow expected; no clamp needed.)
     const nextLevel = node.level + 1;
     const nextLv = currentTypeDef.levels.find((l) => l.level === nextLevel);
     if (!nextLv) return { ok: false, reason: 'already at max level' };
@@ -199,7 +200,6 @@ export class GameEngine {
     node.units -= cost;
     node.level = nextLevel;
     node.maxUnits = nextLv.maxUnits;
-    node.units = Math.min(node.units, node.maxUnits);
     return { ok: true, newType: node.nodeType, newLevel: nextLevel, cost };
   }
 
