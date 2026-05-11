@@ -5,6 +5,7 @@ import type { LiquidId, NodeId, NodeTypeId, PlayerId, Vec2 } from '../types';
 import type { Node } from './entities/Node';
 import type { UnitGroup } from './entities/UnitGroup';
 import type { ActiveSpellEffect } from './entities/Spell';
+import type { Wall } from './entities/Wall';
 import type {
   ContentLibrary,
   LevelDef,
@@ -12,6 +13,8 @@ import type {
 } from './content/ContentLibrary';
 import { vec2FromTuple } from './content/ContentLibrary';
 import { createRNG, type SeededRNG } from './rng';
+import { buildPathCache, type PathCache } from './PathSystem';
+import { pointNearWall } from './geometry';
 
 export interface Player {
   id: PlayerId;
@@ -34,10 +37,17 @@ export interface World {
   unitGroups: UnitGroup[];
   activeSpellEffects: ActiveSpellEffect[];
   level: LevelDef;
+  // Phase 3 — terrain. Empty in pre-Phase-3 levels.
+  walls: Wall[];
+  // Phase 3 — precomputed paths between every ordered (from, to) node
+  // pair. Built once at level load. Value === null ⇒ unreachable.
+  pathCache: PathCache;
   status: GameStatus;
   elapsedMs: number;
   nextUnitGroupId: number;
 }
+
+const NODE_ON_WALL_TOLERANCE_PX = 12;
 
 function nodeTypeLevelStats(
   def: NodeTypeDef,
@@ -67,6 +77,11 @@ export function buildWorldFromLevel(
 
   const human = players.find((p) => p.type === 'human') ?? null;
 
+  const walls: Wall[] = level.terrain.walls.map((w) => ({
+    id: w.id,
+    points: w.points.map((p) => vec2FromTuple(p)),
+  }));
+
   const nodes = new Map<NodeId, Node>();
   const nodeOrder: NodeId[] = [];
 
@@ -78,6 +93,11 @@ export function buildWorldFromLevel(
     }
     const stats = nodeTypeLevelStats(typeDef, ndef.level);
     const pos: Vec2 = vec2FromTuple(ndef.position);
+    if (walls.length > 0 && pointNearWall(pos, walls, NODE_ON_WALL_TOLERANCE_PX)) {
+      throw new Error(
+        `Level ${level.id} node '${ndef.id}' at (${pos.x},${pos.y}) overlaps a wall.`,
+      );
+    }
     const node: Node = {
       id: ndef.id,
       position: pos,
@@ -99,6 +119,8 @@ export function buildWorldFromLevel(
     nodeOrder.push(node.id);
   }
 
+  const pathCache = buildPathCache(nodeOrder, nodes, walls);
+
   return {
     tick: 0,
     rng: createRNG(seed),
@@ -109,6 +131,8 @@ export function buildWorldFromLevel(
     unitGroups: [],
     activeSpellEffects: [],
     level,
+    walls,
+    pathCache,
     status: 'playing',
     elapsedMs: 0,
     nextUnitGroupId: 1,

@@ -20,6 +20,7 @@ import type { Node } from '../entities/Node';
 import type { UnitGroup } from '../entities/UnitGroup';
 import type { ContentLibrary } from '../content/ContentLibrary';
 import type { NodeTypeId } from '../../types';
+import { segmentBlockedByWalls } from '../geometry';
 
 export interface TowerShot {
   fromNodeId: string;
@@ -116,6 +117,11 @@ export class TowerInterceptSystem {
       const dy = ug.position.y - tower.position.y;
       const d2 = dx * dx + dy * dy;
       if (d2 > r2) continue;
+      // Phase 3 LOS — walls block beams. Per-tick segment test; small N
+      // makes caching unnecessary (see SPEC §11.5).
+      if (world.walls.length > 0 && segmentBlockedByWalls(tower.position, ug.position, world.walls)) {
+        continue;
+      }
       if (d2 < bestD2 || (d2 === bestD2 && best !== null && ug.id < best.id)) {
         best = ug;
         bestD2 = d2;

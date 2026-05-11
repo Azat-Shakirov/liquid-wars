@@ -3,18 +3,20 @@
 //
 // Layered stage (§10.1):
 //   1. Background          — dark canvas (Phase 1)
-//   2. Connection hints    — drag/hover line from selected source(s) to target
-//   3. Nodes               — NodeView containers
-//   4. Tower attack range  — Phase 2
-//   5. Unit groups         — UnitGroupView containers
-//   6. Spell effects       — Phase 2
-//   7. Selection box       — dashed rectangle while box-selecting
-//   8. HUD overlay         — tick counter / status string
+//   2. Walls               — static terrain polylines (Phase 3)
+//   3. Connection hints    — drag/hover line from selected source(s) to target
+//   4. Nodes               — NodeView containers
+//   5. Tower attack range  — Phase 2
+//   6. Unit groups         — UnitGroupView containers
+//   7. Spell effects       — Phase 2
+//   8. Selection box       — dashed rectangle while box-selecting
+//   9. HUD overlay         — tick counter / status string
 
 import { Application, Container, Graphics, Text } from 'pixi.js';
 import type { World } from '../engine/World';
 import type { ContentLibrary } from '../engine/content/ContentLibrary';
 import type { TowerShot } from '../engine/systems/TowerInterceptSystem';
+import { pathCacheKey } from '../engine/PathSystem';
 import { NodeView } from './views/NodeView';
 import { UnitGroupView } from './views/UnitGroupView';
 import { SelectionBoxView } from './views/SelectionBoxView';
@@ -46,6 +48,7 @@ export class PixiRenderer {
   private readonly content: ContentLibrary;
 
   private readonly bgLayer: Container;
+  private readonly wallsLayer: Container;
   private readonly rangeLayer: Container;
   private readonly hintLayer: Container;
   private readonly nodeLayer: Container;
@@ -58,9 +61,13 @@ export class PixiRenderer {
   private readonly rippleGraphics: Graphics;
   private readonly rangeGraphics: Graphics;
   private readonly beamGraphics: Graphics;
+  private readonly wallsGraphics: Graphics;
   private readonly selectionBoxView: SelectionBoxView;
   private readonly hudText: Text;
   private readonly statusText: Text;
+
+  // Walls are static per level — redraw only when the level id changes.
+  private lastWallsLevelId: number | null = null;
 
   private readonly nodeViews = new Map<string, NodeView>();
   private readonly unitViews = new Map<string, UnitGroupView>();
@@ -76,6 +83,7 @@ export class PixiRenderer {
     this.content = content;
 
     this.bgLayer = new Container();
+    this.wallsLayer = new Container();
     this.rangeLayer = new Container();
     this.hintLayer = new Container();
     this.nodeLayer = new Container();
@@ -85,6 +93,7 @@ export class PixiRenderer {
     this.hudLayer = new Container();
 
     this.app.stage.addChild(this.bgLayer);
+    this.app.stage.addChild(this.wallsLayer);
     this.app.stage.addChild(this.rangeLayer);
     this.app.stage.addChild(this.hintLayer);
     this.app.stage.addChild(this.nodeLayer);
@@ -92,6 +101,9 @@ export class PixiRenderer {
     this.app.stage.addChild(this.beamLayer);
     this.app.stage.addChild(this.boxLayer);
     this.app.stage.addChild(this.hudLayer);
+
+    this.wallsGraphics = new Graphics();
+    this.wallsLayer.addChild(this.wallsGraphics);
 
     this.hintGraphics = new Graphics();
     this.hintLayer.addChild(this.hintGraphics);
@@ -153,6 +165,7 @@ export class PixiRenderer {
     nowMs: number,
     recentTowerShots: ReadonlyArray<TowerShot> = [],
   ): void {
+    this.syncWalls(world);
     this.syncNodes(world, session, nowMs, alpha);
     this.syncUnitGroups(world, alpha);
     this.drawHints(world, session);
@@ -162,6 +175,54 @@ export class PixiRenderer {
     this.selectionBoxView.update(session.boxSelect);
     this.drawRipples(nowMs);
     this.updateHud(world);
+  }
+
+  // Walls are static per level — only redraw when the level changes.
+  private syncWalls(world: World): void {
+    if (this.lastWallsLevelId === world.level.id) return;
+    this.lastWallsLevelId = world.level.id;
+    this.wallsGraphics.clear();
+    for (const wall of world.walls) {
+      if (wall.points.length < 2) continue;
+      // Soft drop shadow under the wall — adds presence on the dark bg.
+      this.wallsGraphics.moveTo(wall.points[0]!.x, wall.points[0]!.y + 2);
+      for (let i = 1; i < wall.points.length; i++) {
+        this.wallsGraphics.lineTo(wall.points[i]!.x, wall.points[i]!.y + 2);
+      }
+      this.wallsGraphics.stroke({ color: 0x000000, width: 9, alpha: 0.45, cap: 'round', join: 'round' });
+
+      // Main wall body — stone grey.
+      this.wallsGraphics.moveTo(wall.points[0]!.x, wall.points[0]!.y);
+      for (let i = 1; i < wall.points.length; i++) {
+        this.wallsGraphics.lineTo(wall.points[i]!.x, wall.points[i]!.y);
+      }
+      this.wallsGraphics.stroke({ color: 0x4a4a4a, width: 7, alpha: 1.0, cap: 'round', join: 'round' });
+
+      // Highlight pass — thin lighter centerline for a beveled look.
+      this.wallsGraphics.moveTo(wall.points[0]!.x, wall.points[0]!.y);
+      for (let i = 1; i < wall.points.length; i++) {
+        this.wallsGraphics.lineTo(wall.points[i]!.x, wall.points[i]!.y);
+      }
+      this.wallsGraphics.stroke({ color: 0x6a6a6a, width: 2, alpha: 0.9, cap: 'round', join: 'round' });
+    }
+  }
+
+  // Polyline path between two nodes — cached one if present, else direct
+  // [from, to]. Returns null if the pair is explicitly unreachable.
+  private polylineForPair(
+    world: World,
+    fromId: string,
+    toId: string,
+  ): { x: number; y: number }[] | null {
+    const cached = world.pathCache.get(pathCacheKey(fromId, toId));
+    if (cached === null) return null;
+    if (cached === undefined) {
+      const a = world.nodes.get(fromId);
+      const b = world.nodes.get(toId);
+      if (!a || !b) return null;
+      return [{ ...a.position }, { ...b.position }];
+    }
+    return cached.map((p) => ({ x: p.x, y: p.y }));
   }
 
   private drawTowerRanges(world: World, session: SessionState): void {
@@ -303,14 +364,28 @@ export class PixiRenderer {
           ? world.players.find((p) => p.id === from.ownerId)
           : undefined;
         const color = owner ? colorFromHex(owner.color) : 0xffffff;
-        this.hintGraphics
-          .moveTo(from.position.x, from.position.y)
-          .lineTo(tipX, tipY)
-          .stroke({ color, width: 1.5, alpha: targetNode ? 0.85 : 0.45 });
+        // When dragging over an actual target, preview the cached path
+        // polyline. While the cursor is mid-air, fall back to a straight
+        // rubber-band to the cursor.
         if (targetNode) {
+          const poly = this.polylineForPair(world, fromId, targetNode.id);
+          if (poly === null) {
+            // Unreachable — draw a faint X across the link to make it visible.
+            this.hintGraphics
+              .moveTo(from.position.x, from.position.y)
+              .lineTo(tipX, tipY)
+              .stroke({ color: 0xff5050, width: 1.5, alpha: 0.45 });
+          } else {
+            this.strokePolyline(poly, color, 1.5, 0.85);
+          }
           this.hintGraphics
             .circle(targetNode.position.x, targetNode.position.y, 22)
             .stroke({ color, width: 2, alpha: 0.9 });
+        } else {
+          this.hintGraphics
+            .moveTo(from.position.x, from.position.y)
+            .lineTo(tipX, tipY)
+            .stroke({ color, width: 1.5, alpha: 0.45 });
         }
       }
       return;
@@ -332,10 +407,15 @@ export class PixiRenderer {
             ? world.players.find((p) => p.id === source.ownerId)
             : undefined;
           const color = owner ? colorFromHex(owner.color) : 0xffffff;
-          this.hintGraphics
-            .moveTo(source.position.x, source.position.y)
-            .lineTo(hovered.position.x, hovered.position.y)
-            .stroke({ color, width: 1.5, alpha: 0.45 });
+          const poly = this.polylineForPair(world, sid, hovered.id);
+          if (poly === null) {
+            this.hintGraphics
+              .moveTo(source.position.x, source.position.y)
+              .lineTo(hovered.position.x, hovered.position.y)
+              .stroke({ color: 0xff5050, width: 1.5, alpha: 0.35 });
+          } else {
+            this.strokePolyline(poly, color, 1.5, 0.45);
+          }
         }
         this.hintGraphics
           .circle(hovered.position.x, hovered.position.y, 22)
@@ -352,6 +432,20 @@ export class PixiRenderer {
           .stroke({ color: 0xffffff, width: 1, alpha: 0.18 });
       }
     }
+  }
+
+  private strokePolyline(
+    poly: { x: number; y: number }[],
+    color: number,
+    width: number,
+    alpha: number,
+  ): void {
+    if (poly.length < 2) return;
+    this.hintGraphics.moveTo(poly[0]!.x, poly[0]!.y);
+    for (let i = 1; i < poly.length; i++) {
+      this.hintGraphics.lineTo(poly[i]!.x, poly[i]!.y);
+    }
+    this.hintGraphics.stroke({ color, width, alpha, cap: 'round', join: 'round' });
   }
 
   private drawRipples(nowMs: number): void {

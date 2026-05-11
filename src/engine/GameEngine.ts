@@ -7,6 +7,7 @@ import { effectValueForLiquid } from './effects/EffectRegistry';
 import { registerCoreEffects } from './effects/registerCoreEffects';
 import { buildWorldFromLevel, type World } from './World';
 import { pathTotalDistance, vec2Distance } from './path';
+import { pathCacheKey } from './PathSystem';
 import { ProductionSystem } from './systems/ProductionSystem';
 import { SpellConcoctionSystem } from './systems/SpellConcoctionSystem';
 import { MovementSystem } from './systems/MovementSystem';
@@ -111,10 +112,12 @@ export class GameEngine {
       const sendCount = Math.floor(source.units * f);
       if (sendCount <= 0) continue;
 
-      const path = [
+      const cached = this.world.pathCache.get(pathCacheKey(source.id, target.id));
+      if (cached === null) continue; // unreachable — silently drop
+      const path = (cached ?? [
         { ...source.position },
         { ...target.position },
-      ];
+      ]).map((p) => ({ x: p.x, y: p.y }));
       const totalDistance = pathTotalDistance(path);
       if (totalDistance === 0) continue;
 
@@ -317,6 +320,22 @@ export class GameEngine {
       speed *= effectValueForLiquid(liquid, 'travelSpeedMultiplier');
     }
     return speed;
+  }
+
+  // Phase 3 — returns the cached path polyline from one node to another,
+  // or null if the pair is unreachable (target fully walled off).
+  // Used by the renderer for hover-preview lines.
+  getPath(fromId: NodeId, toId: NodeId): { x: number; y: number }[] | null {
+    if (fromId === toId) return null;
+    const cached = this.world.pathCache.get(pathCacheKey(fromId, toId));
+    if (cached === undefined) {
+      const a = this.world.nodes.get(fromId);
+      const b = this.world.nodes.get(toId);
+      if (!a || !b) return null;
+      return [{ ...a.position }, { ...b.position }];
+    }
+    if (cached === null) return null;
+    return cached.map((p) => ({ x: p.x, y: p.y }));
   }
 
   // Helper for hit-testing in input layer — returns nearest node to a point
