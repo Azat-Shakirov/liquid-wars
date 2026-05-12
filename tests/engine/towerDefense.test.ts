@@ -85,19 +85,20 @@ describe('Tower defenseRate (divisor)', () => {
     expect(tower.units).toBeCloseTo(6, 5);
   });
 
-  it('neutral tower does NOT divide (no owner = no defenders)', () => {
+  it('neutral tower divides incoming counts (v2.6.2 — neutrals are a faction)', () => {
     const level = makeLevel([
-      { id: 't1', position: [400, 300], ownerId: null,  units: 0, type: 'tower',    level: 1 },
-      { id: 's1', position: [402, 300], ownerId: 'ai1', units: 8, type: 'barracks', level: 1 },
-      { id: 's2', position: [800, 300], ownerId: 'p1',  units: 5, type: 'barracks', level: 1 },
+      { id: 't1', position: [400, 300], ownerId: null,  units: 0,  type: 'tower',    level: 1 },
+      { id: 's1', position: [402, 300], ownerId: 'ai1', units: 20, type: 'barracks', level: 5 },
+      { id: 's2', position: [800, 300], ownerId: 'p1',  units: 5,  type: 'barracks', level: 1 },
     ]);
     const engine = new GameEngine(level, content);
     const tower = engine.world.nodes.get('t1')!;
+    tower.attackCooldownMs = 99999; // suppress in-flight interception
     engine.sendUnits(['s1'], 't1', 1.0);
     for (let i = 0; i < 30; i++) engine.tick();
-    // 8 incoming with no division (neutral) → captured by ai1 with 8 units.
+    // L1 defenseRate 2: 20 / 2 = 10 effective; neutral tower flips to ai1 with 10 units.
     expect(tower.ownerId).toBe('ai1');
-    expect(tower.units).toBeCloseTo(8, 0);
+    expect(Math.round(tower.units)).toBe(10);
   });
 
   it('small attack still gets divided (no flip if defender holds)', () => {

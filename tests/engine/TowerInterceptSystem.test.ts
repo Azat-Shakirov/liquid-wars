@@ -126,6 +126,30 @@ describe('TowerInterceptSystem', () => {
     }
   });
 
+  it('neutral towers attack everyone (v2.6.2 — neutrals are a faction)', () => {
+    const level = makeLevel([
+      // p1 placeholder so the engine doesn't enter 'lost' status before
+      // the tower has a chance to fire.
+      { id: 'p0', position: [50, 50],   ownerId: 'p1',  units: 5,  type: 'barracks', level: 1 },
+      { id: 't1', position: [400, 300], ownerId: null,  units: 0,  type: 'tower',    level: 1 },
+      { id: 's1', position: [800, 300], ownerId: 'ai1', units: 50, type: 'barracks', level: 1 },
+      { id: 'd1', position: [200, 300], ownerId: 'ai1', units: 50, type: 'barracks', level: 1 },
+    ]);
+    const engine = new GameEngine(level, content);
+    engine.sendUnits(['s1'], 'd1', 1.0);
+    const ug = engine.world.unitGroups[0]!;
+    const startCount = ug.count;
+
+    let fired = false;
+    for (let i = 0; i < 600 && !fired; i++) {
+      engine.tick();
+      if (engine.world.unitGroups.length === 0) break;
+      const live = engine.world.unitGroups[0];
+      if (live && live.count < startCount) fired = true;
+    }
+    expect(fired).toBe(true);
+  });
+
   it('does not affect a level with no towers', () => {
     const level = makeLevel([
       { id: 'b1', position: [200, 200], ownerId: 'p1', units: 25 },

@@ -66,15 +66,20 @@ export class CombatSystem {
   private resolveArrival(ug: UnitGroup, target: Node): void {
     const sourceLiquid = this.content.liquids[ug.sourceLiquid as LiquidId];
 
-    const hostileArrival =
-      target.ownerId !== null && target.ownerId !== ug.ownerId;
+    // True when this arrival is anything other than a friendly
+    // reinforcement — i.e. attacking an enemy OR capturing a neutral.
+    // Neutrals are treated as a faction (v2.6.2): their liquid defends
+    // on arrival and their towers apply defenseRate. The original name
+    // `hostileArrival` was preserved for diff readability.
+    const hostileArrival = target.ownerId !== ug.ownerId;
 
     let effectiveCount = ug.count;
 
     // Step 1: incoming damage modifier from defender's current liquid
-    // (§5.3). HOSTILE only — friendly reinforcements aren't "damage"
-    // and must pass through the defender's defensive liquid unchanged
-    // (otherwise capturing an Ink node would halve your own resupplies).
+    // (§5.3). Capture / attack arrivals only — friendly reinforcements
+    // aren't "damage" and must pass through the defender's defensive
+    // liquid unchanged (otherwise capturing an Ink node would halve
+    // your own resupplies).
     if (hostileArrival) {
       const defenderLiquid = this.content.liquids[target.liquidType as LiquidId];
       if (defenderLiquid) {
@@ -82,11 +87,11 @@ export class CombatSystem {
       }
     }
 
-    // Step 1b: Tower per-arrival defense (user spec patch). Towers
-    // divide HOSTILE incoming counts by defenseRate (a divisor, like
-    // an Ink-style multiplier — rate 2 means a 20-unit attack hits
-    // for 10). Friendly reinforcements pass through unmodified.
-    // Neutral towers don't defend.
+    // Step 1b: Tower per-arrival defense. Towers divide capture/attack
+    // incoming counts by defenseRate (a divisor — rate 2 means a 20-unit
+    // attack hits for 10). Friendly reinforcements pass through
+    // unmodified. Neutral towers defend (v2.6.2) — they're a faction
+    // without send/produce/concoct, not a passive flag.
     if (hostileArrival && target.nodeType === 'tower') {
       const def = this.content.nodeTypes[target.nodeType];
       const lv = def?.levels.find((l) => l.level === target.level);

@@ -58,7 +58,10 @@ export class TowerInterceptSystem {
         // Towers are the only attackers. Other types ignore cooldown.
         continue;
       }
-      if (tower.ownerId === null) continue;
+      // Neutral towers attack everyone (v2.6.2). The friendly check in
+      // pickTarget filters by `ownerId === tower.ownerId`; since no
+      // UnitGroup has ownerId === null, every group is "non-friendly"
+      // to a neutral tower and is fair game.
       if (tower.isFrozen) continue;
 
       const stats = this.statsForTower(tower.nodeType, tower.level);
