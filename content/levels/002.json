@@ -4,9 +4,9 @@
   "tutorialKey": "reinforce",
   "tutorial": {
     "title": "Reinforce your own nodes",
-    "body": "Dragging to one of YOUR OWN nodes pours units into it. Useful for stacking before a big push, or topping up a node about to be overrun.\n\nYou have two bases. The enemy has one stronger base. Consolidate your forces before you attack."
+    "body": "Dragging to one of YOUR OWN nodes pours units into it. Useful for stacking before a big push.\n\nYou have two bases. The enemy has one stronger base. Consolidate before you attack."
   },
-  "objective": "Capture the red base by consolidating your two starting nodes.",
+  "objective": "Consolidate your forces, then capture the red base.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {

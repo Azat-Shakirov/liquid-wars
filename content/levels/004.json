@@ -1,12 +1,12 @@
 {
   "id": 4,
-  "name": "Build Up",
-  "tutorialKey": "house",
+  "name": "First House",
+  "tutorialKey": "house_intro",
   "tutorial": {
-    "title": "Houses convert into specialists",
-    "body": "Hover any node to open its info panel. The panel's bottom section lists upgrade options.\n\nHouses produce slowly but can convert into a Barracks, Lab, or Tower at the cost of units stored in them. You start with two Houses \u2014 convert at least one into a Barracks to keep pace with the enemy."
+    "title": "Houses can become anything",
+    "body": "A House produces slowly (0.2 u/sec) and caps at 20. Hover it and use the Upgrade buttons to convert it into a Barracks, Lab, or Tower.\n\nConvert your House to a Barracks. Now you out-produce the enemy."
   },
-  "objective": "Convert your Houses into Barracks (or Towers) and capture the red base.",
+  "objective": "Convert your House and capture the red base.",
   "introducesNodeTypes": [
     "house"
   ],
@@ -36,7 +36,7 @@
   ],
   "nodes": [
     {
-      "id": "p1_b",
+      "id": "p1_base",
       "position": [
         220,
         360
@@ -45,25 +45,13 @@
       "nodeType": "barracks",
       "level": 1,
       "liquidType": "water",
-      "units": 8
+      "units": 10
     },
     {
-      "id": "p1_h_top",
+      "id": "p1_h",
       "position": [
-        420,
-        220
-      ],
-      "ownerId": "p1",
-      "nodeType": "house",
-      "level": 1,
-      "liquidType": "water",
-      "units": 18
-    },
-    {
-      "id": "p1_h_bot",
-      "position": [
-        420,
-        500
+        440,
+        360
       ],
       "ownerId": "p1",
       "nodeType": "house",
@@ -74,7 +62,7 @@
     {
       "id": "neutral",
       "position": [
-        640,
+        700,
         360
       ],
       "ownerId": null,
@@ -84,40 +72,16 @@
       "units": 6
     },
     {
-      "id": "ai1_b1",
-      "position": [
-        900,
-        220
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 8
-    },
-    {
-      "id": "ai1_b2",
-      "position": [
-        900,
-        500
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 8
-    },
-    {
       "id": "ai1_base",
       "position": [
-        1100,
+        1080,
         360
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 12
     }
   ],
   "winCondition": {
@@ -125,14 +89,14 @@
   },
   "starThresholds": {
     "time": [
-      360000,
+      300000,
       240000,
       180000
     ],
     "units": [
-      120,
-      80,
-      50
+      100,
+      70,
+      40
     ]
   }
 }

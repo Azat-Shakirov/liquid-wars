@@ -1,12 +1,12 @@
 {
   "id": 7,
-  "name": "Narrow Path",
-  "tutorialKey": "walls",
+  "name": "Tier 3",
+  "tutorialKey": "upgrade_practice",
   "tutorial": {
-    "title": "Walls block movement",
-    "body": "Stone walls cut across the map. Units cannot pass through them \u2014 they route around automatically.\n\nHover-preview lines now follow the actual routed path. If a target is fully walled off, the preview turns faint red and the send drops silently.\n\nFind the gap and push through."
+    "title": "Push to tier 3",
+    "body": "Reaching L3 barracks gives you 1.2 u/sec production vs L1's 0.4 u/sec \u2014 three times the output.\n\nThe enemy already has L2 forces. To win, you'll need to climb to L3 on at least one node."
   },
-  "objective": "Route through the gap and capture the red base.",
+  "objective": "Reach L3 production and crush the red side.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -15,34 +15,7 @@
     "background": "stone"
   },
   "terrain": {
-    "walls": [
-      {
-        "id": "w_top",
-        "points": [
-          [
-            640,
-            0
-          ],
-          [
-            640,
-            240
-          ]
-        ]
-      },
-      {
-        "id": "w_bottom",
-        "points": [
-          [
-            640,
-            480
-          ],
-          [
-            640,
-            720
-          ]
-        ]
-      }
-    ]
+    "walls": []
   },
   "players": [
     {
@@ -61,33 +34,45 @@
   ],
   "nodes": [
     {
-      "id": "p1_top",
+      "id": "p1_main",
       "position": [
         240,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 12
+    },
+    {
+      "id": "p1_top",
+      "position": [
+        440,
         220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 8
     },
     {
       "id": "p1_bot",
       "position": [
-        240,
+        440,
         500
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 8
     },
     {
       "id": "ai1_top",
       "position": [
-        1040,
+        840,
         220
       ],
       "ownerId": "ai1",
@@ -99,7 +84,7 @@
     {
       "id": "ai1_bot",
       "position": [
-        1040,
+        840,
         500
       ],
       "ownerId": "ai1",
@@ -111,14 +96,14 @@
     {
       "id": "ai1_base",
       "position": [
-        1180,
+        1100,
         360
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 16
     }
   ],
   "winCondition": {
@@ -126,14 +111,14 @@
   },
   "starThresholds": {
     "time": [
-      360000,
+      420000,
       300000,
       240000
     ],
     "units": [
-      150,
-      100,
-      60
+      160,
+      110,
+      70
     ]
   }
 }

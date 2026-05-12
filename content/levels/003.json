@@ -4,9 +4,9 @@
   "tutorialKey": "multiselect",
   "tutorial": {
     "title": "Multi-select and coordinated attacks",
-    "body": "Drag on empty space to draw a selection box. Every node you cover is selected.\n\nClick a target with 2+ nodes selected to send 50% from each at once. Double-click for 100%. Coordinated attacks crack open defended positions.\n\nYou are outnumbered. Combine your forces."
+    "body": "Drag on empty space to draw a selection box. Every node you cover is selected.\n\nClick a target with 2+ nodes selected to send 50% from each at once. Double-click for 100%.\n\nYou are outnumbered. Combine your forces."
   },
-  "objective": "Box-select your bases, then strike together. Capture all red nodes.",
+  "objective": "Box-select your bases, then strike together.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
