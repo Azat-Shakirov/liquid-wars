@@ -66,14 +66,20 @@ export class CombatSystem {
   private resolveArrival(ug: UnitGroup, target: Node): void {
     const sourceLiquid = this.content.liquids[ug.sourceLiquid as LiquidId];
 
-    // Step 1: incoming damage modifier from defender's current liquid (§5.3).
+    const hostileArrival =
+      target.ownerId !== null && target.ownerId !== ug.ownerId;
+
     let effectiveCount = ug.count;
-    const defenderLiquid =
-      target.ownerId !== null
-        ? this.content.liquids[target.liquidType as LiquidId]
-        : undefined;
-    if (defenderLiquid) {
-      effectiveCount *= effectValueForLiquid(defenderLiquid, 'incomingDamageMultiplier');
+
+    // Step 1: incoming damage modifier from defender's current liquid
+    // (§5.3). HOSTILE only — friendly reinforcements aren't "damage"
+    // and must pass through the defender's defensive liquid unchanged
+    // (otherwise capturing an Ink node would halve your own resupplies).
+    if (hostileArrival) {
+      const defenderLiquid = this.content.liquids[target.liquidType as LiquidId];
+      if (defenderLiquid) {
+        effectiveCount *= effectValueForLiquid(defenderLiquid, 'incomingDamageMultiplier');
+      }
     }
 
     // Step 1b: Tower per-arrival defense (user spec patch). Towers
@@ -81,8 +87,6 @@ export class CombatSystem {
     // an Ink-style multiplier — rate 2 means a 20-unit attack hits
     // for 10). Friendly reinforcements pass through unmodified.
     // Neutral towers don't defend.
-    const hostileArrival =
-      target.ownerId !== null && target.ownerId !== ug.ownerId;
     if (hostileArrival && target.nodeType === 'tower') {
       const def = this.content.nodeTypes[target.nodeType];
       const lv = def?.levels.find((l) => l.level === target.level);

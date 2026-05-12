@@ -109,6 +109,26 @@ describe('CombatSystem', () => {
     expect(node.units).toBeCloseTo(1.4286, 3);
   });
 
+  it('ink incomingDamageMultiplier does NOT apply to friendly arrivals', () => {
+    // Regression: pre-fix, ink (0.5) was applied to every arrival
+    // before the friendly/hostile split, so capturing an ink node
+    // halved your own reinforcements. Friendly arrivals must pass
+    // through the defender's liquid unmodified — "incomingDamage" is
+    // an enemy-side concept.
+    const content = makeContent();
+    const level = makeLevel([
+      { id: 'b', position: [100, 0], ownerId: 'p1', liquid: 'ink', units: 10 },
+    ]);
+    const world = buildWorldFromLevel(level, content);
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));
+    const sys = new CombatSystem(content);
+
+    sys.update(world, TICK_MS);
+
+    // 10 + 12 = 22 (full friendly count, NOT 10 + 6).
+    expect(world.nodes.get('b')!.units).toBe(22);
+  });
+
   it('ink incomingDamageMultiplier 0.5 halves attacker effectiveness', () => {
     const content = makeContent();
     const level = makeLevel([
