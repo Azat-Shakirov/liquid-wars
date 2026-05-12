@@ -4,7 +4,7 @@
 import { create } from 'zustand';
 import type { LiquidId } from '../types';
 
-export type Route = 'menu' | 'levelSelect' | 'settings' | 'credits' | 'game' | 'quit';
+export type Route = 'menu' | 'levelSelect' | 'settings' | 'credits' | 'game' | 'quit' | 'editor';
 
 interface SessionStore {
   route: Route;

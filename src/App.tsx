@@ -9,6 +9,9 @@ import { Settings } from './ui/Settings';
 import { Credits } from './ui/Credits';
 import { QuitScreen } from './ui/QuitScreen';
 import { GameView } from './ui/GameView';
+import { EditorView } from './ui/editor/EditorView';
+
+const DEV = import.meta.env.DEV;
 
 export default function App() {
   const route = useSessionStore((s) => s.route);
@@ -28,5 +31,8 @@ export default function App() {
     case 'game':
       if (selectedLevelId === null) return <MainMenu />;
       return <GameView levelId={selectedLevelId} />;
+    case 'editor':
+      if (!DEV) return <MainMenu />;
+      return <EditorView />;
   }
 }
