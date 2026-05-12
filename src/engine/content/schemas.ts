@@ -106,10 +106,21 @@ export const WallSchema = z.object({
   points: z.array(Vec2TupleSchema).min(2),
 });
 
+export const TutorialSchema = z.object({
+  title: z.string().min(1),
+  body: z.string().min(1),
+});
+
 export const LevelSchema = z.object({
   id: z.number().int().nonnegative(),
   name: z.string().min(1),
   tutorialKey: z.string().nullable(),
+  // Optional one-shot modal shown when the level loads. Engine pauses
+  // until dismissed. Phase 5 introduction-of-mechanics levels set this.
+  tutorial: TutorialSchema.nullable().optional(),
+  // Optional persistent banner shown across the top of the game view.
+  // Plain string — purely cosmetic, no engine semantics.
+  objective: z.string().nullable().optional(),
   introducesNodeTypes: z.array(z.string()),
   introducesLiquids: z.array(z.string()),
   map: z.object({

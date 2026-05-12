@@ -98,10 +98,19 @@ export interface LevelNodeDef {
   units: number;
 }
 
+export interface TutorialDef {
+  title: string;
+  body: string;
+}
+
 export interface LevelDef {
   id: number;
   name: string;
   tutorialKey: string | null;
+  // Phase 5: one-shot modal at level start (engine paused until dismissed).
+  tutorial?: TutorialDef | null;
+  // Phase 5: persistent objective banner across the top of the game view.
+  objective?: string | null;
   introducesNodeTypes: string[];
   introducesLiquids: string[];
   map: { width: number; height: number; background: string };

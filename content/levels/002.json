@@ -1,25 +1,29 @@
 {
   "id": 2,
-  "name": "Three Way",
-  "tutorialKey": null,
+  "name": "Reinforce",
+  "tutorialKey": "reinforce",
+  "tutorial": {
+    "title": "Reinforce your own nodes",
+    "body": "Dragging to one of YOUR OWN nodes pours units into it. Useful for stacking before a big push, or topping up a node about to be overrun.\n\nYou have two bases. The enemy has one stronger base. Consolidate your forces before you attack."
+  },
+  "objective": "Capture the red base by consolidating your two starting nodes.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": { "width": 1280, "height": 720, "background": "stone" },
   "terrain": { "walls": [] },
   "players": [
-    { "id": "p1", "type": "human", "color": "#3da9fc" },
-    { "id": "ai1", "type": "ai", "color": "#e63946", "aiConfigId": "easy" }
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
   ],
   "nodes": [
-    { "id": "n1", "position": [200, 540], "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 20 },
-    { "id": "n2", "position": [420, 220], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
-    { "id": "n3", "position": [640, 540], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
-    { "id": "n4", "position": [860, 220], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
-    { "id": "n5", "position": [1080, 540],"ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 20 }
+    { "id": "p1_front",  "position": [320, 220],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
+    { "id": "p1_rear",   "position": [320, 540],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
+    { "id": "neutral",   "position": [640, 360],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
+    { "id": "ai1_base",  "position": [1000, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 }
   ],
   "winCondition": { "type": "controlAll" },
   "starThresholds": {
-    "time": [180000, 120000, 90000],
-    "units": [80, 50, 30]
+    "time": [240000, 180000, 120000],
+    "units": [70, 50, 30]
   }
 }

@@ -12,6 +12,9 @@ import { TICK_MS } from '../types';
 import { UnitBar } from './UnitBar';
 import { PauseMenu } from './PauseMenu';
 import { NodeInfoPanel } from './NodeInfoPanel';
+import { TutorialOverlay } from './TutorialOverlay';
+import { ObjectiveBanner } from './ObjectiveBanner';
+import type { TutorialDef } from '../engine/content/ContentLibrary';
 import type { LiquidId, NodeId } from '../types';
 import type { LevelDef } from '../engine/content/ContentLibrary';
 import { useHudStore } from '../store/hudStore';
@@ -32,6 +35,10 @@ export function GameView({ levelId }: GameViewProps) {
   const [restartCounter, setRestartCounter] = useState(0);
   const [hoveredId, setHoveredId] = useState<NodeId | null>(null);
   const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
+  const [tutorial, setTutorial] = useState<TutorialDef | null>(null);
+  const [objective, setObjective] = useState<string | null>(null);
+  const [levelName, setLevelName] = useState<string>('');
+  const tutorialOpenRef = useRef(false);
   const engineRefForMenu = useRef<GameEngine | null>(null);
   const sessionRef = useRef<SessionState | null>(null);
   const paused = useSessionStore((s) => s.paused);
@@ -66,6 +73,7 @@ export function GameView({ levelId }: GameViewProps) {
 
     const handleKey = (e: KeyboardEvent) => {
       if (e.repeat) return;
+      if (tutorialOpenRef.current) return; // tutorial blocks all input
       const key = e.key.toLowerCase();
       if (key === 'escape') {
         // Cancel spell-targeting first if active; otherwise pause.
@@ -104,6 +112,16 @@ export function GameView({ levelId }: GameViewProps) {
           : baseLevel;
         engine = new GameEngine(level, content);
         engineRef = engine;
+        // Phase 5: surface tutorial modal + objective banner.
+        setLevelName(level.name);
+        setObjective(level.objective ?? null);
+        if (level.tutorial) {
+          setTutorial(level.tutorial);
+          tutorialOpenRef.current = true;
+        } else {
+          setTutorial(null);
+          tutorialOpenRef.current = false;
+        }
       } catch (err) {
         setError((err as Error).message);
         return;
@@ -142,7 +160,8 @@ export function GameView({ levelId }: GameViewProps) {
       const frame = (now: number) => {
         const delta = Math.min(now - lastTime, MAX_FRAME_MS);
         lastTime = now;
-        if (!pausedRef.current) {
+        const blockTick = pausedRef.current || tutorialOpenRef.current;
+        if (!blockTick) {
           accumulator += delta;
           while (accumulator >= TICK_MS) {
             engine.tick();
@@ -162,7 +181,7 @@ export function GameView({ levelId }: GameViewProps) {
           });
         }
 
-        const alpha = pausedRef.current ? 0 : accumulator / TICK_MS;
+        const alpha = blockTick ? 0 : accumulator / TICK_MS;
         r.render(
           engine.world,
           session,
@@ -195,6 +214,7 @@ export function GameView({ levelId }: GameViewProps) {
   return (
     <>
       <UnitBar />
+      {objective && !tutorial && <ObjectiveBanner objective={objective} />}
       <div
         ref={hostRef}
         style={{
@@ -204,6 +224,16 @@ export function GameView({ levelId }: GameViewProps) {
           cursor: 'crosshair',
         }}
       />
+      {tutorial && (
+        <TutorialOverlay
+          tutorial={tutorial}
+          levelName={levelName}
+          onDismiss={() => {
+            tutorialOpenRef.current = false;
+            setTutorial(null);
+          }}
+        />
+      )}
       {paused && (
         <PauseMenu
           onResume={() => setPaused(false)}

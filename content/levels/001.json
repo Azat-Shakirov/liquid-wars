@@ -1,23 +1,28 @@
 {
   "id": 1,
   "name": "First Drops",
-  "tutorialKey": null,
+  "tutorialKey": "basics",
+  "tutorial": {
+    "title": "Send units, capture nodes",
+    "body": "You are blue. The enemy is red.\n\nDrag from your node to a target to send half your units. Double-click a target to send all. Capture every enemy node to win.\n\nYour barracks produce units automatically up to their capacity."
+  },
+  "objective": "Capture the red base.",
   "introducesNodeTypes": ["barracks"],
   "introducesLiquids": ["water"],
   "map": { "width": 1280, "height": 720, "background": "stone" },
   "terrain": { "walls": [] },
   "players": [
-    { "id": "p1", "type": "human", "color": "#3da9fc" },
-    { "id": "ai1", "type": "ai", "color": "#e63946", "aiConfigId": "easy" }
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
   ],
   "nodes": [
-    { "id": "n1", "position": [220, 360], "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 },
-    { "id": "n2", "position": [640, 360], "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 5 },
-    { "id": "n3", "position": [1060, 360],"ownerId": "ai1", "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 10 }
+    { "id": "p1_base",  "position": [240, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "neutral",  "position": [640, 360],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 5 },
+    { "id": "ai1_base", "position": [1040, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 6 }
   ],
   "winCondition": { "type": "controlAll" },
   "starThresholds": {
-    "time": [120000, 90000, 60000],
+    "time": [180000, 120000, 60000],
     "units": [50, 30, 15]
   }
 }

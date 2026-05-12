@@ -1,27 +1,32 @@
 {
   "id": 5,
-  "name": "Hold the Line",
-  "tutorialKey": null,
-  "introducesNodeTypes": ["tower"],
+  "name": "Promotion",
+  "tutorialKey": "upgrade",
+  "tutorial": {
+    "title": "Level up your barracks",
+    "body": "Barracks scale from level 1 to 5. Each level boosts production rate and capacity.\n\nThe info panel's Upgrade row shows the cost in units. Pay it from the node itself to advance.\n\nThe enemy has higher-level barracks. Match them or out-produce them."
+  },
+  "objective": "Upgrade your barracks and overwhelm the red side.",
+  "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": { "width": 1280, "height": 720, "background": "stone" },
   "terrain": { "walls": [] },
   "players": [
-    { "id": "p1", "type": "human", "color": "#3da9fc" },
-    { "id": "ai1", "type": "ai", "color": "#e63946", "aiConfigId": "easy" }
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
   ],
   "nodes": [
-    { "id": "p_b1", "position": [200, 200],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 18 },
-    { "id": "p_b2", "position": [200, 520],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 18 },
-    { "id": "p_t1", "position": [430, 360],  "ownerId": "p1",  "nodeType": "tower",    "level": 2, "liquidType": "water", "units": 25 },
-    { "id": "n1",   "position": [640, 360],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
-    { "id": "ai_b2","position": [1080, 200], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 18 },
-    { "id": "ai_b3","position": [1080, 520], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 18 },
-    { "id": "ai_b1","position": [1100, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 3, "liquidType": "water", "units": 28 }
+    { "id": "p1_main", "position": [240, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 9  },
+    { "id": "p1_top",  "position": [420, 200],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 9  },
+    { "id": "p1_bot",  "position": [420, 520],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 9  },
+    { "id": "neutral", "position": [640, 360],  "ownerId": null,  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 12 },
+    { "id": "ai1_top", "position": [900, 200],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_bot", "position": [900, 520],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_base","position": [1100, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 3, "liquidType": "water", "units": 22 }
   ],
   "winCondition": { "type": "controlAll" },
   "starThresholds": {
-    "time": [360000, 300000, 240000],
+    "time": [420000, 300000, 240000],
     "units": [150, 100, 60]
   }
 }
