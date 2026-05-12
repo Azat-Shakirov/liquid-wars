@@ -12,7 +12,8 @@ import { TICK_MS } from '../types';
 import { UnitBar } from './UnitBar';
 import { PauseMenu } from './PauseMenu';
 import { NodeInfoPanel } from './NodeInfoPanel';
-import type { NodeId } from '../types';
+import type { LiquidId, NodeId } from '../types';
+import type { LevelDef } from '../engine/content/ContentLibrary';
 import { useHudStore } from '../store/hudStore';
 import { useSessionStore } from '../store/sessionStore';
 import { useProgressStore } from '../store/progressStore';
@@ -93,10 +94,14 @@ export function GameView({ levelId }: GameViewProps) {
       try {
         content = loadContent();
         availableLevels = Object.keys(content.levels).map(Number).sort((a, b) => a - b);
-        const level = content.levels[levelId];
-        if (!level) {
+        const baseLevel = content.levels[levelId];
+        if (!baseLevel) {
           throw new Error(`Level ${levelId} not found.`);
         }
+        const overrideLiquid = useSessionStore.getState().playerStartLiquid;
+        const level = overrideLiquid
+          ? applyPlayerLiquidOverride(baseLevel, overrideLiquid)
+          : baseLevel;
         engine = new GameEngine(level, content);
         engineRef = engine;
       } catch (err) {
@@ -241,4 +246,20 @@ function nextLevelId(current: number, available: number[]): number | null {
   const idx = available.indexOf(current);
   if (idx === -1 || idx + 1 >= available.length) return null;
   return available[idx + 1] ?? null;
+}
+
+// Dev playtest helper: returns a shallow-cloned LevelDef whose human-
+// owned starting nodes have their liquidType swapped to `liquidId`.
+// Enemy + neutral nodes are left alone — the override is for feeling
+// out the player's own buff. Auto-conversion on capture (§4.5) still
+// applies as usual once the player takes enemy territory.
+function applyPlayerLiquidOverride(level: LevelDef, liquidId: LiquidId): LevelDef {
+  const human = level.players.find((p) => p.type === 'human');
+  if (!human) return level;
+  return {
+    ...level,
+    nodes: level.nodes.map((n) =>
+      n.ownerId === human.id ? { ...n, liquidType: liquidId } : n,
+    ),
+  };
 }

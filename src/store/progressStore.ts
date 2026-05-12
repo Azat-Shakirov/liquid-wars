@@ -64,11 +64,17 @@ function clamp01(v: number): number {
 
 // Level N is unlocked if it's the first level in the sorted list, or if
 // the level immediately before it has been completed.
+//
+// DEV bypass: when running under `npm run dev` (Vite sets
+// import.meta.env.DEV = true) every level is unlocked so the author
+// can jump straight to any level for playtest. Production builds
+// (`npm run build`) keep the progression gate intact.
 export function isLevelUnlocked(
   id: number,
   sortedAvailable: number[],
   completed: Record<number, LevelProgress>,
 ): boolean {
+  if (import.meta.env.DEV) return true;
   const idx = sortedAvailable.indexOf(id);
   if (idx === -1) return false;
   if (idx === 0) return true;
