@@ -34,7 +34,7 @@ export type SpellResult =
   | { ok: true }
   | { ok: false; reason: string };
 
-const BASE_UNIT_SPEED_PX_PER_MS = 0.12; // ~120px/sec — Phase 1 baseline.
+const BASE_UNIT_SPEED_PX_PER_MS = 0.09; // ~90px/sec — v2.7.3 pacing slow-down (was 0.12).
 
 export class GameEngine {
   readonly world: World;

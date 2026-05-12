@@ -17,7 +17,7 @@ import level001 from '../../content/levels/001.json';
 import level002 from '../../content/levels/002.json';
 import level003 from '../../content/levels/003.json';
 
-const BASE_UNIT_SPEED_PX_PER_MS = 0.12; // mirrors GameEngine constant
+const BASE_UNIT_SPEED_PX_PER_MS = 0.09; // mirrors GameEngine constant (v2.7.3)
 
 interface Decision {
   fromNodeIds: NodeId[];

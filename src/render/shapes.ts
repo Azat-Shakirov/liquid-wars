@@ -24,18 +24,18 @@ export function shapeKindForType(type: NodeTypeId): ShapeKind {
 }
 
 export function metricsForType(type: NodeTypeId, level: number): ShapeMetrics {
-  // Slightly grow with level so higher-tier nodes feel chunkier without
-  // changing pip rules. Values pulled to feel-good defaults; can move to
-  // content JSON later if rebalanced.
+  // v2.7.3: shrunk ~25% from the v2.7 ship sizes (was house 48 / barracks
+  // 56 / lab+tower 60) so maps breathe — node-to-node travel takes
+  // visibly longer and the player can read the board.
   const baseByType: Record<NodeTypeId, number> = {
-    house: 48,
-    barracks: 56,
-    lab: 60,
-    tower: 60,
+    house: 36,
+    barracks: 42,
+    lab: 45,
+    tower: 45,
   };
   const base = baseByType[type];
-  const size = base + (level - 1) * 4;
-  return { size, cornerRadius: 8, kind: shapeKindForType(type) };
+  const size = base + (level - 1) * 3;
+  return { size, cornerRadius: 6, kind: shapeKindForType(type) };
 }
 
 export function colorFromHex(hex: string): number {

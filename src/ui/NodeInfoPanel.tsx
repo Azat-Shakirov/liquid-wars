@@ -26,7 +26,7 @@ interface Props {
   canvasEl: HTMLCanvasElement | null;
 }
 
-const BASE_UNIT_SPEED_PX_PER_SEC = 120;
+const BASE_UNIT_SPEED_PX_PER_SEC = 90; // v2.7.3 — must match engine BASE_UNIT_SPEED.
 const PANEL_WIDTH = 240;
 const PANEL_OFFSET_PX = 14;
 const VIEWPORT_PAD = 8;
