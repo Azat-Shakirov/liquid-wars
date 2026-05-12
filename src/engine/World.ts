@@ -131,7 +131,10 @@ export function buildWorldFromLevel(
     nodeOrder.push(node.id);
   }
 
-  const pathCache = buildPathCache(nodeOrder, nodes, walls);
+  const pathCache = buildPathCache(nodeOrder, nodes, walls, {
+    width: level.map.width,
+    height: level.map.height,
+  });
 
   return {
     tick: 0,

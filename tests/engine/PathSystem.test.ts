@@ -79,6 +79,37 @@ describe('PathSystem', () => {
     expect(() => new GameEngine(level, makeContent())).toThrow(/overlaps a wall/);
   });
 
+  it('walls touching the canvas edge do not let units route off-canvas', () => {
+    // Regression: pre-fix, corner waypoints at wall endpoints could be
+    // outside the canvas bounds; units routing around an edge-touching
+    // wall would visibly pass off-canvas (e.g., "underneath" a wall
+    // that ends at y=720). Fix drops out-of-bounds corner waypoints.
+    //
+    // Two stacked walls with the BOTTOM wall extending exactly to
+    // y=720 (canvas bottom). Source at (100, 700), target at (1100, 700).
+    // Without the fix, the path routes via a corner waypoint at
+    // y≈744, off-canvas. With the fix, units must route through the
+    // y=300..420 chokepoint on the SAME canvas.
+    const baseLevel = makeLevel([
+      { id: 'n1', position: [100, 680], ownerId: 'p1', units: 10 },
+      { id: 'n2', position: [1100, 680], ownerId: 'ai1', units: 10 },
+    ]);
+    const level = withWalls(baseLevel, [
+      { id: 'w_top', points: [[600, 0], [600, 300]] },
+      { id: 'w_bot', points: [[600, 420], [600, 720]] },
+    ]);
+    const engine = new GameEngine(level, makeContent());
+    const path = engine.world.pathCache.get(pathCacheKey('n1', 'n2'));
+    expect(path).not.toBeNull();
+    // Every waypoint must stay on-canvas.
+    for (const p of path!) {
+      expect(p.x).toBeGreaterThanOrEqual(0);
+      expect(p.x).toBeLessThanOrEqual(1280);
+      expect(p.y).toBeGreaterThanOrEqual(0);
+      expect(p.y).toBeLessThanOrEqual(720);
+    }
+  });
+
   it('sendUnits routes through the cached path waypoints', () => {
     const baseLevel = makeLevel([
       { id: 'n1', position: [100, 200], ownerId: 'p1', units: 10 },

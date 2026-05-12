@@ -42,6 +42,11 @@ export function buildPathCache(
   nodeOrder: NodeId[],
   nodes: Map<NodeId, Node>,
   walls: Wall[],
+  // Phase 5: canvas bounds. Corner waypoints outside these bounds are
+  // dropped, so units cannot route off-canvas around a wall whose
+  // endpoint sits on (or near) the edge — i.e. cannot visibly "pass
+  // underneath" a top/bottom wall.
+  canvas?: { width: number; height: number },
 ): PathCache {
   const cache: PathCache = new Map();
 
@@ -85,6 +90,13 @@ export function buildPathCache(
           y: v.y + dy * CORNER_BUFFER_PX,
         };
         if (pointNearWall(cand, walls, CORNER_BUFFER_PX * 0.5)) continue;
+        // Drop corner waypoints outside the canvas bounds — otherwise
+        // units route around wall endpoints through off-canvas space
+        // (visually "passing underneath" the wall).
+        if (canvas !== undefined) {
+          if (cand.x < 0 || cand.x > canvas.width) continue;
+          if (cand.y < 0 || cand.y > canvas.height) continue;
+        }
         points.push({ pos: cand, nodeId: null });
       }
     }
