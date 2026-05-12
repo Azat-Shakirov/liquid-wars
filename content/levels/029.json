@@ -3,10 +3,10 @@
   "name": "Coalition",
   "tutorialKey": "multi_faction_practice",
   "tutorial": {
-    "title": "Three factions, three liquids",
-    "body": "Water, Slime, and Blood \u2014 three enemies, all hostile to you AND each other.\n\nSlime concocts fast; Blood captures cheaply; Water out-produces. They'll attack each other if you let them. Pick your moment."
+    "title": "Four corners, one center",
+    "body": "The map is split into four quadrants by a stone cross. Each corner holds a faction — you (Water), Water (red), Slime (green), and Blood (crimson). The only way between quadrants is through the central crossroads, and a neutral tower stands at its heart, attacking anyone who crosses.\n\nSlime concocts fast. Blood captures cheaply. Water out-produces. They'll fight each other through the center if you let them — or you can seize the central tower and dictate the engagement.\n\nYou win when all three enemy factions are gone."
   },
-  "objective": "Outlast or outplay all three factions.",
+  "objective": "Outlast or outplay all three factions. The center tower is the key.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -15,7 +15,24 @@
     "background": "stone"
   },
   "terrain": {
-    "walls": []
+    "walls": [
+      {
+        "id": "w_top",
+        "points": [[640, 0], [640, 280]]
+      },
+      {
+        "id": "w_bot",
+        "points": [[640, 440], [640, 720]]
+      },
+      {
+        "id": "w_left",
+        "points": [[0, 360], [560, 360]]
+      },
+      {
+        "id": "w_right",
+        "points": [[720, 360], [1280, 360]]
+      }
+    ]
   },
   "players": [
     {
@@ -49,46 +66,52 @@
   "nodes": [
     {
       "id": "p1_b1",
-      "position": [
-        200,
-        360
-      ],
+      "position": [180, 180],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 14
+    },
+    {
+      "id": "p1_b2",
+      "position": [400, 200],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 8
     },
     {
       "id": "p1_lab",
-      "position": [
-        380,
-        360
-      ],
+      "position": [180, 300],
       "ownerId": "p1",
       "nodeType": "lab",
-      "level": 3,
+      "level": 2,
       "liquidType": "water",
-      "units": 80
+      "units": 50
     },
     {
       "id": "ai1_b1",
-      "position": [
-        640,
-        160
-      ],
+      "position": [1100, 180],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 14
     },
     {
       "id": "ai1_b2",
-      "position": [
-        880,
-        160
-      ],
+      "position": [880, 200],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 8
+    },
+    {
+      "id": "ai1_base",
+      "position": [1100, 300],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
@@ -96,47 +119,53 @@
       "units": 16
     },
     {
+      "id": "ai2_b1",
+      "position": [180, 540],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 14
+    },
+    {
+      "id": "ai2_b2",
+      "position": [400, 520],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "slime",
+      "units": 8
+    },
+    {
       "id": "ai2_lab",
-      "position": [
-        640,
-        560
-      ],
+      "position": [180, 420],
       "ownerId": "ai2",
       "nodeType": "lab",
       "level": 2,
       "liquidType": "slime",
-      "units": 60
-    },
-    {
-      "id": "ai2_b1",
-      "position": [
-        880,
-        560
-      ],
-      "ownerId": "ai2",
-      "nodeType": "barracks",
-      "level": 2,
-      "liquidType": "slime",
-      "units": 16
+      "units": 50
     },
     {
       "id": "ai3_b1",
-      "position": [
-        1100,
-        200
-      ],
+      "position": [1100, 540],
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "blood",
-      "units": 16
+      "units": 14
     },
     {
       "id": "ai3_b2",
-      "position": [
-        1100,
-        500
-      ],
+      "position": [880, 520],
+      "ownerId": "ai3",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "blood",
+      "units": 8
+    },
+    {
+      "id": "ai3_base",
+      "position": [1100, 420],
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
@@ -144,31 +173,20 @@
       "units": 16
     },
     {
-      "id": "ai3_base",
-      "position": [
-        1200,
-        360
-      ],
-      "ownerId": "ai3",
-      "nodeType": "barracks",
-      "level": 3,
-      "liquidType": "blood",
-      "units": 24
+      "id": "nt_center",
+      "position": [640, 360],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
     }
   ],
   "winCondition": {
     "type": "controlAll"
   },
   "starThresholds": {
-    "time": [
-      720000,
-      540000,
-      420000
-    ],
-    "units": [
-      320,
-      240,
-      160
-    ]
+    "time": [720000, 540000, 420000],
+    "units": [360, 260, 180]
   }
 }

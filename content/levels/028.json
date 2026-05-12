@@ -3,10 +3,10 @@
   "name": "Three-Way Cold War",
   "tutorialKey": "multi_faction",
   "tutorial": {
-    "title": "Multiple enemies, separate sides",
-    "body": "There are TWO enemy factions on this map: Water (red) and Ink (black). They do NOT share units. They are hostile to each other as well as to you.\n\nYou win when BOTH enemy factions are eliminated. You can let them fight each other while you build, or pick a side and pressure the other first.\n\nNeutral nodes don't count toward win \u2014 you only need to wipe out enemies."
+    "title": "Walled sectors, guarded gaps",
+    "body": "Two stone walls split the map into three sectors: you on the left, Water (red) in the middle, Ink (black) on the right. The only way across is through the narrow gaps — and a neutral tower sits in each gap, shooting at anyone trying to pass.\n\nYou win when BOTH enemy factions are eliminated. You can let Water and Ink fight each other through the right gap, or capture a neutral tower yourself to turn its guns on them.\n\nNeutral nodes don't count toward the win condition — only enemies do."
   },
-  "objective": "Eliminate both enemy factions.",
+  "objective": "Eliminate both enemy factions. Neutral towers guard the gaps — capture or avoid them.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -15,7 +15,24 @@
     "background": "stone"
   },
   "terrain": {
-    "walls": []
+    "walls": [
+      {
+        "id": "w_left_top",
+        "points": [[440, 0], [440, 280]]
+      },
+      {
+        "id": "w_left_bot",
+        "points": [[440, 440], [440, 720]]
+      },
+      {
+        "id": "w_right_top",
+        "points": [[840, 0], [840, 280]]
+      },
+      {
+        "id": "w_right_bot",
+        "points": [[840, 440], [840, 720]]
+      }
+    ]
   },
   "players": [
     {
@@ -41,11 +58,8 @@
   ],
   "nodes": [
     {
-      "id": "p1_b1",
-      "position": [
-        180,
-        220
-      ],
+      "id": "p1_n",
+      "position": [180, 220],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
@@ -53,11 +67,8 @@
       "units": 16
     },
     {
-      "id": "p1_b2",
-      "position": [
-        180,
-        500
-      ],
+      "id": "p1_s",
+      "position": [180, 500],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
@@ -66,22 +77,16 @@
     },
     {
       "id": "p1_lab",
-      "position": [
-        380,
-        360
-      ],
+      "position": [320, 360],
       "ownerId": "p1",
       "nodeType": "lab",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 60
+      "units": 30
     },
     {
-      "id": "ai1_b1",
-      "position": [
-        760,
-        180
-      ],
+      "id": "ai1_n",
+      "position": [640, 200],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
@@ -89,11 +94,8 @@
       "units": 16
     },
     {
-      "id": "ai1_b2",
-      "position": [
-        760,
-        360
-      ],
+      "id": "ai1_s",
+      "position": [640, 520],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
@@ -101,23 +103,8 @@
       "units": 16
     },
     {
-      "id": "ai1_b3",
-      "position": [
-        760,
-        540
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
-      "liquidType": "water",
-      "units": 16
-    },
-    {
-      "id": "ai2_b1",
-      "position": [
-        1080,
-        200
-      ],
+      "id": "ai2_n",
+      "position": [1100, 200],
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 2,
@@ -125,11 +112,8 @@
       "units": 16
     },
     {
-      "id": "ai2_b2",
-      "position": [
-        1080,
-        520
-      ],
+      "id": "ai2_s",
+      "position": [1100, 520],
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 2,
@@ -138,30 +122,37 @@
     },
     {
       "id": "ai2_base",
-      "position": [
-        1200,
-        360
-      ],
+      "position": [1200, 360],
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 3,
       "liquidType": "ink",
       "units": 24
+    },
+    {
+      "id": "nt_left",
+      "position": [440, 360],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    },
+    {
+      "id": "nt_right",
+      "position": [840, 360],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
     }
   ],
   "winCondition": {
     "type": "controlAll"
   },
   "starThresholds": {
-    "time": [
-      600000,
-      480000,
-      360000
-    ],
-    "units": [
-      250,
-      180,
-      120
-    ]
+    "time": [600000, 480000, 360000],
+    "units": [280, 200, 140]
   }
 }
