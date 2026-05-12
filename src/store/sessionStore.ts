@@ -10,9 +10,11 @@ interface SessionStore {
   route: Route;
   selectedLevelId: number | null;
   paused: boolean;
-  // Dev-only: when set, GameView clones the level and overrides the
-  // human player's starting nodes' liquidType to this value before
-  // booting the engine. null = use the level's defaults.
+  // Player's chosen liquid for challenge-tier levels (L31-40, the levels
+  // with `letPlayerChooseLiquid: true`). On those levels, GameView clones
+  // the level and overrides the human player's liquid to this value
+  // before booting the engine. On L1-30 (designer's choice) this is
+  // ignored. null = fall back to the level's designer-set liquid.
   playerStartLiquid: LiquidId | null;
   navigate: (route: Route) => void;
   startLevel: (id: number) => void;

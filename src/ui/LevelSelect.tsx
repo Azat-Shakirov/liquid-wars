@@ -7,7 +7,6 @@ import type { LiquidId } from '../types';
 
 const STAR_FILLED = '★';
 const STAR_EMPTY = '☆';
-const DEV = import.meta.env.DEV;
 
 export function LevelSelect() {
   const navigate = useSessionStore((s) => s.navigate);
@@ -25,13 +24,19 @@ export function LevelSelect() {
     () => Object.keys(content.liquids).sort(),
     [content.liquids],
   );
+  // Only show the challenge-tier picker once at least one level with
+  // letPlayerChooseLiquid exists in the campaign.
+  const hasChallengeLevels = useMemo(
+    () => sortedIds.some((id) => content.levels[id]?.letPlayerChooseLiquid === true),
+    [sortedIds, content.levels],
+  );
 
   return (
     <div style={screenStyle}>
       <div style={{ ...titleStyle, fontSize: 36, marginBottom: 24 }}>Choose a Level</div>
-      {DEV && (
+      {hasChallengeLevels && (
         <div style={pickerRowStyle}>
-          <span style={pickerLabelStyle}>Start as</span>
+          <span style={pickerLabelStyle}>Liquid for challenge levels (L31-40)</span>
           {liquidIds.map((lid) => {
             const liq = content.liquids[lid as LiquidId]!;
             const selected = (playerStartLiquid ?? null) === lid;
