@@ -1,0 +1,126 @@
+{
+  "id": 25,
+  "name": "Venomous",
+  "tutorialKey": "venom",
+  "tutorial": {
+    "title": "Venom: faster strikes",
+    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach \u2014 speed past it before it can intercept enough."
+  },
+  "objective": "Strike fast and overrun the red side.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [
+    "venom"
+  ],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "venom"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_back",
+      "position": [
+        180,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "venom",
+      "units": 16
+    },
+    {
+      "id": "p1_front",
+      "position": [
+        440,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "venom",
+      "units": 16
+    },
+    {
+      "id": "ai1_tower",
+      "position": [
+        780,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "tower",
+      "level": 2,
+      "liquidType": "water",
+      "units": 20
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        1040,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        1040,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1180,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      360000,
+      270000,
+      210000
+    ],
+    "units": [
+      150,
+      100,
+      60
+    ]
+  }
+}

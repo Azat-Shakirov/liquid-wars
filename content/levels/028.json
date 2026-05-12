@@ -1,0 +1,167 @@
+{
+  "id": 28,
+  "name": "Three-Way Cold War",
+  "tutorialKey": "multi_faction",
+  "tutorial": {
+    "title": "Multiple enemies, separate sides",
+    "body": "There are TWO enemy factions on this map: Water (red) and Ink (black). They do NOT share units. They are hostile to each other as well as to you.\n\nYou win when BOTH enemy factions are eliminated. You can let them fight each other while you build, or pick a side and pressure the other first.\n\nNeutral nodes don't count toward win \u2014 you only need to wipe out enemies."
+  },
+  "objective": "Eliminate both enemy factions.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    },
+    {
+      "id": "ai2",
+      "type": "ai",
+      "color": "#1a1a24",
+      "liquid": "ink",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_b1",
+      "position": [
+        180,
+        220
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "p1_b2",
+      "position": [
+        180,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        380,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 2,
+      "liquidType": "water",
+      "units": 60
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        760,
+        180
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        760,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b3",
+      "position": [
+        760,
+        540
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai2_b1",
+      "position": [
+        1080,
+        200
+      ],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "ink",
+      "units": 16
+    },
+    {
+      "id": "ai2_b2",
+      "position": [
+        1080,
+        520
+      ],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "ink",
+      "units": 16
+    },
+    {
+      "id": "ai2_base",
+      "position": [
+        1200,
+        360
+      ],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "ink",
+      "units": 24
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      600000,
+      480000,
+      360000
+    ],
+    "units": [
+      250,
+      180,
+      120
+    ]
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "id": 24,
+  "name": "Slime Storm",
+  "tutorialKey": "slime_practice",
+  "tutorial": {
+    "title": "Lab L3 + Slime",
+    "body": "Your Lab is L3 on Slime. Every spell \u2014 Freeze, Bleed, Recruit \u2014 concocts in 7.5 seconds.\n\nThe enemy is bigger than you. Use Recruit aggressively: every flip changes the unit balance by twice the captured units."
+  },
+  "objective": "Tempo the red side into submission.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "slime"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_b1",
+      "position": [
+        200,
+        220
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "p1_b2",
+      "position": [
+        200,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        420,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "slime",
+      "units": 90
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        800,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        800,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b3",
+      "position": [
+        1020,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    },
+    {
+      "id": "ai1_b4",
+      "position": [
+        1020,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1180,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      540000,
+      420000,
+      300000
+    ],
+    "units": [
+      220,
+      160,
+      110
+    ]
+  }
+}

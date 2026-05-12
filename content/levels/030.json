@@ -1,0 +1,175 @@
+{
+  "id": 30,
+  "name": "Last Light",
+  "tutorialKey": "campaign_finale",
+  "tutorial": {
+    "title": "The campaign closer",
+    "body": "Everything you've learned, in one fight.\n\nYou are Slime \u2014 fast spells, weaker production. The enemy is fortified Ink with Towers and a strong keep. You have a Lab L3 and full toolkit access.\n\nBreak them. Then prepare for the challenge tier \u2014 every level beyond this, YOU choose the liquid."
+  },
+  "objective": "End the Ink fortress. Close the campaign.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": [
+      {
+        "id": "w_top",
+        "points": [
+          [
+            820,
+            0
+          ],
+          [
+            820,
+            220
+          ]
+        ]
+      },
+      {
+        "id": "w_bottom",
+        "points": [
+          [
+            820,
+            500
+          ],
+          [
+            820,
+            720
+          ]
+        ]
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "slime"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#1a1a24",
+      "liquid": "ink",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_b1",
+      "position": [
+        180,
+        200
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "p1_b2",
+      "position": [
+        180,
+        520
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "p1_b3",
+      "position": [
+        400,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        600,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "slime",
+      "units": 90
+    },
+    {
+      "id": "ai1_t1",
+      "position": [
+        920,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "ink",
+      "units": 30
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        1060,
+        200
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "ink",
+      "units": 24
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        1060,
+        520
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "ink",
+      "units": 24
+    },
+    {
+      "id": "ai1_keep",
+      "position": [
+        1200,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 4,
+      "liquidType": "ink",
+      "units": 36
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      720000,
+      540000,
+      420000
+    ],
+    "units": [
+      300,
+      220,
+      150
+    ]
+  }
+}

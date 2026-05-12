@@ -1,0 +1,136 @@
+{
+  "id": 27,
+  "name": "Liquid Lattice",
+  "tutorialKey": "auto_convert",
+  "tutorial": {
+    "title": "Auto-conversion: liquid follows the capture",
+    "body": "Four neutral nodes sit between you and the enemy, each on a different liquid. Capturing any of them converts the node to YOUR liquid \u2014 the special liquid is GONE.\n\nIf you want to OWN a Slime Lab or an Ink Tower, you'd need to be Slime or Ink yourself first. (The dev liquid picker lets you experiment.)\n\nCapturing in different orders builds different early empires."
+  },
+  "objective": "Capture all red nodes. Read the neutrals carefully.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_base",
+      "position": [
+        160,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "n_blood",
+      "position": [
+        420,
+        180
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "blood",
+      "units": 8
+    },
+    {
+      "id": "n_venom",
+      "position": [
+        420,
+        540
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "venom",
+      "units": 8
+    },
+    {
+      "id": "n_slime",
+      "position": [
+        640,
+        360
+      ],
+      "ownerId": null,
+      "nodeType": "lab",
+      "level": 1,
+      "liquidType": "slime",
+      "units": 12
+    },
+    {
+      "id": "n_ink",
+      "position": [
+        860,
+        360
+      ],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 1,
+      "liquidType": "ink",
+      "units": 10
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        1120,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        1120,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      480000,
+      360000,
+      240000
+    ],
+    "units": [
+      200,
+      150,
+      100
+    ]
+  }
+}

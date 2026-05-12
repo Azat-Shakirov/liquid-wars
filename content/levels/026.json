@@ -1,0 +1,148 @@
+{
+  "id": 26,
+  "name": "Strike & Fade",
+  "tutorialKey": "venom_practice",
+  "tutorial": {
+    "title": "Raid-heavy playstyle",
+    "body": "Venom suits raids: hit and retreat before the enemy can counter. With 40% faster travel, your reinforcements arrive before theirs.\n\nThe enemy has multiple bases. Pick one off at a time."
+  },
+  "objective": "Pick the red bases off one by one.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "venom"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_b1",
+      "position": [
+        180,
+        200
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "venom",
+      "units": 14
+    },
+    {
+      "id": "p1_b2",
+      "position": [
+        180,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "venom",
+      "units": 14
+    },
+    {
+      "id": "p1_b3",
+      "position": [
+        380,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "venom",
+      "units": 16
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        700,
+        200
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        700,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b3",
+      "position": [
+        940,
+        200
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b4",
+      "position": [
+        940,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_back",
+      "position": [
+        1140,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      480000,
+      360000,
+      270000
+    ],
+    "units": [
+      200,
+      150,
+      100
+    ]
+  }
+}

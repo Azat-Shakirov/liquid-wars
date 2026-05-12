@@ -1,0 +1,174 @@
+{
+  "id": 29,
+  "name": "Coalition",
+  "tutorialKey": "multi_faction_practice",
+  "tutorial": {
+    "title": "Three factions, three liquids",
+    "body": "Water, Slime, and Blood \u2014 three enemies, all hostile to you AND each other.\n\nSlime concocts fast; Blood captures cheaply; Water out-produces. They'll attack each other if you let them. Pick your moment."
+  },
+  "objective": "Outlast or outplay all three factions.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    },
+    {
+      "id": "ai2",
+      "type": "ai",
+      "color": "#5cd65c",
+      "liquid": "slime",
+      "aiConfigId": "easy"
+    },
+    {
+      "id": "ai3",
+      "type": "ai",
+      "color": "#a01010",
+      "liquid": "blood",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_b1",
+      "position": [
+        200,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        380,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "water",
+      "units": 80
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        640,
+        160
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        880,
+        160
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai2_lab",
+      "position": [
+        640,
+        560
+      ],
+      "ownerId": "ai2",
+      "nodeType": "lab",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 60
+    },
+    {
+      "id": "ai2_b1",
+      "position": [
+        880,
+        560
+      ],
+      "ownerId": "ai2",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "ai3_b1",
+      "position": [
+        1100,
+        200
+      ],
+      "ownerId": "ai3",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "blood",
+      "units": 16
+    },
+    {
+      "id": "ai3_b2",
+      "position": [
+        1100,
+        500
+      ],
+      "ownerId": "ai3",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "blood",
+      "units": 16
+    },
+    {
+      "id": "ai3_base",
+      "position": [
+        1200,
+        360
+      ],
+      "ownerId": "ai3",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "blood",
+      "units": 24
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      720000,
+      540000,
+      420000
+    ],
+    "units": [
+      320,
+      240,
+      160
+    ]
+  }
+}
