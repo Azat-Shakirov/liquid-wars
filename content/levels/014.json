@@ -1,16 +1,14 @@
 {
   "id": 14,
-  "name": "Inkwell",
-  "tutorialKey": "ink",
+  "name": "Cold Snap",
+  "tutorialKey": "freeze_practice",
   "tutorial": {
-    "title": "Ink: hostile arrivals halved",
-    "body": "The red side's main base sits on Ink \u2014 hostile arrivals on Ink nodes are halved. A 20-unit attack hits for 10.\n\nInk is brittle vs sustained pressure: stack waves, or use Bleed/Freeze to disable production before pushing.\n\nCapture an Ink node and the buff is yours \u2014 your incoming liquid replaces it, though."
+    "title": "Freeze the right node",
+    "body": "Freeze costs 25 units per cast. Pick targets that matter \u2014 a heavily-defended base, a Tower covering your approach, or a fast-producing barracks.\n\nThe enemy has two strong nodes. You can freeze them in sequence."
   },
-  "objective": "Crack the Ink-defended red base.",
+  "objective": "Time your freezes and capture the red side.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [
-    "ink"
-  ],
+  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -31,7 +29,7 @@
       "type": "ai",
       "color": "#e63946",
       "aiConfigId": "easy",
-      "liquid": "ink"
+      "liquid": "water"
     }
   ],
   "nodes": [
@@ -39,25 +37,25 @@
       "id": "p1_b1",
       "position": [
         200,
-        200
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 18
+      "units": 14
     },
     {
       "id": "p1_b2",
       "position": [
         200,
-        520
+        500
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 18
+      "units": 14
     },
     {
       "id": "p1_lab",
@@ -67,45 +65,57 @@
       ],
       "ownerId": "p1",
       "nodeType": "lab",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 50
+      "units": 40
     },
     {
       "id": "ai1_b1",
       "position": [
-        840,
+        820,
         220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 16
     },
     {
       "id": "ai1_b2",
       "position": [
-        840,
+        820,
         500
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 16
     },
     {
-      "id": "ai1_ink",
+      "id": "ai1_b3",
       "position": [
         1100,
-        360
+        220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "ink",
-      "units": 22
+      "liquidType": "water",
+      "units": 24
+    },
+    {
+      "id": "ai1_b4",
+      "position": [
+        1100,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
     }
   ],
   "winCondition": {
@@ -118,9 +128,9 @@
       240000
     ],
     "units": [
-      150,
-      100,
-      60
+      180,
+      130,
+      80
     ]
   }
 }

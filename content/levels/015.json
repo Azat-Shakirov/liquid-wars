@@ -1,16 +1,14 @@
 {
   "id": 15,
-  "name": "Quick & Sticky",
-  "tutorialKey": "slime",
+  "name": "Hemorrhage",
+  "tutorialKey": "bleed",
   "tutorial": {
-    "title": "Slime: 2\u00d7 spell speed",
-    "body": "Your Lab sits on Slime \u2014 spell concoction runs at double speed (15 s \u2192 ~7.5 s).\n\nA Slime Lab paired with Lab L2/L3 means Bleed every 7.5 s, Recruit every 7.5 s. You can dominate by spells alone if you keep the Lab fed with units.\n\nThe red side has the numbers. You have the rhythm."
+    "title": "Bleed: permanent production halt",
+    "body": "Lab L2 unlocks Bleed (35 units).\n\nBleed targets a node and drains 1 unit/sec from it permanently \u2014 until that node is captured by someone other than its current owner. Production halts while bleeding.\n\nThe enemy's main base produces too fast to take by force. Bleed it. Push in."
   },
-  "objective": "Spell-spam the red side into collapse.",
+  "objective": "Bleed the strong red base, then capture it.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [
-    "slime"
-  ],
+  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -24,7 +22,7 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "slime"
+      "liquid": "water"
     },
     {
       "id": "ai1",
@@ -60,7 +58,7 @@
       "units": 16
     },
     {
-      "id": "p1_slime",
+      "id": "p1_lab",
       "position": [
         420,
         360
@@ -68,7 +66,7 @@
       "ownerId": "p1",
       "nodeType": "lab",
       "level": 2,
-      "liquidType": "slime",
+      "liquidType": "water",
       "units": 60
     },
     {
@@ -79,9 +77,9 @@
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 16
+      "units": 6
     },
     {
       "id": "ai1_b2",
@@ -91,33 +89,21 @@
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 16
+      "units": 6
     },
     {
-      "id": "ai1_b3",
+      "id": "ai1_base",
       "position": [
-        1080,
-        220
+        1100,
+        360
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 4,
       "liquidType": "water",
-      "units": 16
-    },
-    {
-      "id": "ai1_b4",
-      "position": [
-        1080,
-        500
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 36
     }
   ],
   "winCondition": {
@@ -125,14 +111,14 @@
   },
   "starThresholds": {
     "time": [
-      480000,
       360000,
-      270000
+      240000,
+      180000
     ],
     "units": [
-      180,
-      130,
-      80
+      120,
+      80,
+      50
     ]
   }
 }

@@ -1,12 +1,12 @@
 {
   "id": 17,
-  "name": "Liquid Lattice",
-  "tutorialKey": "auto_convert",
+  "name": "Defection",
+  "tutorialKey": "recruit",
   "tutorial": {
-    "title": "Auto-conversion: liquid follows the capture",
-    "body": "When you capture a node, it auto-converts to YOUR sending liquid. The previous liquid is gone.\n\nFour neutral nodes sit between you and the enemy, each on a different liquid. Capturing them in different orders builds different empires:\n\n\u2022 Take Slime first \u2192 spam spells\n\u2022 Take Blood first \u2192 cheap rolling captures\n\u2022 Take Venom first \u2192 relentless raids\n\u2022 Take Ink first \u2192 impregnable wall\n\nChoose your axis. The enemy won't wait."
+    "title": "Recruit: flip a node",
+    "body": "Lab L3 unlocks Recruit (50 units).\n\nRecruit converts the target node to YOUR side. Units stay on it. Active bleed clears. In-progress concoction on the target is cancelled.\n\nThe red side has more nodes than you. Recruit their strongest one to even the odds."
   },
-  "objective": "Capture all red nodes. Order matters.",
+  "objective": "Recruit a key red barracks, then take the rest.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -34,10 +34,10 @@
   ],
   "nodes": [
     {
-      "id": "p1_base",
+      "id": "p1_b1",
       "position": [
-        160,
-        360
+        200,
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -46,76 +46,76 @@
       "units": 16
     },
     {
-      "id": "n_blood",
+      "id": "p1_b2",
       "position": [
-        420,
-        180
+        200,
+        500
       ],
-      "ownerId": null,
+      "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "blood",
-      "units": 8
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
     },
     {
-      "id": "n_venom",
+      "id": "p1_lab",
       "position": [
         420,
-        540
-      ],
-      "ownerId": null,
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "venom",
-      "units": 8
-    },
-    {
-      "id": "n_slime",
-      "position": [
-        640,
         360
       ],
-      "ownerId": null,
+      "ownerId": "p1",
       "nodeType": "lab",
-      "level": 1,
-      "liquidType": "slime",
-      "units": 12
-    },
-    {
-      "id": "n_ink",
-      "position": [
-        860,
-        360
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 1,
-      "liquidType": "ink",
-      "units": 10
+      "level": 3,
+      "liquidType": "water",
+      "units": 90
     },
     {
       "id": "ai1_b1",
       "position": [
-        1120,
+        820,
         220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 3,
       "liquidType": "water",
-      "units": 14
+      "units": 24
     },
     {
       "id": "ai1_b2",
       "position": [
-        1120,
+        820,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1100,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    },
+    {
+      "id": "ai1_far",
+      "position": [
+        1100,
         500
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 16
     }
   ],
   "winCondition": {
@@ -123,14 +123,14 @@
   },
   "starThresholds": {
     "time": [
-      480000,
-      360000,
+      420000,
+      300000,
       240000
     ],
     "units": [
-      200,
-      150,
-      100
+      180,
+      120,
+      80
     ]
   }
 }

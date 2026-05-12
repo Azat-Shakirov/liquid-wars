@@ -1,128 +1,69 @@
 {
   "id": 19,
-  "name": "Citadel",
-  "tutorialKey": null,
-  "objective": "Break the fortress. Bleed, Recruit, or grind \u2014 your call.",
+  "name": "Crimson Tide",
+  "tutorialKey": "blood",
+  "tutorial": {
+    "title": "Blood: cheaper captures",
+    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid \u2014 Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
+  },
+  "objective": "Sweep the red side with cheap rolling captures.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
+  "introducesLiquids": [
+    "blood"
+  ],
   "map": {
     "width": 1280,
     "height": 720,
     "background": "stone"
   },
   "terrain": {
-    "walls": [
-      {
-        "id": "w_top",
-        "points": [
-          [
-            820,
-            0
-          ],
-          [
-            820,
-            220
-          ]
-        ]
-      },
-      {
-        "id": "w_bottom",
-        "points": [
-          [
-            820,
-            500
-          ],
-          [
-            820,
-            720
-          ]
-        ]
-      },
-      {
-        "id": "w_back_t",
-        "points": [
-          [
-            820,
-            220
-          ],
-          [
-            1280,
-            220
-          ]
-        ]
-      },
-      {
-        "id": "w_back_b",
-        "points": [
-          [
-            820,
-            500
-          ],
-          [
-            1280,
-            500
-          ]
-        ]
-      }
-    ]
+    "walls": []
   },
   "players": [
     {
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "slime"
+      "liquid": "blood"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
       "aiConfigId": "easy",
-      "liquid": "ink"
+      "liquid": "water"
     }
   ],
   "nodes": [
     {
       "id": "p1_b1",
       "position": [
-        180,
-        200
+        200,
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "level": 2,
+      "liquidType": "blood",
+      "units": 14
     },
     {
       "id": "p1_b2",
       "position": [
-        180,
-        520
+        200,
+        500
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "level": 2,
+      "liquidType": "blood",
+      "units": 14
     },
     {
-      "id": "p1_lab",
+      "id": "p1_b3",
       "position": [
-        400,
+        420,
         360
-      ],
-      "ownerId": "p1",
-      "nodeType": "lab",
-      "level": 3,
-      "liquidType": "slime",
-      "units": 80
-    },
-    {
-      "id": "p1_blood",
-      "position": [
-        620,
-        200
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -131,64 +72,52 @@
       "units": 8
     },
     {
-      "id": "p1_venom",
+      "id": "neutral",
       "position": [
-        620,
-        520
-      ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "venom",
-      "units": 8
-    },
-    {
-      "id": "ai1_tower1",
-      "position": [
-        880,
+        640,
         360
       ],
-      "ownerId": "ai1",
-      "nodeType": "tower",
-      "level": 4,
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 2,
       "liquidType": "water",
-      "units": 50
+      "units": 12
     },
     {
       "id": "ai1_b1",
       "position": [
-        1060,
-        290
+        880,
+        220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 3,
+      "level": 2,
       "liquidType": "water",
-      "units": 24
+      "units": 18
     },
     {
       "id": "ai1_b2",
       "position": [
-        1060,
-        430
+        880,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 18
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1100,
+        360
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
       "liquidType": "water",
-      "units": 24
-    },
-    {
-      "id": "ai1_keep",
-      "position": [
-        1200,
-        360
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 4,
-      "liquidType": "ink",
-      "units": 38
+      "units": 26
     }
   ],
   "winCondition": {
@@ -196,14 +125,14 @@
   },
   "starThresholds": {
     "time": [
-      600000,
-      480000,
-      360000
+      360000,
+      270000,
+      210000
     ],
     "units": [
-      260,
-      200,
-      140
+      150,
+      100,
+      60
     ]
   }
 }

@@ -1,16 +1,16 @@
 {
   "id": 13,
-  "name": "Crimson Tide",
-  "tutorialKey": "blood",
+  "name": "First Concoction",
+  "tutorialKey": "lab_freeze",
   "tutorial": {
-    "title": "Blood: cheaper captures",
-    "body": "You start with a Blood node. Attackers sent FROM a Blood node spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units \u2014 captured at send-time. The target node also auto-converts to YOUR sending liquid on capture, so capturing with Blood units spreads Blood across the map.\n\nUse Blood to crack open the enemy's economy with less."
+    "title": "Labs concoct spells",
+    "body": "Hover your Lab and click Concoct \u2192 Freeze. After ~15 seconds the spell is ready.\n\nTo cast: drag from your ready Lab to any node. Freeze instantly neutralizes the target \u2014 units preserved, ownership erased.\n\nLabs cannot produce units, only consume them. The red main base is too strong to take by force. Freeze it, then capture the empty shell."
   },
-  "objective": "Send from your Blood barracks to capture cheap. Take all red nodes.",
-  "introducesNodeTypes": [],
-  "introducesLiquids": [
-    "blood"
+  "objective": "Freeze the strong red base, then capture it.",
+  "introducesNodeTypes": [
+    "lab"
   ],
+  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -24,7 +24,7 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "blood"
+      "liquid": "water"
     },
     {
       "id": "ai1",
@@ -36,76 +36,64 @@
   ],
   "nodes": [
     {
-      "id": "p1_blood",
+      "id": "p1_b1",
       "position": [
-        220,
-        360
+        200,
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "blood",
+      "liquidType": "water",
       "units": 16
     },
     {
-      "id": "p1_water",
+      "id": "p1_b2",
       "position": [
-        420,
-        200
+        200,
+        500
       ],
       "ownerId": "p1",
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 8
-    },
-    {
-      "id": "p1_water2",
-      "position": [
-        420,
-        520
-      ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 8
-    },
-    {
-      "id": "neutral",
-      "position": [
-        640,
-        360
-      ],
-      "ownerId": null,
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        420,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 1,
+      "liquidType": "water",
+      "units": 30
     },
     {
       "id": "ai1_b1",
       "position": [
-        880,
-        200
+        820,
+        220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 18
+      "units": 6
     },
     {
       "id": "ai1_b2",
       "position": [
-        880,
-        520
+        820,
+        500
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 18
+      "units": 6
     },
     {
       "id": "ai1_base",
@@ -115,9 +103,9 @@
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 3,
+      "level": 4,
       "liquidType": "water",
-      "units": 26
+      "units": 38
     }
   ],
   "winCondition": {
@@ -126,13 +114,13 @@
   "starThresholds": {
     "time": [
       360000,
-      270000,
-      210000
+      240000,
+      180000
     ],
     "units": [
-      150,
-      100,
-      60
+      120,
+      80,
+      50
     ]
   }
 }

@@ -1,8 +1,12 @@
 {
   "id": 18,
-  "name": "Pincer",
-  "tutorialKey": null,
-  "objective": "Hold both flanks. Capture every red node.",
+  "name": "Turncoat",
+  "tutorialKey": "recruit_practice",
+  "tutorial": {
+    "title": "Recruit a chain reaction",
+    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines \u2014 suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
+  },
+  "objective": "Recruit deep, then sweep the rest.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -11,67 +15,14 @@
     "background": "stone"
   },
   "terrain": {
-    "walls": [
-      {
-        "id": "w_nw",
-        "points": [
-          [
-            420,
-            0
-          ],
-          [
-            420,
-            180
-          ]
-        ]
-      },
-      {
-        "id": "w_sw",
-        "points": [
-          [
-            420,
-            540
-          ],
-          [
-            420,
-            720
-          ]
-        ]
-      },
-      {
-        "id": "w_ne",
-        "points": [
-          [
-            860,
-            0
-          ],
-          [
-            860,
-            180
-          ]
-        ]
-      },
-      {
-        "id": "w_se",
-        "points": [
-          [
-            860,
-            540
-          ],
-          [
-            860,
-            720
-          ]
-        ]
-      }
-    ]
+    "walls": []
   },
   "players": [
     {
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "slime"
+      "liquid": "water"
     },
     {
       "id": "ai1",
@@ -83,46 +34,46 @@
   ],
   "nodes": [
     {
-      "id": "p1_main",
+      "id": "p1_b1",
       "position": [
-        640,
-        360
+        180,
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
-      "level": 3,
+      "level": 2,
       "liquidType": "water",
-      "units": 24
+      "units": 16
+    },
+    {
+      "id": "p1_b2",
+      "position": [
+        180,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
     },
     {
       "id": "p1_lab",
       "position": [
-        640,
-        540
+        380,
+        360
       ],
       "ownerId": "p1",
       "nodeType": "lab",
-      "level": 2,
-      "liquidType": "slime",
-      "units": 60
-    },
-    {
-      "id": "p1_tower",
-      "position": [
-        640,
-        180
-      ],
-      "ownerId": "p1",
-      "nodeType": "tower",
-      "level": 2,
+      "level": 3,
       "liquidType": "water",
-      "units": 24
+      "units": 90
     },
     {
-      "id": "ai1_nw",
+      "id": "ai1_b1",
       "position": [
-        200,
-        200
+        700,
+        220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -131,10 +82,10 @@
       "units": 16
     },
     {
-      "id": "ai1_sw",
+      "id": "ai1_b2",
       "position": [
-        200,
-        520
+        700,
+        500
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -143,10 +94,10 @@
       "units": 16
     },
     {
-      "id": "ai1_ne",
+      "id": "ai1_b3",
       "position": [
-        1080,
-        200
+        940,
+        220
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -155,10 +106,10 @@
       "units": 16
     },
     {
-      "id": "ai1_se",
+      "id": "ai1_b4",
       "position": [
-        1080,
-        520
+        940,
+        500
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -167,9 +118,9 @@
       "units": 16
     },
     {
-      "id": "ai1_base",
+      "id": "ai1_back",
       "position": [
-        1200,
+        1140,
         360
       ],
       "ownerId": "ai1",
@@ -184,14 +135,14 @@
   },
   "starThresholds": {
     "time": [
-      540000,
-      420000,
-      300000
+      480000,
+      360000,
+      270000
     ],
     "units": [
-      220,
-      160,
-      100
+      200,
+      140,
+      90
     ]
   }
 }

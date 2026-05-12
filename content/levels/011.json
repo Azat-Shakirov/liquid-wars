@@ -1,12 +1,12 @@
 {
   "id": 11,
-  "name": "Hemorrhage",
-  "tutorialKey": "bleed",
+  "name": "Labyrinth",
+  "tutorialKey": "walls_practice",
   "tutorial": {
-    "title": "Bleed: permanent production halt",
-    "body": "Lab level 2 unlocks Bleed (35 units).\n\nBleed targets a node and drains 1 unit/sec from it permanently \u2014 until that node is captured by someone other than its current owner. Production halts while bleeding.\n\nThe enemy's main base produces too fast to take by force. Bleed it. Once it stops producing, push in."
+    "title": "Walls in numbers",
+    "body": "Multiple walls form a maze. Your hover-preview lines show the exact route units will take.\n\nPlan around the geometry \u2014 sometimes a longer route is the only route."
   },
-  "objective": "Bleed the strong red base, then capture it.",
+  "objective": "Find your way through and capture every red node.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
   "map": {
@@ -15,7 +15,60 @@
     "background": "stone"
   },
   "terrain": {
-    "walls": []
+    "walls": [
+      {
+        "id": "w_a",
+        "points": [
+          [
+            420,
+            0
+          ],
+          [
+            420,
+            360
+          ]
+        ]
+      },
+      {
+        "id": "w_b",
+        "points": [
+          [
+            420,
+            460
+          ],
+          [
+            420,
+            720
+          ]
+        ]
+      },
+      {
+        "id": "w_c",
+        "points": [
+          [
+            860,
+            260
+          ],
+          [
+            860,
+            720
+          ]
+        ]
+      },
+      {
+        "id": "w_d",
+        "points": [
+          [
+            860,
+            0
+          ],
+          [
+            860,
+            160
+          ]
+        ]
+      }
+    ]
   },
   "players": [
     {
@@ -34,76 +87,76 @@
   ],
   "nodes": [
     {
-      "id": "p1_b1",
+      "id": "p1_top",
       "position": [
-        200,
-        220
+        220,
+        200
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 14
     },
     {
-      "id": "p1_b2",
+      "id": "p1_bot",
       "position": [
-        200,
-        500
+        220,
+        520
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 14
     },
     {
-      "id": "p1_lab",
+      "id": "n_mid",
       "position": [
-        420,
-        360
+        640,
+        410
       ],
-      "ownerId": "p1",
-      "nodeType": "lab",
+      "ownerId": null,
+      "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 60
+      "units": 12
     },
     {
-      "id": "ai1_b1",
+      "id": "n_top",
       "position": [
-        820,
-        220
+        640,
+        100
       ],
-      "ownerId": "ai1",
+      "ownerId": null,
       "nodeType": "barracks",
       "level": 1,
       "liquidType": "water",
-      "units": 6
+      "units": 8
     },
     {
-      "id": "ai1_b2",
+      "id": "ai1_top",
       "position": [
-        820,
-        500
+        1060,
+        200
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 1,
+      "level": 2,
       "liquidType": "water",
-      "units": 6
+      "units": 14
     },
     {
-      "id": "ai1_base",
+      "id": "ai1_bot",
       "position": [
-        1100,
-        360
+        1060,
+        520
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 4,
+      "level": 2,
       "liquidType": "water",
-      "units": 36
+      "units": 14
     }
   ],
   "winCondition": {
@@ -111,14 +164,14 @@
   },
   "starThresholds": {
     "time": [
+      420000,
       360000,
-      240000,
-      180000
+      300000
     ],
     "units": [
+      180,
       120,
-      80,
-      50
+      80
     ]
   }
 }
