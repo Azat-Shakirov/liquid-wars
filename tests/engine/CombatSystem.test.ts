@@ -109,13 +109,13 @@ describe('CombatSystem', () => {
     expect(node.units).toBeCloseTo(1.4286, 3);
   });
 
-  it('ink incomingDamageMultiplier 0.33 reduces attacker effectiveness', () => {
+  it('ink incomingDamageMultiplier 0.5 halves attacker effectiveness', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'ai1', liquid: 'ink', units: 10 },
     ]);
     const world = buildWorldFromLevel(level, content);
-    // 12 water vs 10 ink → effective = 12 * 0.33 = 3.96; defender 10 - 3.96 = 6.04, holds.
+    // 12 water vs 10 ink → effective = 12 * 0.5 = 6; defender 10 - 6 = 4, holds.
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));
     const sys = new CombatSystem(content);
 
@@ -123,7 +123,7 @@ describe('CombatSystem', () => {
 
     const node = world.nodes.get('b')!;
     expect(node.ownerId).toBe('ai1');
-    expect(node.units).toBeCloseTo(6.04, 2);
+    expect(node.units).toBeCloseTo(4, 5);
   });
 
   it('multiple arrivals same tick resolve in arrivalTick then id order', () => {

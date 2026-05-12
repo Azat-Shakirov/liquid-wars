@@ -2,8 +2,8 @@
   "id": "water",
   "name": "Water",
   "color": "#3da9fc",
-  "description": "Default. Standard production.",
+  "description": "Water nodes produce units 30% faster.",
   "effects": [
-    { "type": "productionMultiplier", "value": 1.0 }
+    { "type": "productionMultiplier", "value": 1.3 }
   ]
 }

@@ -14,8 +14,8 @@ export const water: LiquidDef = {
   id: 'water',
   name: 'Water',
   color: '#3da9fc',
-  description: 'Default.',
-  effects: [{ type: 'productionMultiplier', value: 1.0 }],
+  description: '30% production boost.',
+  effects: [{ type: 'productionMultiplier', value: 1.3 }],
 };
 
 export const blood: LiquidDef = {
@@ -30,8 +30,8 @@ export const ink: LiquidDef = {
   id: 'ink',
   name: 'Ink',
   color: '#0a0a14',
-  description: 'Reduces incoming.',
-  effects: [{ type: 'incomingDamageMultiplier', value: 0.33 }],
+  description: 'Halves incoming.',
+  effects: [{ type: 'incomingDamageMultiplier', value: 0.5 }],
 };
 
 export const slime: LiquidDef = {

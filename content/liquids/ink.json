@@ -2,8 +2,8 @@
   "id": "ink",
   "name": "Ink",
   "color": "#0a0a14",
-  "description": "Hostile arrivals on ink nodes deal only one third of their count.",
+  "description": "Hostile arrivals on ink nodes deal only half their count.",
   "effects": [
-    { "type": "incomingDamageMultiplier", "value": 0.33 }
+    { "type": "incomingDamageMultiplier", "value": 0.5 }
   ]
 }

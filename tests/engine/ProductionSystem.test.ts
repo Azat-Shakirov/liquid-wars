@@ -16,11 +16,11 @@ describe('ProductionSystem', () => {
     const world = buildWorldFromLevel(level, content);
     const sys = new ProductionSystem(content);
 
-    // Barracks lvl 1: productionRate=0.4 units/sec → 60 ticks/sec gives 0.4 units/sec.
+    // Barracks lvl 1: productionRate=0.4 units/sec, water productionMultiplier=1.3 → 0.52 units/sec.
     for (let i = 0; i < 60; i++) sys.update(world, TICK_MS);
 
     const n = world.nodes.get('n1')!;
-    expect(n.units).toBeCloseTo(0.4, 5);
+    expect(n.units).toBeCloseTo(0.52, 5);
   });
 
   it('caps units at maxUnits', () => {

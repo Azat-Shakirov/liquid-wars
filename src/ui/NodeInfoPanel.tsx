@@ -171,7 +171,7 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Prop
       {lv?.defenseRate !== undefined && lv.defenseRate > 0 && (
         <div style={rowStyle}>
           <span>Defense rate</span>
-          <span style={valueStyle}>−{lv.defenseRate} per arrival</span>
+          <span style={valueStyle}>÷{lv.defenseRate} on arrival</span>
         </div>
       )}
 
