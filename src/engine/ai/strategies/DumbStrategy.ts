@@ -66,7 +66,7 @@ export const DumbStrategy: Strategy = {
       const t = cand.node;
       const projectedDefense = Math.max(0, t.units - (inFlightToward.get(t.id) ?? 0));
       if (sendCount > projectedDefense * personality.thresholds.attackRatio) {
-        return { fromNodeIds: [source.id], toNodeId: t.id, fraction: SEND_FRACTION };
+        return { kind: 'send', fromNodeIds: [source.id], toNodeId: t.id, fraction: SEND_FRACTION };
       }
     }
 
