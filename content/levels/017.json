@@ -4,29 +4,133 @@
   "tutorialKey": "auto_convert",
   "tutorial": {
     "title": "Auto-conversion: liquid follows the capture",
-    "body": "When you capture a node, it auto-converts to YOUR sending liquid. The previous liquid is gone.\n\nFour neutral nodes sit between you and the enemy, each on a different liquid. Capturing them in different orders builds different empires:\n\n• Take Slime first → spam spells\n• Take Blood first → cheap rolling captures\n• Take Venom first → relentless raids\n• Take Ink first → impregnable wall\n\nChoose your axis. The enemy won't wait."
+    "body": "When you capture a node, it auto-converts to YOUR sending liquid. The previous liquid is gone.\n\nFour neutral nodes sit between you and the enemy, each on a different liquid. Capturing them in different orders builds different empires:\n\n\u2022 Take Slime first \u2192 spam spells\n\u2022 Take Blood first \u2192 cheap rolling captures\n\u2022 Take Venom first \u2192 relentless raids\n\u2022 Take Ink first \u2192 impregnable wall\n\nChoose your axis. The enemy won't wait."
   },
   "objective": "Capture all red nodes. Order matters.",
   "introducesNodeTypes": [],
   "introducesLiquids": [],
-  "map": { "width": 1280, "height": 720, "background": "stone" },
-  "terrain": { "walls": [] },
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
   "players": [
-    { "id": "p1",  "type": "human", "color": "#3da9fc" },
-    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "aiConfigId": "easy",
+      "liquid": "water"
+    }
   ],
   "nodes": [
-    { "id": "p1_base",    "position": [160, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
-    { "id": "n_blood",    "position": [420, 180],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "blood", "units": 8  },
-    { "id": "n_venom",    "position": [420, 540],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "venom", "units": 8  },
-    { "id": "n_slime",    "position": [640, 360],  "ownerId": null,  "nodeType": "lab",      "level": 1, "liquidType": "slime", "units": 12 },
-    { "id": "n_ink",      "position": [860, 360],  "ownerId": null,  "nodeType": "tower",    "level": 1, "liquidType": "ink",   "units": 10 },
-    { "id": "ai1_b1",     "position": [1120, 220], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
-    { "id": "ai1_b2",     "position": [1120, 500], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 }
+    {
+      "id": "p1_base",
+      "position": [
+        160,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "n_blood",
+      "position": [
+        420,
+        180
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "blood",
+      "units": 8
+    },
+    {
+      "id": "n_venom",
+      "position": [
+        420,
+        540
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "venom",
+      "units": 8
+    },
+    {
+      "id": "n_slime",
+      "position": [
+        640,
+        360
+      ],
+      "ownerId": null,
+      "nodeType": "lab",
+      "level": 1,
+      "liquidType": "slime",
+      "units": 12
+    },
+    {
+      "id": "n_ink",
+      "position": [
+        860,
+        360
+      ],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 1,
+      "liquidType": "ink",
+      "units": 10
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        1120,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        1120,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    }
   ],
-  "winCondition": { "type": "controlAll" },
+  "winCondition": {
+    "type": "controlAll"
+  },
   "starThresholds": {
-    "time": [480000, 360000, 240000],
-    "units": [200, 150, 100]
+    "time": [
+      480000,
+      360000,
+      240000
+    ],
+    "units": [
+      200,
+      150,
+      100
+    ]
   }
 }

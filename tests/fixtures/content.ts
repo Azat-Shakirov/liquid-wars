@@ -157,9 +157,13 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
   height?: number;
   humanId?: string;
   aiId?: string;
+  humanLiquid?: string;
+  aiLiquid?: string;
 } = {}): LevelDef {
   const humanId = opts.humanId ?? 'p1';
   const aiId = opts.aiId ?? 'ai1';
+  const humanLiquid = opts.humanLiquid ?? 'water';
+  const aiLiquid = opts.aiLiquid ?? 'water';
   return {
     id: opts.id ?? 1,
     name: 'fixture',
@@ -169,8 +173,8 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
     map: { width: opts.width ?? 1280, height: opts.height ?? 720, background: 'stone' },
     terrain: { walls: [] },
     players: [
-      { id: humanId, type: 'human', color: '#3da9fc' },
-      { id: aiId, type: 'ai', color: '#e63946', aiConfigId: 'easy' },
+      { id: humanId, type: 'human', color: '#3da9fc', liquid: humanLiquid },
+      { id: aiId, type: 'ai', color: '#e63946', liquid: aiLiquid, aiConfigId: 'easy' },
     ],
     nodes: nodeSeeds.map((n) => ({
       id: n.id,

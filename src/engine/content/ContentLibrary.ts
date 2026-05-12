@@ -85,6 +85,9 @@ export interface LevelPlayerDef {
   id: PlayerId;
   type: 'human' | 'ai';
   color: string;
+  // Phase 5 — required. The player's liquid. Owned nodes inherit it
+  // at level load; captures convert to the new owner's liquid.
+  liquid: LiquidId;
   aiConfigId?: string;
 }
 

@@ -17,9 +17,9 @@ const ticksFor = (ms: number) => Math.ceil(ms / TICK_MS);
 describe('Slime (spellSpeedMultiplier 2.0)', () => {
   it('lab on slime concocts in ~half the wall-clock time', () => {
     const level = makeLevel([
-      { id: 'lab1', position: [200, 200], ownerId: 'p1', units: 60, type: 'lab', level: 1, liquid: 'slime' },
+      { id: 'lab1', position: [200, 200], ownerId: 'p1', units: 60, type: 'lab', level: 1 },
       { id: 'enemy', position: [600, 200], ownerId: 'ai1', units: 20, type: 'barracks', level: 1 },
-    ]);
+    ], { humanLiquid: 'slime' });
     const engine = new GameEngine(level, content);
     engine.startConcoction('lab1', 'freeze');
     const lab = engine.world.nodes.get('lab1')!;
@@ -35,7 +35,7 @@ describe('Slime (spellSpeedMultiplier 2.0)', () => {
 
   it('lab on water (baseline) is NOT yet ready at the half-time mark', () => {
     const level = makeLevel([
-      { id: 'lab1', position: [200, 200], ownerId: 'p1', units: 60, type: 'lab', level: 1, liquid: 'water' },
+      { id: 'lab1', position: [200, 200], ownerId: 'p1', units: 60, type: 'lab', level: 1 },
       { id: 'enemy', position: [600, 200], ownerId: 'ai1', units: 20, type: 'barracks', level: 1 },
     ]);
     const engine = new GameEngine(level, content);
@@ -54,11 +54,11 @@ describe('Slime (spellSpeedMultiplier 2.0)', () => {
 describe('Venom (travelSpeedMultiplier 1.4)', () => {
   it('units sent from a venom node have baseSpeed = water baseSpeed × 1.4', () => {
     const venomLevel = makeLevel([
-      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50, liquid: 'venom' },
+      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50 },
       { id: 'b', position: [700, 200], ownerId: 'ai1', units: 10 },
-    ]);
+    ], { humanLiquid: 'venom' });
     const waterLevel = makeLevel([
-      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50, liquid: 'water' },
+      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50 },
       { id: 'b', position: [700, 200], ownerId: 'ai1', units: 10 },
     ]);
 
@@ -76,11 +76,11 @@ describe('Venom (travelSpeedMultiplier 1.4)', () => {
 
   it('venom-sourced groups arrive in fewer ticks than water', () => {
     const venomLevel = makeLevel([
-      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50, liquid: 'venom' },
+      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50 },
       { id: 'b', position: [700, 200], ownerId: 'ai1', units: 10 },
-    ]);
+    ], { humanLiquid: 'venom' });
     const waterLevel = makeLevel([
-      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50, liquid: 'water' },
+      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50 },
       { id: 'b', position: [700, 200], ownerId: 'ai1', units: 10 },
     ]);
 
@@ -96,9 +96,9 @@ describe('Venom (travelSpeedMultiplier 1.4)', () => {
 
   it('sourceLiquid is captured at send-time and travels with the group', () => {
     const level = makeLevel([
-      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50, liquid: 'venom' },
+      { id: 'a', position: [100, 200], ownerId: 'p1', units: 50 },
       { id: 'b', position: [700, 200], ownerId: 'ai1', units: 10 },
-    ]);
+    ], { humanLiquid: 'venom' });
     const engine = new GameEngine(level, content);
     engine.sendUnits(['a'], 'b', 0.4);
 

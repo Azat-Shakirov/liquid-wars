@@ -117,8 +117,8 @@ describe('CombatSystem', () => {
     // an enemy-side concept.
     const content = makeContent();
     const level = makeLevel([
-      { id: 'b', position: [100, 0], ownerId: 'p1', liquid: 'ink', units: 10 },
-    ]);
+      { id: 'b', position: [100, 0], ownerId: 'p1', units: 10 },
+    ], { humanLiquid: 'ink' });
     const world = buildWorldFromLevel(level, content);
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));
     const sys = new CombatSystem(content);
@@ -132,8 +132,8 @@ describe('CombatSystem', () => {
   it('ink incomingDamageMultiplier 0.5 halves attacker effectiveness', () => {
     const content = makeContent();
     const level = makeLevel([
-      { id: 'b', position: [100, 0], ownerId: 'ai1', liquid: 'ink', units: 10 },
-    ]);
+      { id: 'b', position: [100, 0], ownerId: 'ai1', units: 10 },
+    ], { aiLiquid: 'ink' });
     const world = buildWorldFromLevel(level, content);
     // 12 water vs 10 ink → effective = 12 * 0.5 = 6; defender 10 - 6 = 4, holds.
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));

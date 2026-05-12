@@ -85,11 +85,23 @@ export function buildWorldFromLevel(
   const nodes = new Map<NodeId, Node>();
   const nodeOrder: NodeId[] = [];
 
+  // Phase 5: each player owns ONE liquid; owned nodes inherit it at load.
+  // Neutral nodes (ownerId null) keep the JSON-declared liquidType.
+  const playerLiquid = new Map<string, LiquidId>();
+  for (const pdef of level.players) {
+    if (!content.liquids[pdef.liquid as LiquidId]) {
+      throw new Error(`Level ${level.id} player '${pdef.id}' references unknown liquid '${pdef.liquid}'`);
+    }
+    playerLiquid.set(pdef.id, pdef.liquid as LiquidId);
+  }
+
   for (const ndef of level.nodes) {
     const typeDef = content.nodeTypes[ndef.nodeType as NodeTypeId];
     if (!typeDef) throw new Error(`Level ${level.id} references unknown nodeType '${ndef.nodeType}'`);
-    if (!content.liquids[ndef.liquidType as LiquidId]) {
-      throw new Error(`Level ${level.id} references unknown liquid '${ndef.liquidType}'`);
+    const ownerLiquid = ndef.ownerId !== null ? playerLiquid.get(ndef.ownerId) : undefined;
+    const effectiveLiquid = (ownerLiquid ?? ndef.liquidType) as LiquidId;
+    if (!content.liquids[effectiveLiquid]) {
+      throw new Error(`Level ${level.id} references unknown liquid '${effectiveLiquid}'`);
     }
     const stats = nodeTypeLevelStats(typeDef, ndef.level);
     const pos: Vec2 = vec2FromTuple(ndef.position);
@@ -105,7 +117,7 @@ export function buildWorldFromLevel(
       ownerId: ndef.ownerId,
       nodeType: ndef.nodeType,
       level: ndef.level,
-      liquidType: ndef.liquidType,
+      liquidType: effectiveLiquid,
       units: ndef.units,
       maxUnits: stats.maxUnits,
       productionProgress: 0,

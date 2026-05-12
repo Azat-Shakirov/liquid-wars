@@ -88,6 +88,10 @@ export const LevelPlayerSchema = z.object({
   id: z.string().min(1),
   type: z.enum(['human', 'ai']),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  // Phase 5 — each player owns ONE liquid. All of their owned nodes
+  // inherit it at level load; captures auto-convert to the new owner's
+  // liquid. Liquids cannot mix across players. Required.
+  liquid: z.string().min(1),
   aiConfigId: z.string().optional(),
 });
 

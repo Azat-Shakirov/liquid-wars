@@ -4,29 +4,135 @@
   "tutorialKey": "house",
   "tutorial": {
     "title": "Houses convert into specialists",
-    "body": "Hover any node to open its info panel. The panel's bottom section lists upgrade options.\n\nHouses produce slowly but can convert into a Barracks, Lab, or Tower at the cost of units stored in them. You start with two Houses — convert at least one into a Barracks to keep pace with the enemy."
+    "body": "Hover any node to open its info panel. The panel's bottom section lists upgrade options.\n\nHouses produce slowly but can convert into a Barracks, Lab, or Tower at the cost of units stored in them. You start with two Houses \u2014 convert at least one into a Barracks to keep pace with the enemy."
   },
   "objective": "Convert your Houses into Barracks (or Towers) and capture the red base.",
-  "introducesNodeTypes": ["house"],
+  "introducesNodeTypes": [
+    "house"
+  ],
   "introducesLiquids": [],
-  "map": { "width": 1280, "height": 720, "background": "stone" },
-  "terrain": { "walls": [] },
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
   "players": [
-    { "id": "p1",  "type": "human", "color": "#3da9fc" },
-    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "aiConfigId": "easy",
+      "liquid": "water"
+    }
   ],
   "nodes": [
-    { "id": "p1_b",     "position": [220, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
-    { "id": "p1_h_top", "position": [420, 220],  "ownerId": "p1",  "nodeType": "house",    "level": 1, "liquidType": "water", "units": 18 },
-    { "id": "p1_h_bot", "position": [420, 500],  "ownerId": "p1",  "nodeType": "house",    "level": 1, "liquidType": "water", "units": 18 },
-    { "id": "neutral",  "position": [640, 360],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 6  },
-    { "id": "ai1_b1",   "position": [900, 220],  "ownerId": "ai1", "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
-    { "id": "ai1_b2",   "position": [900, 500],  "ownerId": "ai1", "nodeType": "barracks", "level": 1, "liquidType": "water", "units": 8  },
-    { "id": "ai1_base", "position": [1100, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 }
+    {
+      "id": "p1_b",
+      "position": [
+        220,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 8
+    },
+    {
+      "id": "p1_h_top",
+      "position": [
+        420,
+        220
+      ],
+      "ownerId": "p1",
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 18
+    },
+    {
+      "id": "p1_h_bot",
+      "position": [
+        420,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 18
+    },
+    {
+      "id": "neutral",
+      "position": [
+        640,
+        360
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 6
+    },
+    {
+      "id": "ai1_b1",
+      "position": [
+        900,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 8
+    },
+    {
+      "id": "ai1_b2",
+      "position": [
+        900,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 8
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1100,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    }
   ],
-  "winCondition": { "type": "controlAll" },
+  "winCondition": {
+    "type": "controlAll"
+  },
   "starThresholds": {
-    "time": [360000, 240000, 180000],
-    "units": [120, 80, 50]
+    "time": [
+      360000,
+      240000,
+      180000
+    ],
+    "units": [
+      120,
+      80,
+      50
+    ]
   }
 }

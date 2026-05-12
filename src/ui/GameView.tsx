@@ -278,18 +278,17 @@ function nextLevelId(current: number, available: number[]): number | null {
   return available[idx + 1] ?? null;
 }
 
-// Dev playtest helper: returns a shallow-cloned LevelDef whose human-
-// owned starting nodes have their liquidType swapped to `liquidId`.
-// Enemy + neutral nodes are left alone — the override is for feeling
-// out the player's own buff. Auto-conversion on capture (§4.5) still
-// applies as usual once the player takes enemy territory.
+// Dev playtest helper: returns a shallow-cloned LevelDef whose human
+// player's `liquid` is swapped to `liquidId`. buildWorldFromLevel
+// propagates the override to every node the human owns (per-player
+// liquid model). Enemy + neutral nodes are left alone — the override
+// is for feeling out the player's own buff. Auto-conversion on capture
+// (§4.5) still applies as usual once the player takes enemy territory.
 function applyPlayerLiquidOverride(level: LevelDef, liquidId: LiquidId): LevelDef {
-  const human = level.players.find((p) => p.type === 'human');
-  if (!human) return level;
   return {
     ...level,
-    nodes: level.nodes.map((n) =>
-      n.ownerId === human.id ? { ...n, liquidType: liquidId } : n,
+    players: level.players.map((p) =>
+      p.type === 'human' ? { ...p, liquid: liquidId } : p,
     ),
   };
 }
