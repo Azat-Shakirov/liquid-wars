@@ -1,0 +1,31 @@
+{
+  "id": 16,
+  "name": "Venomous",
+  "tutorialKey": "venom",
+  "tutorial": {
+    "title": "Venom: faster strikes",
+    "body": "Your front barracks sits on Venom. Units sent FROM a Venom node travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react, and more raids per minute.\n\nThe enemy has a tower covering the approach. Speed past it before it can intercept enough."
+  },
+  "objective": "Strike fast from your Venom node and overrun the red base.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": ["venom"],
+  "map": { "width": 1280, "height": 720, "background": "stone" },
+  "terrain": { "walls": [] },
+  "players": [
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
+  ],
+  "nodes": [
+    { "id": "p1_back",   "position": [180, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "p1_venom",  "position": [440, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "venom", "units": 16 },
+    { "id": "ai1_tower", "position": [780, 360],  "ownerId": "ai1", "nodeType": "tower",    "level": 2, "liquidType": "water", "units": 20 },
+    { "id": "ai1_b1",    "position": [1040, 200], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_b2",    "position": [1040, 520], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_base",  "position": [1180, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 }
+  ],
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": {
+    "time": [360000, 270000, 210000],
+    "units": [150, 100, 60]
+  }
+}

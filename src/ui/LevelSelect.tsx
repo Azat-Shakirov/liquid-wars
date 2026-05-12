@@ -65,7 +65,16 @@ export function LevelSelect() {
           </button>
         </div>
       )}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, maxWidth: 720, width: '90%' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 12,
+        maxWidth: 900,
+        width: '90%',
+        maxHeight: '70vh',
+        overflowY: 'auto',
+        padding: '4px 8px',
+      }}>
         {sortedIds.map((id) => {
           const lv = content.levels[id]!;
           const unlocked = isLevelUnlocked(id, sortedIds, completedLevels);

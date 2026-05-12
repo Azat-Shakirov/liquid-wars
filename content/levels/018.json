@@ -1,0 +1,36 @@
+{
+  "id": 18,
+  "name": "Pincer",
+  "tutorialKey": null,
+  "objective": "Hold both flanks. Capture every red node.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": { "width": 1280, "height": 720, "background": "stone" },
+  "terrain": {
+    "walls": [
+      { "id": "w_nw", "points": [[420, 0],   [420, 180]] },
+      { "id": "w_sw", "points": [[420, 540], [420, 720]] },
+      { "id": "w_ne", "points": [[860, 0],   [860, 180]] },
+      { "id": "w_se", "points": [[860, 540], [860, 720]] }
+    ]
+  },
+  "players": [
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
+  ],
+  "nodes": [
+    { "id": "p1_main",   "position": [640, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 3, "liquidType": "water", "units": 24 },
+    { "id": "p1_lab",    "position": [640, 540],  "ownerId": "p1",  "nodeType": "lab",      "level": 2, "liquidType": "slime", "units": 60 },
+    { "id": "p1_tower",  "position": [640, 180],  "ownerId": "p1",  "nodeType": "tower",    "level": 2, "liquidType": "water", "units": 24 },
+    { "id": "ai1_nw",    "position": [200, 200],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_sw",    "position": [200, 520],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_ne",    "position": [1080, 200], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_se",    "position": [1080, 520], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai1_base",  "position": [1200, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 3, "liquidType": "water", "units": 24 }
+  ],
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": {
+    "time": [540000, 420000, 300000],
+    "units": [220, 160, 100]
+  }
+}
