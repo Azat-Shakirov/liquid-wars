@@ -25,8 +25,7 @@
       "id": "ai1",
       "type": "ai",
       "color": "#5cd65c",
-      "liquid": "slime",
-      "aiConfigId": "easy"
+      "liquid": "slime"
     }
   ],
   "nodes": [

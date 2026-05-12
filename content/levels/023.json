@@ -3,8 +3,8 @@
   "name": "Quick & Sticky",
   "tutorialKey": "slime",
   "tutorial": {
-    "title": "Slime: 2\u00d7 spell speed",
-    "body": "You are Slime. Spell concoction runs at double speed (15s \u2192 ~7.5s).\n\nWith Lab L2/L3 you can Bleed every 7.5s or Recruit every 7.5s. Win by tempo if you keep the Lab fed.\n\nThe red side has the numbers. You have the rhythm."
+    "title": "Slime: 2× spell speed",
+    "body": "You are Slime. Spell concoction runs at double speed (15s → ~7.5s).\n\nWith Lab L2/L3 you can Bleed every 7.5s or Recruit every 7.5s. Win by tempo if you keep the Lab fed.\n\nThe red side has the numbers. You have the rhythm."
   },
   "objective": "Spell-spam the red side into collapse.",
   "introducesNodeTypes": [],
@@ -30,8 +30,7 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water",
-      "aiConfigId": "easy"
+      "liquid": "water"
     }
   ],
   "nodes": [

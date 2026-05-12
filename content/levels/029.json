@@ -18,19 +18,55 @@
     "walls": [
       {
         "id": "w_top",
-        "points": [[640, 0], [640, 280]]
+        "points": [
+          [
+            640,
+            0
+          ],
+          [
+            640,
+            280
+          ]
+        ]
       },
       {
         "id": "w_bot",
-        "points": [[640, 440], [640, 720]]
+        "points": [
+          [
+            640,
+            440
+          ],
+          [
+            640,
+            720
+          ]
+        ]
       },
       {
         "id": "w_left",
-        "points": [[0, 360], [560, 360]]
+        "points": [
+          [
+            0,
+            360
+          ],
+          [
+            560,
+            360
+          ]
+        ]
       },
       {
         "id": "w_right",
-        "points": [[720, 360], [1280, 360]]
+        "points": [
+          [
+            720,
+            360
+          ],
+          [
+            1280,
+            360
+          ]
+        ]
       }
     ]
   },
@@ -45,28 +81,28 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water",
-      "aiConfigId": "easy"
+      "liquid": "water"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#5cd65c",
-      "liquid": "slime",
-      "aiConfigId": "easy"
+      "liquid": "slime"
     },
     {
       "id": "ai3",
       "type": "ai",
       "color": "#a01010",
-      "liquid": "blood",
-      "aiConfigId": "easy"
+      "liquid": "blood"
     }
   ],
   "nodes": [
     {
       "id": "p1_b1",
-      "position": [180, 180],
+      "position": [
+        180,
+        180
+      ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
@@ -75,7 +111,10 @@
     },
     {
       "id": "p1_b2",
-      "position": [400, 200],
+      "position": [
+        400,
+        200
+      ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 1,
@@ -84,7 +123,10 @@
     },
     {
       "id": "p1_lab",
-      "position": [180, 300],
+      "position": [
+        180,
+        300
+      ],
       "ownerId": "p1",
       "nodeType": "lab",
       "level": 2,
@@ -93,7 +135,10 @@
     },
     {
       "id": "ai1_b1",
-      "position": [1100, 180],
+      "position": [
+        1100,
+        180
+      ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
@@ -102,7 +147,10 @@
     },
     {
       "id": "ai1_b2",
-      "position": [880, 200],
+      "position": [
+        880,
+        200
+      ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 1,
@@ -111,7 +159,10 @@
     },
     {
       "id": "ai1_base",
-      "position": [1100, 300],
+      "position": [
+        1100,
+        300
+      ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
@@ -120,7 +171,10 @@
     },
     {
       "id": "ai2_b1",
-      "position": [180, 540],
+      "position": [
+        180,
+        540
+      ],
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 2,
@@ -129,7 +183,10 @@
     },
     {
       "id": "ai2_b2",
-      "position": [400, 520],
+      "position": [
+        400,
+        520
+      ],
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 1,
@@ -138,7 +195,10 @@
     },
     {
       "id": "ai2_lab",
-      "position": [180, 420],
+      "position": [
+        180,
+        420
+      ],
       "ownerId": "ai2",
       "nodeType": "lab",
       "level": 2,
@@ -147,7 +207,10 @@
     },
     {
       "id": "ai3_b1",
-      "position": [1100, 540],
+      "position": [
+        1100,
+        540
+      ],
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
@@ -156,7 +219,10 @@
     },
     {
       "id": "ai3_b2",
-      "position": [880, 520],
+      "position": [
+        880,
+        520
+      ],
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 1,
@@ -165,7 +231,10 @@
     },
     {
       "id": "ai3_base",
-      "position": [1100, 420],
+      "position": [
+        1100,
+        420
+      ],
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
@@ -174,7 +243,10 @@
     },
     {
       "id": "nt_center",
-      "position": [640, 360],
+      "position": [
+        640,
+        360
+      ],
       "ownerId": null,
       "nodeType": "tower",
       "level": 2,
@@ -186,7 +258,15 @@
     "type": "controlAll"
   },
   "starThresholds": {
-    "time": [720000, 540000, 420000],
-    "units": [360, 260, 180]
+    "time": [
+      720000,
+      540000,
+      420000
+    ],
+    "units": [
+      360,
+      260,
+      180
+    ]
   }
 }

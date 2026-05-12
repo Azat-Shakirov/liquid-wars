@@ -4,7 +4,7 @@
   "tutorialKey": "blood_practice",
   "tutorial": {
     "title": "Blood spreads",
-    "body": "Every node you capture becomes Blood. Soon your whole front line is sending cheap-capture attackers.\n\nThe enemy has fortified \u2014 more nodes, higher levels. Lean on the snowball."
+    "body": "Every node you capture becomes Blood. Soon your whole front line is sending cheap-capture attackers.\n\nThe enemy has fortified — more nodes, higher levels. Lean on the snowball."
   },
   "objective": "Snowball Blood across the map until red is gone.",
   "introducesNodeTypes": [],
@@ -28,7 +28,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

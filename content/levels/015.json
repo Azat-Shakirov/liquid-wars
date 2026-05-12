@@ -4,7 +4,7 @@
   "tutorialKey": "bleed",
   "tutorial": {
     "title": "Bleed: permanent production halt",
-    "body": "Lab L2 unlocks Bleed (35 units).\n\nBleed targets a node and drains 1 unit/sec from it permanently \u2014 until that node is captured by someone other than its current owner. Production halts while bleeding.\n\nThe enemy's main base produces too fast to take by force. Bleed it. Push in."
+    "body": "Lab L2 unlocks Bleed (35 units).\n\nBleed targets a node and drains 1 unit/sec from it permanently — until that node is captured by someone other than its current owner. Production halts while bleeding.\n\nThe enemy's main base produces too fast to take by force. Bleed it. Push in."
   },
   "objective": "Bleed the strong red base, then capture it.",
   "introducesNodeTypes": [],
@@ -28,7 +28,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

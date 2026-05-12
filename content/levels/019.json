@@ -4,7 +4,7 @@
   "tutorialKey": "blood",
   "tutorial": {
     "title": "Blood: cheaper captures",
-    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid \u2014 Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
+    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid — Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
   },
   "objective": "Sweep the red side with cheap rolling captures.",
   "introducesNodeTypes": [],
@@ -30,7 +30,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

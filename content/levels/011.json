@@ -4,7 +4,7 @@
   "tutorialKey": "walls_practice",
   "tutorial": {
     "title": "Walls in numbers",
-    "body": "Multiple walls form a maze. Your hover-preview lines show the exact route units will take.\n\nPlan around the geometry \u2014 sometimes a longer route is the only route."
+    "body": "Multiple walls form a maze. Your hover-preview lines show the exact route units will take.\n\nPlan around the geometry — sometimes a longer route is the only route."
   },
   "objective": "Find your way through and capture every red node.",
   "introducesNodeTypes": [],
@@ -81,7 +81,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

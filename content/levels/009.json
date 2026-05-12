@@ -4,7 +4,7 @@
   "tutorialKey": "tower_practice",
   "tutorial": {
     "title": "Two towers cover wider ground",
-    "body": "Tower ranges overlap when placed near each other \u2014 enemy units crossing the corridor between them get chipped twice.\n\nYou have two Houses to convert. Use both as Towers (or one Tower + one Barracks)."
+    "body": "Tower ranges overlap when placed near each other — enemy units crossing the corridor between them get chipped twice.\n\nYou have two Houses to convert. Use both as Towers (or one Tower + one Barracks)."
   },
   "objective": "Hold the corridor, then break through.",
   "introducesNodeTypes": [],
@@ -28,7 +28,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

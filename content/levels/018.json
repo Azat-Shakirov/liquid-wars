@@ -4,7 +4,7 @@
   "tutorialKey": "recruit_practice",
   "tutorial": {
     "title": "Recruit a chain reaction",
-    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines \u2014 suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
+    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines — suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
   },
   "objective": "Recruit deep, then sweep the rest.",
   "introducesNodeTypes": [],
@@ -28,7 +28,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

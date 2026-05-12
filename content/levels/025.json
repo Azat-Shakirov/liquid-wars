@@ -4,7 +4,7 @@
   "tutorialKey": "venom",
   "tutorial": {
     "title": "Venom: faster strikes",
-    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach \u2014 speed past it before it can intercept enough."
+    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach — speed past it before it can intercept enough."
   },
   "objective": "Strike fast and overrun the red side.",
   "introducesNodeTypes": [],
@@ -30,8 +30,7 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water",
-      "aiConfigId": "easy"
+      "liquid": "water"
     }
   ],
   "nodes": [

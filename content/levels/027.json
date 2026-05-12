@@ -4,7 +4,7 @@
   "tutorialKey": "auto_convert",
   "tutorial": {
     "title": "Auto-conversion: liquid follows the capture",
-    "body": "Four neutral nodes sit between you and the enemy, each on a different liquid. Capturing any of them converts the node to YOUR liquid \u2014 the special liquid is GONE.\n\nIf you want to OWN a Slime Lab or an Ink Tower, you'd need to be Slime or Ink yourself first. (The dev liquid picker lets you experiment.)\n\nCapturing in different orders builds different early empires."
+    "body": "Four neutral nodes sit between you and the enemy, each on a different liquid. Capturing any of them converts the node to YOUR liquid — the special liquid is GONE.\n\nIf you want to OWN a Slime Lab or an Ink Tower, you'd need to be Slime or Ink yourself first. (The dev liquid picker lets you experiment.)\n\nCapturing in different orders builds different early empires."
   },
   "objective": "Capture all red nodes. Read the neutrals carefully.",
   "introducesNodeTypes": [],
@@ -28,8 +28,7 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water",
-      "aiConfigId": "easy"
+      "liquid": "water"
     }
   ],
   "nodes": [

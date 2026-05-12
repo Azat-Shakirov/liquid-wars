@@ -4,7 +4,7 @@
   "tutorialKey": "walls",
   "tutorial": {
     "title": "Walls block movement",
-    "body": "Stone walls cut across the map. Units cannot pass through them \u2014 they route around automatically.\n\nHover-preview lines now follow the actual routed path. Find the gap and push through."
+    "body": "Stone walls cut across the map. Units cannot pass through them — they route around automatically.\n\nHover-preview lines now follow the actual routed path. Find the gap and push through."
   },
   "objective": "Route through the gap and capture the red base.",
   "introducesNodeTypes": [],
@@ -55,7 +55,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

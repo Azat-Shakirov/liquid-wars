@@ -4,7 +4,7 @@
   "tutorialKey": "tower",
   "tutorial": {
     "title": "Towers defend, they don't produce",
-    "body": "A Tower fires at enemy units in transit AND divides any hostile arrival count by its defense rate (\u00f72 at L1).\n\nTowers cannot produce units \u2014 keep them topped up via friendly sends from your Barracks.\n\nConvert your House into a Tower and break the red onslaught."
+    "body": "A Tower fires at enemy units in transit AND divides any hostile arrival count by its defense rate (÷2 at L1).\n\nTowers cannot produce units — keep them topped up via friendly sends from your Barracks.\n\nConvert your House into a Tower and break the red onslaught."
   },
   "objective": "Build a Tower, hold the line, then counter-attack.",
   "introducesNodeTypes": [
@@ -30,7 +30,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

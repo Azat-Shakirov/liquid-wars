@@ -25,22 +25,19 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water",
-      "aiConfigId": "easy"
+      "liquid": "water"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#5cd65c",
-      "liquid": "slime",
-      "aiConfigId": "easy"
+      "liquid": "slime"
     },
     {
       "id": "ai3",
       "type": "ai",
       "color": "#a01010",
-      "liquid": "blood",
-      "aiConfigId": "easy"
+      "liquid": "blood"
     }
   ],
   "nodes": [

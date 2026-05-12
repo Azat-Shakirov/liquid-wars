@@ -4,7 +4,7 @@
   "tutorialKey": "ink_practice",
   "tutorial": {
     "title": "Ink at scale",
-    "body": "The Ink enemy has built a deep defensive network. Brute force costs you twice as many units. Plan with spells, or accept the grind.\n\nNote: when you capture an Ink node, it becomes YOUR liquid \u2014 Ink defense is gone the moment you flip it."
+    "body": "The Ink enemy has built a deep defensive network. Brute force costs you twice as many units. Plan with spells, or accept the grind.\n\nNote: when you capture an Ink node, it becomes YOUR liquid — Ink defense is gone the moment you flip it."
   },
   "objective": "Break the Ink network and capture everything red.",
   "introducesNodeTypes": [],
@@ -28,8 +28,7 @@
       "id": "ai1",
       "type": "ai",
       "color": "#1a1a24",
-      "liquid": "ink",
-      "aiConfigId": "easy"
+      "liquid": "ink"
     }
   ],
   "nodes": [

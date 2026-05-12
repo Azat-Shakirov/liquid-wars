@@ -4,7 +4,7 @@
   "tutorialKey": "freeze_practice",
   "tutorial": {
     "title": "Freeze the right node",
-    "body": "Freeze costs 25 units per cast. Pick targets that matter \u2014 a heavily-defended base, a Tower covering your approach, or a fast-producing barracks.\n\nThe enemy has two strong nodes. You can freeze them in sequence."
+    "body": "Freeze costs 25 units per cast. Pick targets that matter — a heavily-defended base, a Tower covering your approach, or a fast-producing barracks.\n\nThe enemy has two strong nodes. You can freeze them in sequence."
   },
   "objective": "Time your freezes and capture the red side.",
   "introducesNodeTypes": [],
@@ -28,7 +28,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],

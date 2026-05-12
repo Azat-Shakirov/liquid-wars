@@ -4,7 +4,7 @@
   "tutorialKey": "lab_freeze",
   "tutorial": {
     "title": "Labs concoct spells",
-    "body": "Hover your Lab and click Concoct \u2192 Freeze. After ~15 seconds the spell is ready.\n\nTo cast: drag from your ready Lab to any node. Freeze instantly neutralizes the target \u2014 units preserved, ownership erased.\n\nLabs cannot produce units, only consume them. The red main base is too strong to take by force. Freeze it, then capture the empty shell."
+    "body": "Hover your Lab and click Concoct → Freeze. After ~15 seconds the spell is ready.\n\nTo cast: drag from your ready Lab to any node. Freeze instantly neutralizes the target — units preserved, ownership erased.\n\nLabs cannot produce units, only consume them. The red main base is too strong to take by force. Freeze it, then capture the empty shell."
   },
   "objective": "Freeze the strong red base, then capture it.",
   "introducesNodeTypes": [
@@ -30,7 +30,6 @@
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "aiConfigId": "easy",
       "liquid": "water"
     }
   ],
