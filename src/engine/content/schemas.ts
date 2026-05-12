@@ -78,6 +78,11 @@ export const AIPersonalitySchema = z.object({
     minSourceUnits: z.number(),
     attackRatio: z.number(),
     upgradeUnitsReserve: z.number(),
+    // Optional expansion cap (v2.7.1). When set, DumbStrategy and
+    // VultureStrategy return null once the AI owns ≥ this many nodes,
+    // so the AI focuses on development/spells instead of sprawling.
+    // Slime's signature behavior (cap around lab + a few barracks).
+    maxOwnedNodes: z.number().int().positive().optional(),
   }),
   strategies: z.array(z.string()),
 });

@@ -35,6 +35,14 @@ export const DumbStrategy: Strategy = {
       else targets.push(n);
     }
 
+    // v2.7.1: expansion cap. When the personality declares a maximum
+    // owned-node count and we've reached it, this strategy yields so the
+    // AI focuses on internal development (upgrades, spells) instead of
+    // sprawling. Slime's signature behavior — "max 2-3 barracks then
+    // concoct." Lets the chain fall through to upgrades / spells / no-op.
+    const cap = personality.thresholds.maxOwnedNodes;
+    if (cap !== undefined && myNodes.length >= cap) return null;
+
     const sources = myNodes
       .filter((n) => !n.isFrozen && n.units >= personality.thresholds.minSourceUnits)
       .sort((a, b) => b.units - a.units || (a.id < b.id ? -1 : 1));

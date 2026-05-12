@@ -10,7 +10,8 @@
   "thresholds": {
     "minSourceUnits": 12,
     "attackRatio": 1.0,
-    "upgradeUnitsReserve": 30
+    "upgradeUnitsReserve": 30,
+    "maxOwnedNodes": 4
   },
   "strategies": ["SpellCastStrategy", "ConcoctStrategy", "UpgradeStrategy", "DumbStrategy"]
 }

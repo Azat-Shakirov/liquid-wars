@@ -32,10 +32,11 @@ describe('UpgradeStrategy', () => {
     expect(d).toBeNull();
   });
 
-  it('upgrades within-type when units exceed reserve + upgradeCost', () => {
-    // Barracks L1 → L2 costs 5; reserve is 30. So units must be ≥ 30.
+  it('upgrades within-type when node is saturated (v2.7.1)', () => {
+    // Barracks L1: maxUnits 50, upgradeCost L1→L2 = 5. SATURATION_BUFFER 2
+    // so trigger fires at units ≥ 48.
     const level = makeLevel([
-      { id: 'b1', position: [200, 200], ownerId: 'ai1', units: 40, type: 'barracks', level: 1 },
+      { id: 'b1', position: [200, 200], ownerId: 'ai1', units: 49, type: 'barracks', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
     ], { aiLiquid: 'water' });
     const engine = new GameEngine(level, content);
@@ -49,10 +50,21 @@ describe('UpgradeStrategy', () => {
     }
   });
 
-  it('converts House to preferred target (barracks for balanced)', () => {
-    // House conversion to barracks costs 5; reserve 30.
+  it('does NOT upgrade when node is not yet saturated', () => {
+    // Barracks L1 maxUnits=50, threshold = 48. 40 units < 48 → null.
     const level = makeLevel([
-      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 35, type: 'house', level: 1 },
+      { id: 'b1', position: [200, 200], ownerId: 'ai1', units: 40, type: 'barracks', level: 1 },
+      { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
+    ], { aiLiquid: 'water' });
+    const engine = new GameEngine(level, content);
+    const me = engine.world.players.find((p) => p.id === 'ai1')!;
+    expect(UpgradeStrategy.decide(engine.world, me, easyAI, content)).toBeNull();
+  });
+
+  it('converts House to preferred target (barracks for balanced)', () => {
+    // House maxUnits 20; trigger at units ≥ 18. Conversion cost = 5.
+    const level = makeLevel([
+      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 19, type: 'house', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
     ], { aiLiquid: 'water' });
     const engine = new GameEngine(level, content);
@@ -68,7 +80,7 @@ describe('UpgradeStrategy', () => {
   it('converts House to tower when defense weight is high', () => {
     const inkLike = withWeights({ defense: 0.9, spellUse: 0 });
     const level = makeLevel([
-      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 35, type: 'house', level: 1 },
+      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 19, type: 'house', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
     ]);
     const engine = new GameEngine(level, content);
@@ -81,7 +93,7 @@ describe('UpgradeStrategy', () => {
   it('converts House to lab when spellUse weight is high', () => {
     const slimeLike = withWeights({ spellUse: 0.9, defense: 0.1 });
     const level = makeLevel([
-      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 35, type: 'house', level: 1 },
+      { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 19, type: 'house', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
     ]);
     const engine = new GameEngine(level, content);
@@ -197,6 +209,40 @@ describe('SpellCastStrategy', () => {
     const d = SpellCastStrategy.decide(engine.world, me, spellUser, content);
     expect(d!.kind).toBe('cast');
     if (d && d.kind === 'cast') expect(d.targetNodeId).toBe('eL');
+  });
+});
+
+describe('DumbStrategy expansion cap (v2.7.1)', () => {
+  it('returns null when ownedNodes >= maxOwnedNodes', async () => {
+    const { DumbStrategy } = await import('../../../src/engine/ai/strategies/DumbStrategy');
+    const capped: AIPersonalityDef = {
+      ...easyAI,
+      thresholds: { ...easyAI.thresholds, maxOwnedNodes: 2 },
+    };
+    const level = makeLevel([
+      { id: 'a1', position: [200, 200], ownerId: 'ai1', units: 30, type: 'barracks', level: 1 },
+      { id: 'a2', position: [300, 200], ownerId: 'ai1', units: 30, type: 'barracks', level: 1 },
+      { id: 'e',  position: [600, 200], ownerId: 'p1',  units: 5 },
+    ]);
+    const engine = new GameEngine(level, content);
+    const me = engine.world.players.find((p) => p.id === 'ai1')!;
+    expect(DumbStrategy.decide(engine.world, me, capped, content)).toBeNull();
+  });
+
+  it('still attacks when below the cap', async () => {
+    const { DumbStrategy } = await import('../../../src/engine/ai/strategies/DumbStrategy');
+    const capped: AIPersonalityDef = {
+      ...easyAI,
+      thresholds: { ...easyAI.thresholds, maxOwnedNodes: 4 },
+    };
+    const level = makeLevel([
+      { id: 'a1', position: [200, 200], ownerId: 'ai1', units: 30, type: 'barracks', level: 1 },
+      { id: 'e',  position: [600, 200], ownerId: 'p1',  units: 5 },
+    ]);
+    const engine = new GameEngine(level, content);
+    const me = engine.world.players.find((p) => p.id === 'ai1')!;
+    const d = DumbStrategy.decide(engine.world, me, capped, content);
+    expect(d?.kind).toBe('send');
   });
 });
 

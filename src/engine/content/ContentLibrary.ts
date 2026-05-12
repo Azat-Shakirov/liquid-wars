@@ -77,6 +77,7 @@ export interface AIPersonalityDef {
     minSourceUnits: number;
     attackRatio: number;
     upgradeUnitsReserve: number;
+    maxOwnedNodes?: number;
   };
   strategies: string[];
 }

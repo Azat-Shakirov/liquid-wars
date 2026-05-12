@@ -131,8 +131,39 @@ function simulate(level: LevelDef, content: ContentLibrary, maxTicks: number): S
   const intervalTicks = Math.max(1, Math.ceil(1500 / TICK_MS));
   let nextPlayerDecisionTick = intervalTicks;
 
+  // v2.7.1 — mirror the AI's saturation-trigger upgrade so the greedy
+  // floor stays comparable to the AI now that AI upgrades aggressively.
+  // Without this, AI snowballs (upgrades → faster production → more
+  // upgrades) and the greedy player can't keep pace structurally.
+  const SATURATION_BUFFER = 2;
+  function tryUpgradeAtSaturation(): boolean {
+    for (const id of engine.world.nodeOrder) {
+      const n = engine.world.nodes.get(id);
+      if (!n) continue;
+      if (n.ownerId !== me!.id) continue;
+      if (n.isFrozen) continue;
+      if (n.units < n.maxUnits - SATURATION_BUFFER) continue;
+      if (n.nodeType === 'house') {
+        const r = engine.upgradeNode(n.id, 'barracks');
+        if (r.ok) return true;
+        continue;
+      }
+      const def = content.nodeTypes[n.nodeType];
+      const next = def?.levels.find((l) => l.level === n.level + 1);
+      if (!next) continue;
+      const cost = next.upgradeCost ?? Infinity;
+      if (!Number.isFinite(cost) || n.units < cost) continue;
+      const r = engine.upgradeNode(n.id);
+      if (r.ok) return true;
+    }
+    return false;
+  }
+
   for (let i = 0; i < maxTicks; i++) {
     if (engine.world.tick >= nextPlayerDecisionTick) {
+      // Try upgrade first (same as Water/Ink AI). Up to 2 upgrades per
+      // decision tick to mirror AIController's MAX_DECISIONS_PER_TICK.
+      tryUpgradeAtSaturation() && tryUpgradeAtSaturation();
       const decision = optimalGreedyDecide(engine.world, me, content);
       if (decision) {
         engine.sendUnits(decision.fromNodeIds, decision.toNodeId, decision.fraction);

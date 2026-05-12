@@ -40,30 +40,43 @@ export class AIController {
     const me: Player | undefined = engine.world.players.find((p) => p.id === this.playerId);
     if (!me) return;
 
-    for (const stratId of this.personality.strategies) {
-      const strat = STRATEGY_TABLE[stratId];
-      if (!strat) continue;
-      const decision = strat.decide(engine.world, me, this.personality, engine.content);
-      if (!decision) continue;
+    // v2.7.1: fire up to MAX_DECISIONS_PER_TICK actions per decision
+    // interval. Lets a single decision tick handle multiple saturated
+    // upgrades, or upgrade-then-attack, instead of trickling one action
+    // per interval. Cap keeps the AI from running away with arbitrary
+    // throughput; in practice most ticks fire 1-2 actions before the
+    // strategy chain exhausts.
+    for (let i = 0; i < MAX_DECISIONS_PER_TICK; i++) {
+      let fired = false;
+      for (const stratId of this.personality.strategies) {
+        const strat = STRATEGY_TABLE[stratId];
+        if (!strat) continue;
+        const decision = strat.decide(engine.world, me, this.personality, engine.content);
+        if (!decision) continue;
 
-      switch (decision.kind) {
-        case 'send':
-          engine.sendUnits(decision.fromNodeIds, decision.toNodeId, decision.fraction);
-          break;
-        case 'upgrade':
-          engine.upgradeNode(decision.nodeId, decision.targetType);
-          break;
-        case 'concoct':
-          engine.startConcoction(decision.labNodeId, decision.spellId);
-          break;
-        case 'cast':
-          engine.castSpell(decision.labNodeId, decision.targetNodeId);
-          break;
+        switch (decision.kind) {
+          case 'send':
+            engine.sendUnits(decision.fromNodeIds, decision.toNodeId, decision.fraction);
+            break;
+          case 'upgrade':
+            engine.upgradeNode(decision.nodeId, decision.targetType);
+            break;
+          case 'concoct':
+            engine.startConcoction(decision.labNodeId, decision.spellId);
+            break;
+          case 'cast':
+            engine.castSpell(decision.labNodeId, decision.targetNodeId);
+            break;
+        }
+        fired = true;
+        break;
       }
-      break;
+      if (!fired) break;
     }
 
     const intervalTicks = Math.max(1, Math.ceil(this.personality.decisionIntervalMs / TICK_MS));
     this.nextDecisionTick = engine.world.tick + intervalTicks;
   }
 }
+
+const MAX_DECISIONS_PER_TICK = 2;

@@ -153,7 +153,7 @@ export const slimeAI: AIPersonalityDef = {
   id: 'slime',
   decisionIntervalMs: 2000,
   weights: { aggression: 0.4, defense: 0.3, economy: 0.6, spellUse: 0.9 },
-  thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30 },
+  thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30, maxOwnedNodes: 4 },
   strategies: ['SpellCastStrategy', 'ConcoctStrategy', 'UpgradeStrategy', 'DumbStrategy'],
 };
 

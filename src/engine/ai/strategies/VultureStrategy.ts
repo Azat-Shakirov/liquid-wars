@@ -42,6 +42,11 @@ export const VultureStrategy: Strategy = {
       else targets.push(n);
     }
 
+    // Same expansion cap as DumbStrategy. Venom is meant to be a fast
+    // harasser, not a sprawler — capping owned nodes keeps it lean.
+    const cap = personality.thresholds.maxOwnedNodes;
+    if (cap !== undefined && myNodes.length >= cap) return null;
+
     const sources = myNodes
       .filter((n) => !n.isFrozen && n.units >= personality.thresholds.minSourceUnits)
       .sort((a, b) => b.units - a.units || (a.id < b.id ? -1 : 1));
