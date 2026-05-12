@@ -1,32 +1,31 @@
 {
   "id": 6,
-  "name": "Chokepoint",
-  "tutorialKey": null,
-  "introducesNodeTypes": [],
+  "name": "Hold the Line",
+  "tutorialKey": "tower",
+  "tutorial": {
+    "title": "Towers defend, they don't produce",
+    "body": "A Tower fires at enemy units in transit (the attack range is shown when selected) AND divides any hostile arrival count by its defense rate.\n\nTowers cannot produce units — keep them topped up via friendly sends from your Barracks.\n\nConvert your House into a Tower and use it to break the red onslaught."
+  },
+  "objective": "Convert your House to a Tower, hold the line, and capture the red side.",
+  "introducesNodeTypes": ["tower"],
   "introducesLiquids": [],
   "map": { "width": 1280, "height": 720, "background": "stone" },
-  "terrain": {
-    "walls": [
-      { "id": "w_top",    "points": [[640, 0],   [640, 280]] },
-      { "id": "w_bottom", "points": [[640, 360], [640, 720]] }
-    ]
-  },
+  "terrain": { "walls": [] },
   "players": [
     { "id": "p1",  "type": "human", "color": "#3da9fc" },
     { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
   ],
   "nodes": [
-    { "id": "p_b1",      "position": [180, 220],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
-    { "id": "p_b2",      "position": [180, 520],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
-    { "id": "p_h",       "position": [380, 360],  "ownerId": "p1",  "nodeType": "house",    "level": 1, "liquidType": "water", "units": 12 },
-    { "id": "neutral_t", "position": [640, 320],  "ownerId": null,  "nodeType": "tower",    "level": 1, "liquidType": "water", "units": 10 },
-    { "id": "ai_h",      "position": [900, 360],  "ownerId": "ai1", "nodeType": "house",    "level": 1, "liquidType": "water", "units": 12 },
-    { "id": "ai_b1",     "position": [1100, 220], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
-    { "id": "ai_b2",     "position": [1100, 520], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 }
+    { "id": "p1_b_top", "position": [200, 220],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "p1_b_bot", "position": [200, 500],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "p1_h",     "position": [460, 360],  "ownerId": "p1",  "nodeType": "house",    "level": 1, "liquidType": "water", "units": 18 },
+    { "id": "ai1_b1",   "position": [840, 220],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_b2",   "position": [840, 500],  "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_base", "position": [1100, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 3, "liquidType": "water", "units": 22 }
   ],
   "winCondition": { "type": "controlAll" },
   "starThresholds": {
-    "time": [420000, 360000, 300000],
-    "units": [200, 150, 100]
+    "time": [420000, 300000, 240000],
+    "units": [150, 100, 60]
   }
 }

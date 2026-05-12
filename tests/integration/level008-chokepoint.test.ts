@@ -1,5 +1,6 @@
-// Phase 3 — level 006 "Chokepoint" loads, builds a pathCache, and routes
+// Phase 3 — Chokepoint level loads, builds a pathCache, and routes
 // pair-paths around the wall instead of through it.
+// Moved 006 → 008 in Phase 5 to make room for Hold the Line / Narrow Path tutorials.
 
 import { describe, it, expect } from 'vitest';
 import { GameEngine } from '../../src/engine/GameEngine';
@@ -7,13 +8,13 @@ import { LevelSchema } from '../../src/engine/content/schemas';
 import { pathCacheKey } from '../../src/engine/PathSystem';
 import { makeContent } from '../fixtures/content';
 import type { LevelDef } from '../../src/engine/content/ContentLibrary';
-import level006 from '../../content/levels/006.json';
+import level008 from '../../content/levels/008.json';
 
-describe('level 006 — Chokepoint', () => {
-  const parsed = LevelSchema.parse(level006) as LevelDef;
+describe('level 008 — Chokepoint', () => {
+  const parsed = LevelSchema.parse(level008) as LevelDef;
 
   it('schema validates and engine accepts the level', () => {
-    expect(parsed.id).toBe(6);
+    expect(parsed.id).toBe(8);
     expect(parsed.terrain.walls.length).toBe(2);
     const engine = new GameEngine(parsed, makeContent());
     expect(engine.world.walls.length).toBe(2);

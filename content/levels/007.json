@@ -1,27 +1,35 @@
 {
   "id": 7,
-  "name": "Liquid Lattice",
-  "tutorialKey": null,
+  "name": "Narrow Path",
+  "tutorialKey": "walls",
+  "tutorial": {
+    "title": "Walls block movement",
+    "body": "Stone walls cut across the map. Units cannot pass through them — they route around automatically.\n\nHover-preview lines now follow the actual routed path. If a target is fully walled off, the preview turns faint red and the send drops silently.\n\nFind the gap and push through."
+  },
+  "objective": "Route through the gap and capture the red base.",
   "introducesNodeTypes": [],
-  "introducesLiquids": ["blood", "ink", "slime", "venom"],
+  "introducesLiquids": [],
   "map": { "width": 1280, "height": 720, "background": "stone" },
-  "terrain": { "walls": [] },
+  "terrain": {
+    "walls": [
+      { "id": "w_top",    "points": [[640, 0],   [640, 240]] },
+      { "id": "w_bottom", "points": [[640, 480], [640, 720]] }
+    ]
+  },
   "players": [
     { "id": "p1",  "type": "human", "color": "#3da9fc" },
     { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
   ],
   "nodes": [
-    { "id": "p_b1",     "position": [160, 360],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
-    { "id": "n_blood",  "position": [420, 180],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "blood", "units": 8 },
-    { "id": "n_venom",  "position": [420, 540],  "ownerId": null,  "nodeType": "barracks", "level": 1, "liquidType": "venom", "units": 8 },
-    { "id": "n_slime",  "position": [640, 360],  "ownerId": null,  "nodeType": "lab",      "level": 1, "liquidType": "slime", "units": 12 },
-    { "id": "n_ink",    "position": [860, 360],  "ownerId": null,  "nodeType": "tower",    "level": 1, "liquidType": "ink",   "units": 10 },
-    { "id": "ai_b1",    "position": [1120, 220], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
-    { "id": "ai_b2",    "position": [1120, 500], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 }
+    { "id": "p1_top",   "position": [240, 220],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "p1_bot",   "position": [240, 500],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_top",  "position": [1040, 220], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_bot",  "position": [1040, 500], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 },
+    { "id": "ai1_base", "position": [1180, 360], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 14 }
   ],
   "winCondition": { "type": "controlAll" },
   "starThresholds": {
-    "time": [480000, 360000, 240000],
-    "units": [200, 150, 100]
+    "time": [360000, 300000, 240000],
+    "units": [150, 100, 60]
   }
 }

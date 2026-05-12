@@ -1,0 +1,37 @@
+{
+  "id": 8,
+  "name": "Chokepoint",
+  "tutorialKey": "chokepoint",
+  "tutorial": {
+    "title": "Towers + chokepoints lock down terrain",
+    "body": "A neutral Tower sits in the gap. Whoever captures it controls the chokepoint — its attack range covers the entire opening, and its defense rate makes it hard to take back.\n\nRace the enemy to the Tower. If they get there first, you'll need overwhelming numbers."
+  },
+  "objective": "Capture the neutral Tower, then break the red side.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": { "width": 1280, "height": 720, "background": "stone" },
+  "terrain": {
+    "walls": [
+      { "id": "w_top",    "points": [[640, 0],   [640, 280]] },
+      { "id": "w_bottom", "points": [[640, 360], [640, 720]] }
+    ]
+  },
+  "players": [
+    { "id": "p1",  "type": "human", "color": "#3da9fc" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "aiConfigId": "easy" }
+  ],
+  "nodes": [
+    { "id": "p_b1",      "position": [180, 220],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "p_b2",      "position": [180, 520],  "ownerId": "p1",  "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "p_h",       "position": [380, 360],  "ownerId": "p1",  "nodeType": "house",    "level": 1, "liquidType": "water", "units": 12 },
+    { "id": "neutral_t", "position": [640, 320],  "ownerId": null,  "nodeType": "tower",    "level": 1, "liquidType": "water", "units": 10 },
+    { "id": "ai_h",      "position": [900, 360],  "ownerId": "ai1", "nodeType": "house",    "level": 1, "liquidType": "water", "units": 12 },
+    { "id": "ai_b1",     "position": [1100, 220], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 },
+    { "id": "ai_b2",     "position": [1100, 520], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "liquidType": "water", "units": 16 }
+  ],
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": {
+    "time": [420000, 360000, 300000],
+    "units": [200, 150, 100]
+  }
+}
