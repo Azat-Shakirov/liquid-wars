@@ -43,8 +43,16 @@ export const DumbStrategy: Strategy = {
     const cap = personality.thresholds.maxOwnedNodes;
     if (cap !== undefined && myNodes.length >= cap) return null;
 
+    // v2.7.2: never drain a lab if the personality uses spells. Labs are
+    // reservoirs for spell unit-costs (Freeze 25u, Bleed 35u, Recruit
+    // 50u); using one as a send source would gut its ability to concoct
+    // the very next tick. Slime's lab going 50u → 25u right after
+    // queueing a freeze was the symptom. Non-spell personalities can
+    // still drain captured labs (they have no other use for them).
+    const usesSpells = personality.weights.spellUse > 0;
     const sources = myNodes
       .filter((n) => !n.isFrozen && n.units >= personality.thresholds.minSourceUnits)
+      .filter((n) => !(usesSpells && n.nodeType === 'lab'))
       .sort((a, b) => b.units - a.units || (a.id < b.id ? -1 : 1));
     if (sources.length === 0) return null;
 

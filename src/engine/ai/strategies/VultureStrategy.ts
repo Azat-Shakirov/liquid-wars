@@ -47,8 +47,12 @@ export const VultureStrategy: Strategy = {
     const cap = personality.thresholds.maxOwnedNodes;
     if (cap !== undefined && myNodes.length >= cap) return null;
 
+    // Mirror DumbStrategy's lab-protection (v2.7.2): spell-using
+    // personalities never drain their own lab.
+    const usesSpells = personality.weights.spellUse > 0;
     const sources = myNodes
       .filter((n) => !n.isFrozen && n.units >= personality.thresholds.minSourceUnits)
+      .filter((n) => !(usesSpells && n.nodeType === 'lab'))
       .sort((a, b) => b.units - a.units || (a.id < b.id ? -1 : 1));
     if (sources.length === 0) return null;
     if (targets.length === 0) return null;
