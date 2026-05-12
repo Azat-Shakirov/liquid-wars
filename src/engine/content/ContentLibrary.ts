@@ -114,6 +114,9 @@ export interface LevelDef {
   tutorial?: TutorialDef | null;
   // Phase 5: persistent objective banner across the top of the game view.
   objective?: string | null;
+  // Phase 5 challenge tier: when true, GameView prompts the player to
+  // pick their liquid before the level boots.
+  letPlayerChooseLiquid?: boolean;
   introducesNodeTypes: string[];
   introducesLiquids: string[];
   map: { width: number; height: number; background: string };

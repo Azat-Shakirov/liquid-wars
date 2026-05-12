@@ -1,0 +1,121 @@
+{
+  "id": 35,
+  "name": "Lab Rush",
+  "tutorialKey": null,
+  "objective": "Spell warfare. Each side starts with a Lab.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "letPlayerChooseLiquid": true,
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "water",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_a",
+      "position": [
+        180,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 14
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        420,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "water",
+      "units": 80
+    },
+    {
+      "id": "ai1_lab",
+      "position": [
+        860,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "water",
+      "units": 80
+    },
+    {
+      "id": "ai1_a",
+      "position": [
+        1100,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_b",
+      "position": [
+        1100,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1220,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 3,
+      "liquidType": "water",
+      "units": 24
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      600000,
+      480000,
+      360000
+    ],
+    "units": [
+      260,
+      200,
+      140
+    ]
+  }
+}

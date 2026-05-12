@@ -125,6 +125,11 @@ export const LevelSchema = z.object({
   // Optional persistent banner shown across the top of the game view.
   // Plain string — purely cosmetic, no engine semantics.
   objective: z.string().nullable().optional(),
+  // Phase 5 challenge tier (L31+): if true, GameView shows a liquid
+  // picker modal on load and the player's chosen liquid overrides the
+  // designer-set player.liquid. Levels 1-30 use the designer's default
+  // (this field is false / omitted).
+  letPlayerChooseLiquid: z.boolean().optional(),
   introducesNodeTypes: z.array(z.string()),
   introducesLiquids: z.array(z.string()),
   map: z.object({

@@ -14,7 +14,8 @@ import { PauseMenu } from './PauseMenu';
 import { NodeInfoPanel } from './NodeInfoPanel';
 import { TutorialOverlay } from './TutorialOverlay';
 import { ObjectiveBanner } from './ObjectiveBanner';
-import type { TutorialDef } from '../engine/content/ContentLibrary';
+import { LiquidPickerOverlay } from './LiquidPickerOverlay';
+import type { TutorialDef, ContentLibrary } from '../engine/content/ContentLibrary';
 import type { LiquidId, NodeId } from '../types';
 import type { LevelDef } from '../engine/content/ContentLibrary';
 import { useHudStore } from '../store/hudStore';
@@ -39,6 +40,10 @@ export function GameView({ levelId }: GameViewProps) {
   const [objective, setObjective] = useState<string | null>(null);
   const [levelName, setLevelName] = useState<string>('');
   const tutorialOpenRef = useRef(false);
+  // Phase 5 challenge tier: when the level has letPlayerChooseLiquid,
+  // we hold engine construction until the player confirms a liquid.
+  const [pickerLevel, setPickerLevel] = useState<{ name: string; content: ContentLibrary } | null>(null);
+  const [chosenLiquid, setChosenLiquid] = useState<LiquidId | null>(null);
   const engineRefForMenu = useRef<GameEngine | null>(null);
   const sessionRef = useRef<SessionState | null>(null);
   const paused = useSessionStore((s) => s.paused);
@@ -106,7 +111,16 @@ export function GameView({ levelId }: GameViewProps) {
         if (!baseLevel) {
           throw new Error(`Level ${levelId} not found.`);
         }
-        const overrideLiquid = useSessionStore.getState().playerStartLiquid;
+        // Phase 5 challenge tier: prompt the player to pick a liquid
+        // before booting the engine. Hold here until they confirm.
+        if (baseLevel.letPlayerChooseLiquid && chosenLiquid === null) {
+          setPickerLevel({ name: baseLevel.name, content });
+          tutorialOpenRef.current = true; // gate the rAF tick the same way
+          return;
+        }
+        setPickerLevel(null);
+        const overrideLiquid =
+          chosenLiquid ?? useSessionStore.getState().playerStartLiquid;
         const level = overrideLiquid
           ? applyPlayerLiquidOverride(baseLevel, overrideLiquid)
           : baseLevel;
@@ -209,7 +223,12 @@ export function GameView({ levelId }: GameViewProps) {
       setHoveredId(null);
       setPaused(false);
     };
-  }, [levelId, restartCounter, togglePause, startLevel, recordCompletion, setPaused]);
+  }, [levelId, restartCounter, chosenLiquid, togglePause, startLevel, recordCompletion, setPaused]);
+
+  // Reset the per-level liquid choice when the level changes.
+  useEffect(() => {
+    setChosenLiquid(null);
+  }, [levelId]);
 
   return (
     <>
@@ -224,6 +243,16 @@ export function GameView({ levelId }: GameViewProps) {
           cursor: 'crosshair',
         }}
       />
+      {pickerLevel && (
+        <LiquidPickerOverlay
+          levelName={pickerLevel.name}
+          content={pickerLevel.content}
+          onConfirm={(liquid) => {
+            setChosenLiquid(liquid);
+            setPickerLevel(null);
+          }}
+        />
+      )}
       {tutorial && (
         <TutorialOverlay
           tutorial={tutorial}

@@ -1,0 +1,121 @@
+{
+  "id": 34,
+  "name": "Bleed Pit",
+  "tutorialKey": null,
+  "objective": "An AI with a Lab. Outpace or out-spell it.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "letPlayerChooseLiquid": true,
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#5cd65c",
+      "liquid": "slime",
+      "aiConfigId": "easy"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "p1_a",
+      "position": [
+        200,
+        220
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "p1_b",
+      "position": [
+        200,
+        500
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "water",
+      "units": 16
+    },
+    {
+      "id": "p1_lab",
+      "position": [
+        420,
+        360
+      ],
+      "ownerId": "p1",
+      "nodeType": "lab",
+      "level": 2,
+      "liquidType": "water",
+      "units": 60
+    },
+    {
+      "id": "ai1_a",
+      "position": [
+        820,
+        220
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "ai1_b",
+      "position": [
+        820,
+        500
+      ],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 2,
+      "liquidType": "slime",
+      "units": 16
+    },
+    {
+      "id": "ai1_lab",
+      "position": [
+        1080,
+        360
+      ],
+      "ownerId": "ai1",
+      "nodeType": "lab",
+      "level": 3,
+      "liquidType": "slime",
+      "units": 80
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [
+      540000,
+      420000,
+      300000
+    ],
+    "units": [
+      220,
+      160,
+      100
+    ]
+  }
+}
