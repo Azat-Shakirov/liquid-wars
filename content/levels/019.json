@@ -158,7 +158,7 @@
       "id": "ai1_b1",
       "position": [
         1060,
-        220
+        290
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -170,7 +170,7 @@
       "id": "ai1_b2",
       "position": [
         1060,
-        500
+        430
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
