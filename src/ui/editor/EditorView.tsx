@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSessionStore } from '../../store/sessionStore';
 import { loadContent } from '../../engine/content/ContentLoader';
+import { LevelSchema } from '../../engine/content/schemas';
 import type {
   ContentLibrary,
   LevelDef,
@@ -410,6 +411,36 @@ export function EditorView() {
     setTimeout(() => setExportToast(null), 2200);
   }
 
+  async function saveToFile() {
+    // Validate against the same schema the engine uses at load. Bad
+    // payloads stop here instead of clobbering a file on disk.
+    const parsed = LevelSchema.safeParse(level);
+    if (!parsed.success) {
+      const first = parsed.error.issues[0];
+      const path = first ? first.path.join('.') : '';
+      const msg = first ? first.message : 'unknown validation error';
+      setExportToast(`Invalid level: ${path ? path + ' — ' : ''}${msg}`);
+      setTimeout(() => setExportToast(null), 4000);
+      return;
+    }
+    try {
+      const r = await fetch('/__editor/save', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ id: level.id, json: level }),
+      });
+      const result = (await r.json()) as { ok: boolean; path?: string; error?: string };
+      if (result.ok) {
+        setExportToast(`Saved ${result.path}`);
+      } else {
+        setExportToast(`Save failed: ${result.error ?? 'unknown error'}`);
+      }
+    } catch (err) {
+      setExportToast(`Save failed: ${(err as Error).message} (is the dev server running?)`);
+    }
+    setTimeout(() => setExportToast(null), 3000);
+  }
+
   function updateNode(id: string, patch: Partial<LevelNodeDef>) {
     setLevel((lv) => ({
       ...lv,
@@ -473,8 +504,11 @@ export function EditorView() {
           style={{ ...selectStyle, width: 80 }}
         />
         <div style={{ flex: 1 }} />
+        <button style={{ ...smallButtonStyle, background: '#3da9fc', color: '#0a1018', fontWeight: 700 }} onClick={saveToFile}>
+          Save
+        </button>
         <button style={smallButtonStyle} onClick={() => exportJson('clipboard')}>Copy JSON</button>
-        <button style={smallButtonStyle} onClick={() => exportJson('download')}>Download JSON</button>
+        <button style={smallButtonStyle} onClick={() => exportJson('download')}>Download</button>
         <button style={smallButtonStyle} onClick={() => navigate('menu')}>← Menu</button>
       </div>
 
