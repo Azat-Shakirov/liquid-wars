@@ -20,6 +20,7 @@ export interface Player {
   id: PlayerId;
   type: 'human' | 'ai';
   color: string;
+  liquid: LiquidId;
   aiConfigId?: string;
 }
 
@@ -72,6 +73,7 @@ export function buildWorldFromLevel(
     id: p.id,
     type: p.type,
     color: p.color,
+    liquid: p.liquid as LiquidId,
     ...(p.aiConfigId !== undefined ? { aiConfigId: p.aiConfigId } : {}),
   }));
 

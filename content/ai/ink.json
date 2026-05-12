@@ -1,0 +1,16 @@
+{
+  "id": "ink",
+  "decisionIntervalMs": 3000,
+  "weights": {
+    "aggression": 0.3,
+    "defense": 0.9,
+    "economy": 0.7,
+    "spellUse": 0
+  },
+  "thresholds": {
+    "minSourceUnits": 20,
+    "attackRatio": 1.5,
+    "upgradeUnitsReserve": 35
+  },
+  "strategies": ["UpgradeStrategy", "DumbStrategy"]
+}

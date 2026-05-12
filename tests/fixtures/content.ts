@@ -131,12 +131,62 @@ export const easyAI: AIPersonalityDef = {
   strategies: ['DumbStrategy'],
 };
 
+// v2.7 — fixture personalities mirror content/ai/*.json so tests that
+// construct levels WITHOUT aiConfigId can auto-select by liquid.
+export const waterAI: AIPersonalityDef = {
+  id: 'water',
+  decisionIntervalMs: 2500,
+  weights: { aggression: 0.5, defense: 0.4, economy: 0.6, spellUse: 0 },
+  thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30 },
+  strategies: ['UpgradeStrategy', 'DumbStrategy'],
+};
+
+export const inkAI: AIPersonalityDef = {
+  id: 'ink',
+  decisionIntervalMs: 3000,
+  weights: { aggression: 0.3, defense: 0.9, economy: 0.7, spellUse: 0 },
+  thresholds: { minSourceUnits: 20, attackRatio: 1.5, upgradeUnitsReserve: 35 },
+  strategies: ['UpgradeStrategy', 'DumbStrategy'],
+};
+
+export const slimeAI: AIPersonalityDef = {
+  id: 'slime',
+  decisionIntervalMs: 2000,
+  weights: { aggression: 0.4, defense: 0.3, economy: 0.6, spellUse: 0.9 },
+  thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30 },
+  strategies: ['SpellCastStrategy', 'ConcoctStrategy', 'UpgradeStrategy', 'DumbStrategy'],
+};
+
+export const bloodAI: AIPersonalityDef = {
+  id: 'blood',
+  decisionIntervalMs: 2000,
+  weights: { aggression: 0.9, defense: 0.2, economy: 0.4, spellUse: 0 },
+  thresholds: { minSourceUnits: 8, attackRatio: 0.9, upgradeUnitsReserve: 25 },
+  strategies: ['DumbStrategy', 'UpgradeStrategy'],
+};
+
+export const venomAI: AIPersonalityDef = {
+  id: 'venom',
+  decisionIntervalMs: 1500,
+  weights: { aggression: 0.8, defense: 0.2, economy: 0.4, spellUse: 0 },
+  thresholds: { minSourceUnits: 10, attackRatio: 1.0, upgradeUnitsReserve: 25 },
+  strategies: ['VultureStrategy', 'UpgradeStrategy', 'DumbStrategy'],
+};
+
 export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLibrary {
   return {
     liquids: { water, blood, ink, slime, venom, ...(overrides.liquids ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
     spells: { freeze: freezeSpell, bleed: bleedSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
-    ai: { easy: easyAI, ...(overrides.ai ?? {}) },
+    ai: {
+      easy: easyAI,
+      water: waterAI,
+      ink: inkAI,
+      slime: slimeAI,
+      blood: bloodAI,
+      venom: venomAI,
+      ...(overrides.ai ?? {}),
+    },
     levels: { ...(overrides.levels ?? {}) },
   };
 }

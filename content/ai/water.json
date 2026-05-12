@@ -1,0 +1,16 @@
+{
+  "id": "water",
+  "decisionIntervalMs": 2500,
+  "weights": {
+    "aggression": 0.5,
+    "defense": 0.4,
+    "economy": 0.6,
+    "spellUse": 0
+  },
+  "thresholds": {
+    "minSourceUnits": 12,
+    "attackRatio": 1.0,
+    "upgradeUnitsReserve": 30
+  },
+  "strategies": ["UpgradeStrategy", "DumbStrategy"]
+}

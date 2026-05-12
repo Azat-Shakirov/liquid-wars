@@ -1,0 +1,16 @@
+{
+  "id": "blood",
+  "decisionIntervalMs": 2000,
+  "weights": {
+    "aggression": 0.9,
+    "defense": 0.2,
+    "economy": 0.4,
+    "spellUse": 0
+  },
+  "thresholds": {
+    "minSourceUnits": 8,
+    "attackRatio": 0.9,
+    "upgradeUnitsReserve": 25
+  },
+  "strategies": ["DumbStrategy", "UpgradeStrategy"]
+}

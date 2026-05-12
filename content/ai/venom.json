@@ -1,0 +1,16 @@
+{
+  "id": "venom",
+  "decisionIntervalMs": 1500,
+  "weights": {
+    "aggression": 0.8,
+    "defense": 0.2,
+    "economy": 0.4,
+    "spellUse": 0
+  },
+  "thresholds": {
+    "minSourceUnits": 10,
+    "attackRatio": 1.0,
+    "upgradeUnitsReserve": 25
+  },
+  "strategies": ["VultureStrategy", "UpgradeStrategy", "DumbStrategy"]
+}

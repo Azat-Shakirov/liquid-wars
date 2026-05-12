@@ -59,10 +59,15 @@ export class GameEngine {
     ];
     this.ais = [];
     for (const p of this.world.players) {
-      if (p.type !== 'ai' || !p.aiConfigId) continue;
-      const personality = content.ai[p.aiConfigId];
+      if (p.type !== 'ai') continue;
+      // v2.7 auto-select-by-liquid: when the level doesn't specify
+      // aiConfigId, use the AI's liquid as the personality key (each
+      // liquid has a matching personality file in content/ai/).
+      // Explicit aiConfigId still wins for testing / special cases.
+      const configId = p.aiConfigId ?? p.liquid;
+      const personality = content.ai[configId];
       if (!personality) {
-        throw new Error(`AI player '${p.id}' references unknown personality '${p.aiConfigId}'`);
+        throw new Error(`AI player '${p.id}' references unknown personality '${configId}'`);
       }
       this.ais.push(new AIController(p.id, personality));
     }
