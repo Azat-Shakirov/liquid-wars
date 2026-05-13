@@ -32,7 +32,7 @@
     {
       "id": "p1_a",
       "position": [
-        180,
+        120,
         360
       ],
       "ownerId": "p1",
@@ -44,7 +44,7 @@
     {
       "id": "p1_lab",
       "position": [
-        420,
+        360,
         360
       ],
       "ownerId": "p1",
@@ -56,7 +56,7 @@
     {
       "id": "ai1_lab",
       "position": [
-        860,
+        800,
         360
       ],
       "ownerId": "ai1",
@@ -68,7 +68,7 @@
     {
       "id": "ai1_a",
       "position": [
-        1100,
+        1040,
         220
       ],
       "ownerId": "ai1",
@@ -80,7 +80,7 @@
     {
       "id": "ai1_b",
       "position": [
-        1100,
+        1040,
         500
       ],
       "ownerId": "ai1",
@@ -92,7 +92,7 @@
     {
       "id": "ai1_base",
       "position": [
-        1220,
+        1160,
         360
       ],
       "ownerId": "ai1",

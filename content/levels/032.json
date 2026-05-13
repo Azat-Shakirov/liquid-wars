@@ -32,8 +32,8 @@
     {
       "id": "p1_a",
       "position": [
-        180,
-        200
+        140,
+        210
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -44,8 +44,8 @@
     {
       "id": "p1_b",
       "position": [
-        180,
-        500
+        140,
+        510
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -56,8 +56,8 @@
     {
       "id": "p1_lab",
       "position": [
-        380,
-        360
+        340,
+        370
       ],
       "ownerId": "p1",
       "nodeType": "lab",
@@ -68,8 +68,8 @@
     {
       "id": "ai1_t",
       "position": [
-        700,
-        360
+        660,
+        370
       ],
       "ownerId": "ai1",
       "nodeType": "tower",
@@ -80,8 +80,8 @@
     {
       "id": "ai1_a",
       "position": [
-        950,
-        200
+        910,
+        210
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -92,8 +92,8 @@
     {
       "id": "ai1_b",
       "position": [
-        950,
-        500
+        910,
+        510
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -104,8 +104,8 @@
     {
       "id": "ai1_base",
       "position": [
-        1180,
-        360
+        1140,
+        370
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",

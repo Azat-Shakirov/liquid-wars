@@ -16,15 +16,14 @@ import type { Wall } from './entities/Wall';
 import type { Node } from './entities/Node';
 import { segmentBlockedByWalls, pointNearWall } from './geometry';
 
-// v2.7.5 — bumped from 24 to 40 because units have visual radius up to
-// 14px and walls render with 3.5px half-width; a 24px corner clearance
-// meant the unit's outer edge was only ~6.5px from the wall edge while
-// rounding the corner, which read as "cutting the corner." 40px gives
-// the engine ~22px of visible space between unit edge and wall edge.
-// The rejection radius (CORNER_BUFFER_PX * 0.5 = 20px) is now greater
-// than unit_radius (14) + wall_half (3.5), so candidate waypoints inside
-// a wall's transit corridor get dropped, not just inside its thickness.
-const CORNER_BUFFER_PX = 40;
+// v2.7.7 — bumped 40 → 56 because v2.7.6 element scaling can grow unit
+// droplets to radius 21 (1.5× × 14) on sparse levels. With wall half-
+// width 3.5, that's 24.5px needed clearance — the previous 40-buffer's
+// rejection radius (20) wasn't enough; the new 56 gives rejection 28
+// (> 24.5) so candidate waypoints inside a scaled unit's transit
+// corridor get dropped. Also makes the visual route bend wider out
+// from the corner, which reads as "rounder", not "cutting close."
+const CORNER_BUFFER_PX = 56;
 const QUADRANTS: Array<[number, number]> = [
   [1, -1], // NE
   [1, 1],  // SE

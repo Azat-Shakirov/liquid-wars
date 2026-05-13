@@ -37,7 +37,7 @@
     {
       "id": "p1_back",
       "position": [
-        180,
+        140,
         360
       ],
       "ownerId": "p1",
@@ -49,7 +49,7 @@
     {
       "id": "p1_front",
       "position": [
-        440,
+        400,
         360
       ],
       "ownerId": "p1",
@@ -61,7 +61,7 @@
     {
       "id": "ai1_tower",
       "position": [
-        780,
+        740,
         360
       ],
       "ownerId": "ai1",
@@ -73,7 +73,7 @@
     {
       "id": "ai1_b1",
       "position": [
-        1040,
+        1000,
         220
       ],
       "ownerId": "ai1",
@@ -85,7 +85,7 @@
     {
       "id": "ai1_b2",
       "position": [
-        1040,
+        1000,
         500
       ],
       "ownerId": "ai1",
@@ -97,7 +97,7 @@
     {
       "id": "ai1_base",
       "position": [
-        1180,
+        1140,
         360
       ],
       "ownerId": "ai1",

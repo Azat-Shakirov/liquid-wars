@@ -35,7 +35,7 @@
     {
       "id": "p1_main",
       "position": [
-        240,
+        210,
         360
       ],
       "ownerId": "p1",
@@ -47,7 +47,7 @@
     {
       "id": "p1_top",
       "position": [
-        420,
+        390,
         200
       ],
       "ownerId": "p1",
@@ -59,7 +59,7 @@
     {
       "id": "p1_bot",
       "position": [
-        420,
+        390,
         520
       ],
       "ownerId": "p1",
@@ -71,7 +71,7 @@
     {
       "id": "neutral",
       "position": [
-        640,
+        610,
         360
       ],
       "ownerId": null,
@@ -83,7 +83,7 @@
     {
       "id": "ai1_top",
       "position": [
-        900,
+        870,
         200
       ],
       "ownerId": null,
@@ -95,7 +95,7 @@
     {
       "id": "ai1_bot",
       "position": [
-        900,
+        870,
         520
       ],
       "ownerId": "ai1",
@@ -107,7 +107,7 @@
     {
       "id": "ai1_base",
       "position": [
-        1100,
+        1070,
         360
       ],
       "ownerId": "ai1",

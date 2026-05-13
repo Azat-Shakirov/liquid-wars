@@ -55,7 +55,7 @@
       "id": "p1_a",
       "position": [
         640,
-        360
+        380
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -67,7 +67,7 @@
       "id": "p1_lab",
       "position": [
         640,
-        540
+        560
       ],
       "ownerId": "p1",
       "nodeType": "lab",
@@ -79,7 +79,7 @@
       "id": "p1_b",
       "position": [
         640,
-        200
+        220
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -91,7 +91,7 @@
       "id": "ai1_a",
       "position": [
         180,
-        160
+        180
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -103,7 +103,7 @@
       "id": "ai1_b",
       "position": [
         60,
-        360
+        380
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -115,7 +115,7 @@
       "id": "ai1_c",
       "position": [
         180,
-        560
+        580
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -127,7 +127,7 @@
       "id": "ai2_a",
       "position": [
         1100,
-        160
+        180
       ],
       "ownerId": "ai2",
       "nodeType": "barracks",
@@ -139,7 +139,7 @@
       "id": "ai2_b",
       "position": [
         1220,
-        360
+        380
       ],
       "ownerId": "ai2",
       "nodeType": "barracks",
@@ -151,7 +151,7 @@
       "id": "ai2_c",
       "position": [
         1100,
-        560
+        580
       ],
       "ownerId": "ai2",
       "nodeType": "barracks",
@@ -163,7 +163,7 @@
       "id": "ai3_a",
       "position": [
         380,
-        80
+        100
       ],
       "ownerId": "ai3",
       "nodeType": "barracks",
@@ -175,7 +175,7 @@
       "id": "ai3_lab",
       "position": [
         640,
-        40
+        60
       ],
       "ownerId": "ai3",
       "nodeType": "lab",
@@ -187,7 +187,7 @@
       "id": "ai3_b",
       "position": [
         900,
-        80
+        100
       ],
       "ownerId": "ai3",
       "nodeType": "barracks",
@@ -199,7 +199,7 @@
       "id": "ai4_a",
       "position": [
         380,
-        640
+        660
       ],
       "ownerId": "ai4",
       "nodeType": "barracks",
@@ -211,7 +211,7 @@
       "id": "ai4_b",
       "position": [
         900,
-        640
+        660
       ],
       "ownerId": "ai4",
       "nodeType": "barracks",
