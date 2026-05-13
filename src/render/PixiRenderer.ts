@@ -172,7 +172,6 @@ export class PixiRenderer {
     nowMs: number,
     recentTowerShots: ReadonlyArray<TowerShot> = [],
   ): void {
-    this.applyViewTransform(world);
     this.syncWalls(world);
     this.syncNodes(world, session, nowMs, alpha);
     this.syncUnitGroups(world, alpha);
@@ -183,21 +182,6 @@ export class PixiRenderer {
     this.selectionBoxView.update(session.boxSelect);
     this.drawRipples(nowMs);
     this.updateHud(world);
-  }
-
-  // v2.7.5: fit world.preferredView into the host canvas. Uniform scale,
-  // centered translation. World layers go through worldRoot; the HUD
-  // layer is on stage directly so its text stays at canvas scale.
-  private applyViewTransform(world: World): void {
-    const view = world.preferredView;
-    const canvasW = this.app.renderer.width / (this.app.renderer.resolution || 1);
-    const canvasH = this.app.renderer.height / (this.app.renderer.resolution || 1);
-    if (view.width <= 0 || view.height <= 0 || canvasW <= 0 || canvasH <= 0) return;
-    const scale = Math.min(canvasW / view.width, canvasH / view.height);
-    const tx = (canvasW - view.width  * scale) / 2 - view.x * scale;
-    const ty = (canvasH - view.height * scale) / 2 - view.y * scale;
-    this.worldRoot.scale.set(scale);
-    this.worldRoot.position.set(tx, ty);
   }
 
   // Walls are static per level — only redraw when the level changes.

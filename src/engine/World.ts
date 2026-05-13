@@ -43,12 +43,11 @@ export interface World {
   // Phase 3 — precomputed paths between every ordered (from, to) node
   // pair. Built once at level load. Value === null ⇒ unreachable.
   pathCache: PathCache;
-  // v2.7.5 — auto-zoom view rectangle in world coords. Computed at
-  // level load from node positions + wall endpoints + padding, with
-  // map aspect preserved. The renderer scales+translates a worldRoot
-  // container so this rectangle fills the host canvas; the input layer
-  // inverse-transforms pointer coords using the same rectangle.
-  preferredView: { x: number; y: number; width: number; height: number };
+  // v2.7.6 — visual element-scale multiplier. Sparse levels (small
+  // node bbox relative to map) render nodes / units larger so the level
+  // feels filled, while coordinates stay 1:1 in world space (no camera
+  // transform, no cursor-math drift). 1.0 = native size. Capped at 1.5x.
+  visualScale: number;
   status: GameStatus;
   elapsedMs: number;
   nextUnitGroupId: number;
@@ -144,7 +143,7 @@ export function buildWorldFromLevel(
     height: level.map.height,
   });
 
-  const preferredView = computePreferredView(
+  const visualScale = computeVisualScale(
     Array.from(nodes.values()),
     walls,
     { width: level.map.width, height: level.map.height },
@@ -162,71 +161,39 @@ export function buildWorldFromLevel(
     level,
     walls,
     pathCache,
-    preferredView,
+    visualScale,
     status: 'playing',
     elapsedMs: 0,
     nextUnitGroupId: 1,
   };
 }
 
-// Auto-zoom: build a viewport rect that snugly contains the level's
-// nodes + walls, preserves the map's 16:9 aspect, has padding around
-// the edges, and is capped at 2× zoom (so even single-node levels
-// don't blow up absurdly). Returns world-space coords.
-function computePreferredView(
+// v2.7.6 — Compute a single visual element-scale multiplier. Sparse
+// levels return > 1 so nodes + units render larger and the map feels
+// filled, without applying any camera transform (which would have
+// required the input layer to inverse-transform pointer coords —
+// previously buggy). 1.0 means native size; capped at 1.5x. Walls
+// stay at native thickness (terrain doesn't grow).
+function computeVisualScale(
   nodes: Node[],
-  walls: Wall[],
+  _walls: Wall[],
   map: { width: number; height: number },
-): { x: number; y: number; width: number; height: number } {
-  if (nodes.length === 0) {
-    return { x: 0, y: 0, width: map.width, height: map.height };
-  }
-  const NODE_VISUAL_HALF = 30;   // a tad more than max barracks half (~22)
-  const PADDING = 90;            // breathing room around the bbox
-  const MIN_VIEW_FRACTION = 0.5; // cap zoom at 2× of map dims
-
+): number {
+  if (nodes.length === 0) return 1.0;
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const n of nodes) {
-    minX = Math.min(minX, n.position.x - NODE_VISUAL_HALF);
-    minY = Math.min(minY, n.position.y - NODE_VISUAL_HALF);
-    maxX = Math.max(maxX, n.position.x + NODE_VISUAL_HALF);
-    maxY = Math.max(maxY, n.position.y + NODE_VISUAL_HALF);
+    if (n.position.x < minX) minX = n.position.x;
+    if (n.position.x > maxX) maxX = n.position.x;
+    if (n.position.y < minY) minY = n.position.y;
+    if (n.position.y > maxY) maxY = n.position.y;
   }
-  for (const w of walls) {
-    for (const p of w.points) {
-      minX = Math.min(minX, p.x);
-      minY = Math.min(minY, p.y);
-      maxX = Math.max(maxX, p.x);
-      maxY = Math.max(maxY, p.y);
-    }
-  }
-  minX -= PADDING; minY -= PADDING;
-  maxX += PADDING; maxY += PADDING;
-
-  // Preserve map aspect by expanding the smaller axis.
-  const mapAspect = map.width / map.height;
-  let w = maxX - minX;
-  let h = maxY - minY;
-  const cx = (minX + maxX) / 2;
-  const cy = (minY + maxY) / 2;
-  if (w / h < mapAspect) w = h * mapAspect;
-  else h = w / mapAspect;
-
-  // Cap zoom: view must be at least MIN_VIEW_FRACTION of map size.
-  const minW = map.width * MIN_VIEW_FRACTION;
-  const minH = map.height * MIN_VIEW_FRACTION;
-  if (w < minW) { w = minW; h = w / mapAspect; }
-  if (h < minH) { h = minH; w = h * mapAspect; }
-
-  // Recompute corners from centered (w, h), then clamp into map bounds.
-  let vx = cx - w / 2;
-  let vy = cy - h / 2;
-  if (vx < 0) vx = 0;
-  if (vy < 0) vy = 0;
-  if (vx + w > map.width)  vx = map.width  - w;
-  if (vy + h > map.height) vy = map.height - h;
-  if (w > map.width)  { vx = 0; w = map.width; }
-  if (h > map.height) { vy = 0; h = map.height; }
-
-  return { x: vx, y: vy, width: w, height: h };
+  const fracX = (maxX - minX) / map.width;
+  const fracY = (maxY - minY) / map.height;
+  const fraction = Math.max(fracX, fracY);
+  // fraction → scale:
+  //   >= 0.85 (~full map)        → 1.0 (no scaling)
+  //   <= 0.40 (very sparse)      → 1.5 (cap)
+  //   linear between
+  const normalized = Math.max(0, Math.min(1, (0.85 - fraction) / 0.45));
+  return 1.0 + normalized * 0.5;
 }

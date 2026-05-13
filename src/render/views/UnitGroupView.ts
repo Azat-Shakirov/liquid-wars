@@ -42,8 +42,11 @@ export class UnitGroupView {
     const liquidDef = content.liquids[ug.sourceLiquid];
     const fillColor = liquidDef ? colorFromHex(liquidDef.color) : 0x3da9fc;
 
+    // v2.7.6: scale droplet radius by world.visualScale so units track
+    // the per-level node size.
     const baseRadius = 5;
-    const radius = Math.min(baseRadius + Math.sqrt(Math.max(1, ug.count)) * 0.6, 14);
+    const raw = Math.min(baseRadius + Math.sqrt(Math.max(1, ug.count)) * 0.6, 14);
+    const radius = raw * world.visualScale;
 
     this.droplet
       .clear()

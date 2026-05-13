@@ -464,25 +464,12 @@ export class InputController {
 
   // ── Helpers ───────────────────────────────────────────────────────
 
-  // v2.7.5: inverse-transform the pointer event from canvas-CSS coords
-  // back into world coords. Must use the SAME transform PixiRenderer
-  // applied (world.preferredView fit to canvas with uniform scale +
-  // centered translation), otherwise drags and hit-tests land on the
-  // wrong nodes when the level is auto-zoomed.
+  // v2.7.6: simple canvas-CSS → world coords. The auto-zoom approach
+  // (v2.7.5) is gone; the world stays 1:1, individual elements scale
+  // via world.visualScale. No transform math here means no cursor drift.
   private localCoords(e: PointerEvent): Vec2 {
     const rect = this.canvas.getBoundingClientRect();
-    const cx = e.clientX - rect.left;
-    const cy = e.clientY - rect.top;
-    const view = this.engine.world.preferredView;
-    const canvasW = rect.width;
-    const canvasH = rect.height;
-    if (view.width <= 0 || view.height <= 0 || canvasW <= 0 || canvasH <= 0) {
-      return { x: cx, y: cy };
-    }
-    const scale = Math.min(canvasW / view.width, canvasH / view.height);
-    const tx = (canvasW - view.width  * scale) / 2 - view.x * scale;
-    const ty = (canvasH - view.height * scale) / 2 - view.y * scale;
-    return { x: (cx - tx) / scale, y: (cy - ty) / scale };
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
   private pickNodeAt(x: number, y: number): NodeId | null {
@@ -490,7 +477,7 @@ export class InputController {
     for (const id of this.engine.world.nodeOrder) {
       const n = this.engine.world.nodes.get(id);
       if (!n) continue;
-      const metrics = metricsForType(n.nodeType, n.level);
+      const metrics = metricsForType(n.nodeType, n.level, this.engine.world.visualScale);
       const radius = metrics.size / 2 + HIT_RADIUS_PADDING;
       const dx = x - n.position.x;
       const dy = y - n.position.y;

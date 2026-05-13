@@ -220,11 +220,14 @@ export function GameView({ levelId }: GameViewProps) {
     <>
       <UnitBar />
       {objective && !tutorial && <ObjectiveBanner objective={objective} />}
+      {/* v2.7.6: shift the canvas below the UnitBar (24px) so nodes
+         placed near y=0 in a level aren't hidden under the bar. */}
       <div
         ref={hostRef}
         style={{
           width: '100vw',
-          height: '100vh',
+          height: 'calc(100vh - 24px)',
+          marginTop: 24,
           position: 'relative',
           cursor: 'crosshair',
         }}

@@ -100,7 +100,7 @@ export class NodeView {
     const py = node.previousPosition.y + (node.position.y - node.previousPosition.y) * alpha;
     this.container.position.set(px, py);
 
-    const metrics = metricsForType(node.nodeType, node.level);
+    const metrics = metricsForType(node.nodeType, node.level, world.visualScale);
     const size = metrics.size;
     const half = size / 2;
     const radius = metrics.cornerRadius;

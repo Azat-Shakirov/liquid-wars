@@ -1,60 +1,54 @@
-// v2.7.5 — auto-zoom: World.preferredView snugly contains the level's
-// nodes + walls, preserves map aspect, caps zoom at 2× (view ≥ 50% of
-// map), and clamps inside map bounds.
+// v2.7.6 — replaced the v2.7.5 auto-zoom (camera transform that caused
+// cursor offset) with a simpler per-level `visualScale` multiplier
+// applied directly to node + unit-droplet sizes via metricsForType.
+// World coords stay 1:1; sparse levels get bigger visuals.
 
 import { describe, it, expect } from 'vitest';
 import { buildWorldFromLevel } from '../../src/engine/World';
 import { makeContent, makeLevel } from '../fixtures/content';
 
 const content = makeContent();
-const MAP_W = 1280;
-const MAP_H = 720;
-const MAP_ASPECT = MAP_W / MAP_H;
 
-describe('World.preferredView (auto-zoom)', () => {
-  it('returns the full map when nodes fill the map', () => {
+describe('World.visualScale', () => {
+  it('returns 1.0 when nodes span the full map', () => {
     const lv = makeLevel([
       { id: 'a', position: [80, 80],   ownerId: 'p1',  units: 5 },
       { id: 'b', position: [1200, 640], ownerId: 'ai1', units: 5 },
     ]);
     const world = buildWorldFromLevel(lv, content);
-    expect(world.preferredView.x).toBeLessThanOrEqual(0 + 1);
-    expect(world.preferredView.y).toBeLessThanOrEqual(0 + 1);
-    expect(world.preferredView.width).toBeCloseTo(MAP_W, 0);
-    expect(world.preferredView.height).toBeCloseTo(MAP_H, 0);
+    expect(world.visualScale).toBeCloseTo(1.0, 2);
   });
 
-  it('caps zoom at 2× even with a single tight cluster', () => {
-    // Three nodes within a 100×100 area.
+  it('caps scale at 1.5 for very sparse layouts', () => {
+    // Three nodes within ~50x50 area (~3% of map).
     const lv = makeLevel([
-      { id: 'a', position: [600, 340], ownerId: 'p1',  units: 5 },
-      { id: 'b', position: [620, 360], ownerId: 'ai1', units: 5 },
-      { id: 'c', position: [640, 380], ownerId: 'ai1', units: 5 },
+      { id: 'a', position: [620, 350], ownerId: 'p1',  units: 5 },
+      { id: 'b', position: [640, 360], ownerId: 'ai1', units: 5 },
+      { id: 'c', position: [660, 370], ownerId: 'ai1', units: 5 },
     ]);
     const world = buildWorldFromLevel(lv, content);
-    expect(world.preferredView.width).toBeGreaterThanOrEqual(MAP_W * 0.5 - 1);
-    expect(world.preferredView.height).toBeGreaterThanOrEqual(MAP_H * 0.5 - 1);
+    expect(world.visualScale).toBeCloseTo(1.5, 2);
   });
 
-  it('preserves map aspect ratio (16:9)', () => {
+  it('scales between 1.0 and 1.5 linearly for mid-sparse layouts', () => {
+    // bbox is ~50% of map → expect scale ~1.3.
     const lv = makeLevel([
-      { id: 'a', position: [200, 200], ownerId: 'p1',  units: 5 },
-      { id: 'b', position: [800, 600], ownerId: 'ai1', units: 5 },
+      { id: 'a', position: [320, 180], ownerId: 'p1',  units: 5 },
+      { id: 'b', position: [960, 540], ownerId: 'ai1', units: 5 },
     ]);
     const world = buildWorldFromLevel(lv, content);
-    const aspect = world.preferredView.width / world.preferredView.height;
-    expect(aspect).toBeCloseTo(MAP_ASPECT, 2);
+    expect(world.visualScale).toBeGreaterThan(1.0);
+    expect(world.visualScale).toBeLessThan(1.5);
   });
 
-  it('view stays inside map bounds', () => {
+  it('never goes below 1.0 even for hypothetical larger-than-map layouts', () => {
+    // bboxFractions clamp at 1.0 → scale floor 1.0.
     const lv = makeLevel([
-      { id: 'a', position: [80, 80],   ownerId: 'p1',  units: 5 },
-      { id: 'b', position: [120, 100], ownerId: 'ai1', units: 5 },
+      { id: 'a', position: [0, 0],     ownerId: 'p1',  units: 5 },
+      { id: 'b', position: [1280, 720], ownerId: 'ai1', units: 5 },
     ]);
     const world = buildWorldFromLevel(lv, content);
-    expect(world.preferredView.x).toBeGreaterThanOrEqual(0);
-    expect(world.preferredView.y).toBeGreaterThanOrEqual(0);
-    expect(world.preferredView.x + world.preferredView.width).toBeLessThanOrEqual(MAP_W + 1);
-    expect(world.preferredView.y + world.preferredView.height).toBeLessThanOrEqual(MAP_H + 1);
+    expect(world.visualScale).toBeGreaterThanOrEqual(1.0);
+    expect(world.visualScale).toBeLessThanOrEqual(1.5);
   });
 });
