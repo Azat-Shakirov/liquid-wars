@@ -16,7 +16,15 @@ import type { Wall } from './entities/Wall';
 import type { Node } from './entities/Node';
 import { segmentBlockedByWalls, pointNearWall } from './geometry';
 
-const CORNER_BUFFER_PX = 24; // perpendicular offset for corner waypoints
+// v2.7.5 — bumped from 24 to 40 because units have visual radius up to
+// 14px and walls render with 3.5px half-width; a 24px corner clearance
+// meant the unit's outer edge was only ~6.5px from the wall edge while
+// rounding the corner, which read as "cutting the corner." 40px gives
+// the engine ~22px of visible space between unit edge and wall edge.
+// The rejection radius (CORNER_BUFFER_PX * 0.5 = 20px) is now greater
+// than unit_radius (14) + wall_half (3.5), so candidate waypoints inside
+// a wall's transit corridor get dropped, not just inside its thickness.
+const CORNER_BUFFER_PX = 40;
 const QUADRANTS: Array<[number, number]> = [
   [1, -1], // NE
   [1, 1],  // SE
