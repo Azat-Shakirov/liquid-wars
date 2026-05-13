@@ -464,9 +464,25 @@ export class InputController {
 
   // ── Helpers ───────────────────────────────────────────────────────
 
+  // v2.7.5: inverse-transform the pointer event from canvas-CSS coords
+  // back into world coords. Must use the SAME transform PixiRenderer
+  // applied (world.preferredView fit to canvas with uniform scale +
+  // centered translation), otherwise drags and hit-tests land on the
+  // wrong nodes when the level is auto-zoomed.
   private localCoords(e: PointerEvent): Vec2 {
     const rect = this.canvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const view = this.engine.world.preferredView;
+    const canvasW = rect.width;
+    const canvasH = rect.height;
+    if (view.width <= 0 || view.height <= 0 || canvasW <= 0 || canvasH <= 0) {
+      return { x: cx, y: cy };
+    }
+    const scale = Math.min(canvasW / view.width, canvasH / view.height);
+    const tx = (canvasW - view.width  * scale) / 2 - view.x * scale;
+    const ty = (canvasH - view.height * scale) / 2 - view.y * scale;
+    return { x: (cx - tx) / scale, y: (cy - ty) / scale };
   }
 
   private pickNodeAt(x: number, y: number): NodeId | null {

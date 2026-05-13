@@ -47,6 +47,10 @@ export class PixiRenderer {
   private readonly host: HTMLElement;
   private readonly content: ContentLibrary;
 
+  // v2.7.5: world layers attach to worldRoot (which we scale+translate
+  // per level via world.preferredView). The HUD layer attaches directly
+  // to stage so overlay text doesn't zoom with the world.
+  private readonly worldRoot: Container;
   private readonly bgLayer: Container;
   private readonly wallsLayer: Container;
   private readonly rangeLayer: Container;
@@ -82,6 +86,7 @@ export class PixiRenderer {
     this.host = host;
     this.content = content;
 
+    this.worldRoot = new Container();
     this.bgLayer = new Container();
     this.wallsLayer = new Container();
     this.rangeLayer = new Container();
@@ -92,14 +97,16 @@ export class PixiRenderer {
     this.boxLayer = new Container();
     this.hudLayer = new Container();
 
-    this.app.stage.addChild(this.bgLayer);
-    this.app.stage.addChild(this.wallsLayer);
-    this.app.stage.addChild(this.rangeLayer);
-    this.app.stage.addChild(this.hintLayer);
-    this.app.stage.addChild(this.nodeLayer);
-    this.app.stage.addChild(this.unitLayer);
-    this.app.stage.addChild(this.beamLayer);
-    this.app.stage.addChild(this.boxLayer);
+    this.app.stage.addChild(this.worldRoot);
+    this.worldRoot.addChild(this.bgLayer);
+    this.worldRoot.addChild(this.wallsLayer);
+    this.worldRoot.addChild(this.rangeLayer);
+    this.worldRoot.addChild(this.hintLayer);
+    this.worldRoot.addChild(this.nodeLayer);
+    this.worldRoot.addChild(this.unitLayer);
+    this.worldRoot.addChild(this.beamLayer);
+    this.worldRoot.addChild(this.boxLayer);
+    // HUD stays at canvas scale.
     this.app.stage.addChild(this.hudLayer);
 
     this.wallsGraphics = new Graphics();
@@ -165,6 +172,7 @@ export class PixiRenderer {
     nowMs: number,
     recentTowerShots: ReadonlyArray<TowerShot> = [],
   ): void {
+    this.applyViewTransform(world);
     this.syncWalls(world);
     this.syncNodes(world, session, nowMs, alpha);
     this.syncUnitGroups(world, alpha);
@@ -175,6 +183,21 @@ export class PixiRenderer {
     this.selectionBoxView.update(session.boxSelect);
     this.drawRipples(nowMs);
     this.updateHud(world);
+  }
+
+  // v2.7.5: fit world.preferredView into the host canvas. Uniform scale,
+  // centered translation. World layers go through worldRoot; the HUD
+  // layer is on stage directly so its text stays at canvas scale.
+  private applyViewTransform(world: World): void {
+    const view = world.preferredView;
+    const canvasW = this.app.renderer.width / (this.app.renderer.resolution || 1);
+    const canvasH = this.app.renderer.height / (this.app.renderer.resolution || 1);
+    if (view.width <= 0 || view.height <= 0 || canvasW <= 0 || canvasH <= 0) return;
+    const scale = Math.min(canvasW / view.width, canvasH / view.height);
+    const tx = (canvasW - view.width  * scale) / 2 - view.x * scale;
+    const ty = (canvasH - view.height * scale) / 2 - view.y * scale;
+    this.worldRoot.scale.set(scale);
+    this.worldRoot.position.set(tx, ty);
   }
 
   // Walls are static per level — only redraw when the level changes.

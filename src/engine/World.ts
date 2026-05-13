@@ -43,6 +43,12 @@ export interface World {
   // Phase 3 — precomputed paths between every ordered (from, to) node
   // pair. Built once at level load. Value === null ⇒ unreachable.
   pathCache: PathCache;
+  // v2.7.5 — auto-zoom view rectangle in world coords. Computed at
+  // level load from node positions + wall endpoints + padding, with
+  // map aspect preserved. The renderer scales+translates a worldRoot
+  // container so this rectangle fills the host canvas; the input layer
+  // inverse-transforms pointer coords using the same rectangle.
+  preferredView: { x: number; y: number; width: number; height: number };
   status: GameStatus;
   elapsedMs: number;
   nextUnitGroupId: number;
@@ -138,6 +144,12 @@ export function buildWorldFromLevel(
     height: level.map.height,
   });
 
+  const preferredView = computePreferredView(
+    Array.from(nodes.values()),
+    walls,
+    { width: level.map.width, height: level.map.height },
+  );
+
   return {
     tick: 0,
     rng: createRNG(seed),
@@ -150,8 +162,71 @@ export function buildWorldFromLevel(
     level,
     walls,
     pathCache,
+    preferredView,
     status: 'playing',
     elapsedMs: 0,
     nextUnitGroupId: 1,
   };
+}
+
+// Auto-zoom: build a viewport rect that snugly contains the level's
+// nodes + walls, preserves the map's 16:9 aspect, has padding around
+// the edges, and is capped at 2× zoom (so even single-node levels
+// don't blow up absurdly). Returns world-space coords.
+function computePreferredView(
+  nodes: Node[],
+  walls: Wall[],
+  map: { width: number; height: number },
+): { x: number; y: number; width: number; height: number } {
+  if (nodes.length === 0) {
+    return { x: 0, y: 0, width: map.width, height: map.height };
+  }
+  const NODE_VISUAL_HALF = 30;   // a tad more than max barracks half (~22)
+  const PADDING = 90;            // breathing room around the bbox
+  const MIN_VIEW_FRACTION = 0.5; // cap zoom at 2× of map dims
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  for (const n of nodes) {
+    minX = Math.min(minX, n.position.x - NODE_VISUAL_HALF);
+    minY = Math.min(minY, n.position.y - NODE_VISUAL_HALF);
+    maxX = Math.max(maxX, n.position.x + NODE_VISUAL_HALF);
+    maxY = Math.max(maxY, n.position.y + NODE_VISUAL_HALF);
+  }
+  for (const w of walls) {
+    for (const p of w.points) {
+      minX = Math.min(minX, p.x);
+      minY = Math.min(minY, p.y);
+      maxX = Math.max(maxX, p.x);
+      maxY = Math.max(maxY, p.y);
+    }
+  }
+  minX -= PADDING; minY -= PADDING;
+  maxX += PADDING; maxY += PADDING;
+
+  // Preserve map aspect by expanding the smaller axis.
+  const mapAspect = map.width / map.height;
+  let w = maxX - minX;
+  let h = maxY - minY;
+  const cx = (minX + maxX) / 2;
+  const cy = (minY + maxY) / 2;
+  if (w / h < mapAspect) w = h * mapAspect;
+  else h = w / mapAspect;
+
+  // Cap zoom: view must be at least MIN_VIEW_FRACTION of map size.
+  const minW = map.width * MIN_VIEW_FRACTION;
+  const minH = map.height * MIN_VIEW_FRACTION;
+  if (w < minW) { w = minW; h = w / mapAspect; }
+  if (h < minH) { h = minH; w = h * mapAspect; }
+
+  // Recompute corners from centered (w, h), then clamp into map bounds.
+  let vx = cx - w / 2;
+  let vy = cy - h / 2;
+  if (vx < 0) vx = 0;
+  if (vy < 0) vy = 0;
+  if (vx + w > map.width)  vx = map.width  - w;
+  if (vy + h > map.height) vy = map.height - h;
+  if (w > map.width)  { vx = 0; w = map.width; }
+  if (h > map.height) { vy = 0; h = map.height; }
+
+  return { x: vx, y: vy, width: w, height: h };
 }
