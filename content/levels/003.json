@@ -35,20 +35,20 @@
     {
       "id": "p1_a",
       "position": [
-        180,
-        220
+        520,
+        203
       ],
-      "ownerId": "p1",
+      "ownerId": null,
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 10
     },
     {
       "id": "p1_b",
       "position": [
-        180,
-        500
+        274,
+        365
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -59,34 +59,22 @@
     {
       "id": "neutral",
       "position": [
-        560,
-        360
+        525,
+        515
       ],
       "ownerId": null,
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 12
-    },
-    {
-      "id": "ai1_top",
-      "position": [
-        950,
-        220
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 10
     },
     {
       "id": "ai1_bot",
       "position": [
-        950,
-        500
+        763,
+        202
       ],
-      "ownerId": "ai1",
+      "ownerId": null,
       "nodeType": "barracks",
       "level": 1,
       "liquidType": "water",
@@ -95,14 +83,26 @@
     {
       "id": "ai1_far",
       "position": [
-        1140,
-        360
+        1006,
+        357
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 5
+    },
+    {
+      "id": "p1_1",
+      "position": [
+        761,
+        517
+      ],
+      "ownerId": null,
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 10
     }
   ],
   "winCondition": {

@@ -37,8 +37,8 @@
     {
       "id": "p1_base",
       "position": [
-        220,
-        360
+        357,
+        281
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -49,8 +49,8 @@
     {
       "id": "p1_h",
       "position": [
-        440,
-        360
+        357,
+        439
       ],
       "ownerId": "p1",
       "nodeType": "house",
@@ -59,22 +59,10 @@
       "units": 18
     },
     {
-      "id": "neutral",
-      "position": [
-        700,
-        360
-      ],
-      "ownerId": null,
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 6
-    },
-    {
       "id": "ai1_base",
       "position": [
-        1080,
-        360
+        755,
+        362
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",

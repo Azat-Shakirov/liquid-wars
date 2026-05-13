@@ -108,8 +108,11 @@ export function EditorView() {
   const [selection, setSelection] = useState<Selection>(null);
   const [drag, setDrag] = useState<{ kind: 'node' | 'wallEndpoint'; id: string; index?: 0 | 1 } | null>(null);
   const [addWallFirstPoint, setAddWallFirstPoint] = useState<[number, number] | null>(null);
-  const [addNodeOwner, setAddNodeOwner] = useState<string | null>('p1');
-  const [addNodeType, setAddNodeType] = useState<NodeTypeId>('barracks');
+  // v2.7.5: editor's Add Node defaults to neutral house with 10u so the
+  // common case (sprinkle neutral capture targets across the map) is the
+  // single-click default. Was: 'p1' / 'barracks' / 10u.
+  const [addNodeOwner, setAddNodeOwner] = useState<string | null>(null);
+  const [addNodeType, setAddNodeType] = useState<NodeTypeId>('house');
   const [addNodeLevel, setAddNodeLevel] = useState<number>(1);
   const [addNodeUnits, setAddNodeUnits] = useState<number>(10);
   const [exportToast, setExportToast] = useState<string | null>(null);

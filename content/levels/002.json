@@ -35,8 +35,8 @@
     {
       "id": "p1_front",
       "position": [
-        320,
-        220
+        442,
+        279
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -47,8 +47,8 @@
     {
       "id": "p1_rear",
       "position": [
-        320,
-        540
+        443,
+        434
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -57,22 +57,10 @@
       "units": 8
     },
     {
-      "id": "neutral",
-      "position": [
-        640,
-        360
-      ],
-      "ownerId": null,
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 8
-    },
-    {
       "id": "ai1_base",
       "position": [
-        1000,
-        360
+        838,
+        359
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",

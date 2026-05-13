@@ -35,74 +35,86 @@
     {
       "id": "p1_main",
       "position": [
-        240,
-        360
+        641,
+        592
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 12
+      "units": 10
     },
     {
       "id": "p1_top",
       "position": [
-        440,
-        220
+        438,
+        188
       ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
+      "ownerId": null,
+      "nodeType": "house",
       "level": 1,
       "liquidType": "water",
-      "units": 8
+      "units": 5
     },
     {
       "id": "p1_bot",
       "position": [
-        440,
-        500
+        441,
+        528
       ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
+      "ownerId": null,
+      "nodeType": "house",
       "level": 1,
       "liquidType": "water",
-      "units": 8
+      "units": 5
     },
     {
       "id": "ai1_top",
       "position": [
         840,
-        220
+        187
       ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 5
     },
     {
       "id": "ai1_bot",
       "position": [
-        840,
-        500
+        837,
+        527
       ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 5
     },
     {
       "id": "ai1_base",
       "position": [
-        1100,
-        360
+        640,
+        119
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 16
+      "units": 10
+    },
+    {
+      "id": "p1_1",
+      "position": [
+        642,
+        364
+      ],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "water",
+      "units": 10
     }
   ],
   "winCondition": {

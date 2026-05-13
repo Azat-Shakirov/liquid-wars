@@ -78,7 +78,7 @@
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 12
+      "units": 10
     },
     {
       "id": "ai1_top",
@@ -86,11 +86,11 @@
         900,
         200
       ],
-      "ownerId": "ai1",
+      "ownerId": null,
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
+      "units": 10
     },
     {
       "id": "ai1_bot",
@@ -100,9 +100,9 @@
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 2,
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 10
     },
     {
       "id": "ai1_base",
@@ -112,9 +112,9 @@
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
-      "level": 3,
+      "level": 1,
       "liquidType": "water",
-      "units": 22
+      "units": 10
     }
   ],
   "winCondition": {

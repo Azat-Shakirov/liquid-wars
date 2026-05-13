@@ -52,8 +52,12 @@ export class UnitGroupView {
       .circle(0, 0, radius)
       .stroke({ color: outlineColor, width: 1.5, alpha: 0.9 });
 
+    // v2.7.5: always show count (was hidden when c < 5). The user can't
+    // read a group's strength at a glance if the label vanishes for
+    // small groups — and small groups are often the most decision-
+    // relevant (deciding whether to send a defender, etc.).
     const c = Math.floor(ug.count);
-    this.label.text = c >= 5 ? c.toString() : '';
+    this.label.text = c > 0 ? c.toString() : '';
   }
 
   destroy(): void {

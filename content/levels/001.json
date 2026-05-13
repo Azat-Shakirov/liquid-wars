@@ -39,32 +39,20 @@
     {
       "id": "p1_base",
       "position": [
-        240,
-        360
+        440,
+        363
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
       "liquidType": "water",
-      "units": 14
-    },
-    {
-      "id": "neutral",
-      "position": [
-        640,
-        360
-      ],
-      "ownerId": null,
-      "nodeType": "barracks",
-      "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 10
     },
     {
       "id": "ai1_base",
       "position": [
-        1040,
-        360
+        837,
+        357
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",

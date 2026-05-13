@@ -35,8 +35,8 @@
     {
       "id": "p1_b",
       "position": [
-        200,
-        360
+        601,
+        615
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -47,8 +47,8 @@
     {
       "id": "p1_h_top",
       "position": [
-        460,
-        220
+        723,
+        480
       ],
       "ownerId": "p1",
       "nodeType": "house",
@@ -59,8 +59,8 @@
     {
       "id": "p1_h_bot",
       "position": [
-        460,
-        500
+        481,
+        484
       ],
       "ownerId": "p1",
       "nodeType": "house",
@@ -71,8 +71,8 @@
     {
       "id": "ai1_b1",
       "position": [
-        820,
-        220
+        440,
+        208
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -83,8 +83,8 @@
     {
       "id": "ai1_b2",
       "position": [
-        820,
-        500
+        513,
+        80
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -95,8 +95,8 @@
     {
       "id": "ai1_b3",
       "position": [
-        1080,
-        220
+        679,
+        79
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -107,8 +107,8 @@
     {
       "id": "ai1_b4",
       "position": [
-        1080,
-        500
+        755,
+        210
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",

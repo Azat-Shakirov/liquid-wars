@@ -54,7 +54,7 @@
       "nodeType": "barracks",
       "level": 1,
       "liquidType": "blood",
-      "units": 8
+      "units": 10
     },
     {
       "id": "n_venom",
@@ -66,7 +66,7 @@
       "nodeType": "barracks",
       "level": 1,
       "liquidType": "venom",
-      "units": 8
+      "units": 10
     },
     {
       "id": "n_slime",

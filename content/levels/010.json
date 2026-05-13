@@ -17,28 +17,41 @@
   "terrain": {
     "walls": [
       {
-        "id": "w_top",
-        "points": [
-          [
-            640,
-            0
-          ],
-          [
-            640,
-            320
-          ]
-        ]
-      },
-      {
         "id": "w_bottom",
         "points": [
           [
-            640,
-            400
+            643,
+            165
           ],
           [
             640,
             720
+          ]
+        ]
+      },
+      {
+        "id": "w_1",
+        "points": [
+          [
+            324,
+            3
+          ],
+          [
+            321,
+            565
+          ]
+        ]
+      },
+      {
+        "id": "w_2",
+        "points": [
+          [
+            956,
+            4
+          ],
+          [
+            958,
+            564
           ]
         ]
       }
@@ -62,20 +75,20 @@
     {
       "id": "p1_top",
       "position": [
-        240,
-        220
+        159,
+        78
       ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
-      "level": 2,
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 5
     },
     {
       "id": "p1_bot",
       "position": [
-        240,
-        500
+        159,
+        365
       ],
       "ownerId": "p1",
       "nodeType": "barracks",
@@ -86,20 +99,32 @@
     {
       "id": "ai1_top",
       "position": [
-        1040,
-        220
+        1123,
+        78
       ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 5
     },
     {
       "id": "ai1_bot",
       "position": [
-        1040,
-        500
+        1125,
+        642
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "ai1_base",
+      "position": [
+        1123,
+        359
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -108,16 +133,88 @@
       "units": 14
     },
     {
-      "id": "ai1_base",
+      "id": "p1_1",
       "position": [
-        1180,
+        800,
+        643
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_2",
+      "position": [
+        798,
+        357
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_3",
+      "position": [
+        801,
+        79
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_4",
+      "position": [
+        163,
+        641
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_5",
+      "position": [
+        473,
+        642
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_6",
+      "position": [
+        481,
         360
       ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 14
+      "units": 5
+    },
+    {
+      "id": "p1_7",
+      "position": [
+        480,
+        80
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
     }
   ],
   "winCondition": {

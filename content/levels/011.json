@@ -20,12 +20,12 @@
         "id": "w_a",
         "points": [
           [
-            420,
-            0
+            240,
+            563
           ],
           [
-            420,
-            360
+            238,
+            1
           ]
         ]
       },
@@ -33,12 +33,12 @@
         "id": "w_b",
         "points": [
           [
-            420,
-            460
+            403,
+            162
           ],
           [
-            420,
-            720
+            404,
+            716
           ]
         ]
       },
@@ -46,12 +46,12 @@
         "id": "w_c",
         "points": [
           [
-            860,
-            260
+            878,
+            160
           ],
           [
-            860,
-            720
+            879,
+            718
           ]
         ]
       },
@@ -59,12 +59,51 @@
         "id": "w_d",
         "points": [
           [
-            860,
-            0
+            1040,
+            4
           ],
           [
-            860,
-            160
+            1038,
+            560
+          ]
+        ]
+      },
+      {
+        "id": "w_1",
+        "points": [
+          [
+            560,
+            242
+          ],
+          [
+            721,
+            241
+          ]
+        ]
+      },
+      {
+        "id": "w_2",
+        "points": [
+          [
+            559,
+            243
+          ],
+          [
+            560,
+            563
+          ]
+        ]
+      },
+      {
+        "id": "w_3",
+        "points": [
+          [
+            719,
+            245
+          ],
+          [
+            723,
+            562
           ]
         ]
       }
@@ -88,56 +127,56 @@
     {
       "id": "p1_top",
       "position": [
-        220,
-        200
+        640,
+        362
       ],
-      "ownerId": "p1",
+      "ownerId": null,
       "nodeType": "barracks",
-      "level": 2,
+      "level": 5,
       "liquidType": "water",
-      "units": 14
+      "units": 10
     },
     {
       "id": "p1_bot",
       "position": [
-        220,
-        520
+        642,
+        639
       ],
-      "ownerId": "p1",
+      "ownerId": null,
       "nodeType": "barracks",
-      "level": 2,
+      "level": 3,
       "liquidType": "water",
-      "units": 14
+      "units": 10
     },
     {
       "id": "n_mid",
       "position": [
-        640,
-        410
+        122,
+        118
       ],
       "ownerId": null,
-      "nodeType": "barracks",
-      "level": 2,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
-      "units": 12
+      "units": 5
     },
     {
       "id": "n_top",
       "position": [
-        640,
-        100
+        644,
+        120
       ],
       "ownerId": null,
-      "nodeType": "barracks",
-      "level": 1,
+      "nodeType": "tower",
+      "level": 2,
       "liquidType": "water",
-      "units": 8
+      "units": 20
     },
     {
       "id": "ai1_top",
       "position": [
-        1060,
-        200
+        1163,
+        363
       ],
       "ownerId": "ai1",
       "nodeType": "barracks",
@@ -148,14 +187,74 @@
     {
       "id": "ai1_bot",
       "position": [
-        1060,
-        520
+        1163,
+        641
       ],
       "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 2,
+      "nodeType": "house",
+      "level": 1,
       "liquidType": "water",
       "units": 14
+    },
+    {
+      "id": "p1_1",
+      "position": [
+        120,
+        366
+      ],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 10
+    },
+    {
+      "id": "p1_2",
+      "position": [
+        125,
+        643
+      ],
+      "ownerId": "p1",
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 10
+    },
+    {
+      "id": "p1_3",
+      "position": [
+        319,
+        363
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_4",
+      "position": [
+        963,
+        364
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
+    },
+    {
+      "id": "p1_5",
+      "position": [
+        1161,
+        119
+      ],
+      "ownerId": null,
+      "nodeType": "house",
+      "level": 1,
+      "liquidType": "water",
+      "units": 5
     }
   ],
   "winCondition": {
