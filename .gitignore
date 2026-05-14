@@ -57,10 +57,14 @@ $RECYCLE.BIN/
 .claude/session-end.log
 
 # Private — never commit to public repo.
-# Spec, agent-instruction file, and session log are kept local only.
-# The session log is mirrored to a private "memory" repo as
-# liquid-wars-records.txt; SPEC.md and CLAUDE.md stay local.
+# Spec, design, asset plan, design-interview summary, agent-instruction
+# file, and session log are kept local only. Most are mirrored to a
+# private "memory" repo (see CLAUDE.md for the file-name mapping).
 SPEC.md
+DESIGN.md
+ASSET_PLAN.md
+game-context.txt
+liquid-wars-design-doc.txt
 CLAUDE.md
 records.txt
 liquid-wars-records.txt

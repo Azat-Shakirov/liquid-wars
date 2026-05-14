@@ -21,7 +21,13 @@ import numpy as np
 from rembg import remove, new_session
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC_PATH = ROOT / "game-assets" / "unit-infantry-1.jpeg"
+SRC_DIR = ROOT / "game-assets"
+# Two walk-cycle frames. Output suffixes -0 / -1 are used as a 2-frame
+# animation in UnitGroupView.
+FRAMES = [
+    ("unit-infantry.jpeg", 0),
+    ("unit-infantry-1.jpeg", 1),
+]
 OUT_DIR = ROOT / "src" / "render" / "sprites" / "units"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -116,19 +122,20 @@ def finalize(rgba_arr: np.ndarray, dst: Path) -> None:
 
 
 def main() -> int:
-    print(f"loading {SRC_PATH.name}")
     session = new_session("u2net")
-    img = Image.open(SRC_PATH).convert("RGBA")
-    cut = remove(img, session=session, post_process_mask=True)
-    arr = np.array(cut)
-    mask = cape_mask(arr)
-    cape_pct = 100.0 * mask.sum() / max(1, mask.size)
-    print(f"  cape mask covers {cape_pct:.2f}% of pixels")
-
-    for liquid, hue in LIQUID_HUES.items():
-        recolored = recolor_to_hue(arr, mask, hue)
-        finalize(recolored, OUT_DIR / f"infantry-{liquid}.png")
-    finalize(recolor_to_ink(arr, mask), OUT_DIR / f"infantry-{INK_LIQUID}.png")
+    for src_name, frame_idx in FRAMES:
+        src_path = SRC_DIR / src_name
+        print(f"frame {frame_idx}: loading {src_name}")
+        img = Image.open(src_path).convert("RGBA")
+        cut = remove(img, session=session, post_process_mask=True)
+        arr = np.array(cut)
+        mask = cape_mask(arr)
+        cape_pct = 100.0 * mask.sum() / max(1, mask.size)
+        print(f"  cape mask covers {cape_pct:.2f}% of pixels")
+        for liquid, hue in LIQUID_HUES.items():
+            recolored = recolor_to_hue(arr, mask, hue)
+            finalize(recolored, OUT_DIR / f"infantry-{liquid}-{frame_idx}.png")
+        finalize(recolor_to_ink(arr, mask), OUT_DIR / f"infantry-{INK_LIQUID}-{frame_idx}.png")
     print("done.")
     return 0
 

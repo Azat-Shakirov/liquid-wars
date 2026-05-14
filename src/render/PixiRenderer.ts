@@ -177,7 +177,7 @@ export class PixiRenderer {
   ): void {
     this.syncWalls(world);
     this.syncNodes(world, session, nowMs, alpha);
-    this.syncUnitGroups(world, alpha);
+    this.syncUnitGroups(world, alpha, nowMs);
     this.drawHints(world, session);
     this.drawTowerRanges(world, session);
     this.ingestTowerShots(recentTowerShots, world, nowMs);
@@ -338,7 +338,7 @@ export class PixiRenderer {
     }
   }
 
-  private syncUnitGroups(world: World, alpha: number): void {
+  private syncUnitGroups(world: World, alpha: number, nowMs: number): void {
     const present = new Set<string>();
     for (const ug of world.unitGroups) {
       present.add(ug.id);
@@ -348,7 +348,7 @@ export class PixiRenderer {
         this.unitViews.set(ug.id, view);
         this.unitLayer.addChild(view.container);
       }
-      view.update(ug, world, this.content, alpha);
+      view.update(ug, world, this.content, alpha, nowMs);
     }
     for (const [id, view] of this.unitViews) {
       if (!present.has(id)) {

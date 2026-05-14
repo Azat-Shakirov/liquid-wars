@@ -1,21 +1,21 @@
-// UnitGroupView — renders one in-flight UnitGroup as an infantry sprite
-// (v2.7.8) whose cape color tracks the source liquid. Pre-v2.7.8 was a
-// procedural colored droplet; kept as a fallback when the texture isn't
-// loaded yet (very brief, only at first frame after PixiRenderer.create).
+// UnitGroupView — renders one in-flight UnitGroup as a marching infantry
+// sprite. Two walk-cycle frames alternate every WALK_FRAME_MS to animate
+// the step; sprite mirrors horizontally based on heading so the soldier
+// faces the way they walk.
 
 import { Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { UnitGroup } from '../../engine/entities/UnitGroup';
 import type { ContentLibrary } from '../../engine/content/ContentLibrary';
 import type { World } from '../../engine/World';
 import { colorFromHex } from '../shapes';
-import { getUnitTexture } from '../sprites/unitSprites';
+import { getUnitFrame } from '../sprites/unitSprites';
 
-// Display size of the infantry sprite at world.visualScale = 1. Adjusted so
-// the soldier reads comparably to the procedural droplet's footprint
-// (~14–28 px diameter depending on count).
-const SPRITE_BASE_DISPLAY_HEIGHT = 26;
-// Size grows with sqrt(count) so a stack-of-50 looks meaningfully bigger
-// than a stack-of-1 without scaling unboundedly. Caps at 1.5×.
+// Sprite display height at world.visualScale = 1. Soldiers ought to read
+// as comparable in scale to a base-size tower (~76 px high after the 1.7×
+// factor) but smaller — a unit not a building.
+const SPRITE_BASE_DISPLAY_HEIGHT = 30;
+const WALK_FRAME_MS = 220;
+
 function countScale(count: number): number {
   const c = Math.max(1, count);
   return Math.min(1.5, 0.85 + Math.sqrt(c) * 0.06);
@@ -27,6 +27,10 @@ export class UnitGroupView {
   private readonly sprite: Sprite;
   private readonly label: Text;
   private readonly groupId: string;
+  // Source-image soldiers face their LEFT (sword + cape on their left side).
+  // We treat that as the "natural" heading; if the group is moving right we
+  // flip horizontally so the soldier faces right.
+  private facingRight = false;
 
   constructor(ug: UnitGroup) {
     this.groupId = ug.id;
@@ -50,28 +54,39 @@ export class UnitGroupView {
     this.container.addChild(this.label);
   }
 
-  update(ug: UnitGroup, world: World, content: ContentLibrary, alpha: number): void {
+  update(
+    ug: UnitGroup,
+    world: World,
+    content: ContentLibrary,
+    alpha: number,
+    nowMs: number,
+  ): void {
     const px = ug.previousPosition.x + (ug.position.x - ug.previousPosition.x) * alpha;
     const py = ug.previousPosition.y + (ug.position.y - ug.previousPosition.y) * alpha;
     this.container.position.set(px, py);
 
-    const tex = getUnitTexture(ug.sourceLiquid);
+    // Heading: use the tick-delta. Only update facing when the delta is
+    // big enough to be meaningful — avoids flickering at stationary moments.
+    const dx = ug.position.x - ug.previousPosition.x;
+    if (dx > 0.5) this.facingRight = true;
+    else if (dx < -0.5) this.facingRight = false;
+
+    const frame = Math.floor(nowMs / WALK_FRAME_MS) & 1;
+    const tex = getUnitFrame(ug.sourceLiquid, frame);
 
     if (tex !== null) {
-      // Sprite path — primary.
       this.sprite.visible = true;
       this.sprite.texture = tex;
       const cs = countScale(ug.count);
       const displayH = SPRITE_BASE_DISPLAY_HEIGHT * world.visualScale * cs;
-      const scale = displayH / tex.height;
-      this.sprite.scale.set(scale);
+      const baseScale = displayH / tex.height;
+      this.sprite.scale.set(this.facingRight ? -baseScale : baseScale, baseScale);
       this.droplet.clear();
 
-      // Position count label below the sprite's bottom edge.
-      const spriteHalfH = (tex.height * scale) / 2;
+      const spriteHalfH = (tex.height * baseScale) / 2;
       this.label.position.set(0, spriteHalfH + 2);
     } else {
-      // Fallback procedural droplet (texture not yet loaded).
+      // Pre-load fallback: procedural droplet (first frame only).
       this.sprite.visible = false;
       const owner = world.players.find((p) => p.id === ug.ownerId);
       const outlineColor = owner ? colorFromHex(owner.color) : 0xffffff;
@@ -89,7 +104,6 @@ export class UnitGroupView {
       this.label.position.set(0, 0);
     }
 
-    // v2.7.5: always show count.
     const c = Math.floor(ug.count);
     this.label.text = c > 0 ? c.toString() : '';
   }
