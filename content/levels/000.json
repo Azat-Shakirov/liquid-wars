@@ -1,0 +1,120 @@
+{
+  "id": 0,
+  "name": "Sprite Sandbox",
+  "tutorialKey": null,
+  "objective": "Tower-sprite preview (dev sandbox). Top row: neutral towers in all 5 liquid colors. Middle row: faction-owned towers showing pip count + ownership outline. Bottom row: barracks for interaction.",
+  "introducesNodeTypes": [],
+  "introducesLiquids": [],
+  "map": {
+    "width": 1280,
+    "height": 720,
+    "background": "stone"
+  },
+  "terrain": {
+    "walls": []
+  },
+  "players": [
+    {
+      "id": "p1",
+      "type": "human",
+      "color": "#3da9fc",
+      "liquid": "water"
+    },
+    {
+      "id": "ai1",
+      "type": "ai",
+      "color": "#e63946",
+      "liquid": "blood"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "tn_water",
+      "position": [200, 180],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "water",
+      "units": 6
+    },
+    {
+      "id": "tn_blood",
+      "position": [420, 180],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "blood",
+      "units": 6
+    },
+    {
+      "id": "tn_slime",
+      "position": [640, 180],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "slime",
+      "units": 6
+    },
+    {
+      "id": "tn_venom",
+      "position": [860, 180],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "venom",
+      "units": 6
+    },
+    {
+      "id": "tn_ink",
+      "position": [1080, 180],
+      "ownerId": null,
+      "nodeType": "tower",
+      "level": 3,
+      "liquidType": "ink",
+      "units": 6
+    },
+    {
+      "id": "p1_tower",
+      "position": [380, 420],
+      "ownerId": "p1",
+      "nodeType": "tower",
+      "level": 5,
+      "liquidType": "water",
+      "units": 25
+    },
+    {
+      "id": "ai1_tower",
+      "position": [900, 420],
+      "ownerId": "ai1",
+      "nodeType": "tower",
+      "level": 5,
+      "liquidType": "blood",
+      "units": 25
+    },
+    {
+      "id": "p1_barracks",
+      "position": [200, 600],
+      "ownerId": "p1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "water",
+      "units": 10
+    },
+    {
+      "id": "ai1_barracks",
+      "position": [1080, 600],
+      "ownerId": "ai1",
+      "nodeType": "barracks",
+      "level": 1,
+      "liquidType": "blood",
+      "units": 6
+    }
+  ],
+  "winCondition": {
+    "type": "controlAll"
+  },
+  "starThresholds": {
+    "time": [600000, 300000, 120000],
+    "units": [200, 100, 50]
+  }
+}

@@ -22,6 +22,8 @@ import { UnitGroupView } from './views/UnitGroupView';
 import { SelectionBoxView } from './views/SelectionBoxView';
 import { colorFromHex } from './shapes';
 import type { SessionState } from './SessionState';
+import { loadTowerTextures } from './sprites/towerSprites';
+import { loadUnitTextures } from './sprites/unitSprites';
 
 interface ClickRipple {
   x: number;
@@ -162,6 +164,7 @@ export class PixiRenderer {
       resolution: window.devicePixelRatio,
     });
     host.appendChild(app.canvas);
+    await Promise.all([loadTowerTextures(), loadUnitTextures()]);
     return new PixiRenderer(app, host, content);
   }
 

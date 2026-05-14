@@ -2,6 +2,7 @@
 // session store. The engine only exists when route === 'game'; other
 // routes are pure React and don't allocate any PixiJS resources.
 
+import { useEffect } from 'react';
 import { useSessionStore } from './store/sessionStore';
 import { MainMenu } from './ui/MainMenu';
 import { LevelSelect } from './ui/LevelSelect';
@@ -16,6 +17,21 @@ const DEV = import.meta.env.DEV;
 export default function App() {
   const route = useSessionStore((s) => s.route);
   const selectedLevelId = useSessionStore((s) => s.selectedLevelId);
+  const startLevel = useSessionStore((s) => s.startLevel);
+
+  // DEV-only URL bootstrap: ?level=N jumps straight to game view at level N.
+  // Used by author + headless screenshot tooling for the sprite sandbox.
+  useEffect(() => {
+    if (!DEV) return;
+    const params = new URLSearchParams(window.location.search);
+    const rawLevel = params.get('level');
+    if (rawLevel !== null) {
+      const id = Number(rawLevel);
+      if (Number.isInteger(id) && id >= 0) {
+        startLevel(id);
+      }
+    }
+  }, [startLevel]);
 
   switch (route) {
     case 'menu':

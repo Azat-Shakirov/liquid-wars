@@ -16,8 +16,18 @@ export function LevelSelect() {
   const completedLevels = useProgressStore((s) => s.completedLevels);
 
   const content = useMemo(() => loadContent(), []);
+  // Level 0 is the dev sandbox — hide it from the regular grid; reachable
+  // only via the DEV-only Sandbox button below.
   const sortedIds = useMemo(
-    () => Object.keys(content.levels).map(Number).sort((a, b) => a - b),
+    () =>
+      Object.keys(content.levels)
+        .map(Number)
+        .filter((id) => id !== 0)
+        .sort((a, b) => a - b),
+    [content.levels],
+  );
+  const hasSandbox = useMemo(
+    () => content.levels[0] !== undefined,
     [content.levels],
   );
   const liquidIds = useMemo(
@@ -111,6 +121,14 @@ export function LevelSelect() {
           );
         })}
       </div>
+      {import.meta.env.DEV && hasSandbox && (
+        <button
+          style={{ ...linkStyle, color: '#9be29b', marginTop: 8 }}
+          onClick={() => startLevel(0)}
+        >
+          ⚙ Sandbox (L0) — sprite preview
+        </button>
+      )}
       <button style={linkStyle} onClick={() => navigate('menu')}>← back</button>
     </div>
   );

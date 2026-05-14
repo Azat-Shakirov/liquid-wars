@@ -1,0 +1,155 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      /* DESIGN.md §9: CSS custom property convention.
+         Defaults to water; overridden at runtime (build step or DOM injection)
+         per faction. */
+      svg {
+        --liquid-color:     #4a8bb8;
+        --liquid-highlight: #7da4c4;
+        --liquid-shadow:    #2a5b88;
+      }
+      .liq        { fill: var(--liquid-color); }
+      .liq-hi     { fill: var(--liquid-highlight); }
+      .liq-stroke { stroke: var(--liquid-shadow); fill: none; }
+    </style>
+  </defs>
+
+  <!-- ============================================================
+       Geometry summary (DESIGN.md §6 — Barracks)
+       Fort footprint: x=[83,173] (w=90), y=[130,210] (h=80)
+       Ground contact: y=210.  Crenellations: y=[122,130].
+       Side wall (3/4 perspective, left): x=[69,83].
+       Banner+pole: above battlements, y=[92,114] zone.
+       L1 = no spire (added at L3+).
+       ============================================================ -->
+
+  <!-- ===== §5 Ground Halo (faction soaked into parchment, beneath shadow) =====
+       Opacity bumped above recipe-baseline so flavor reads at 128px target size. -->
+  <ellipse cx="128" cy="217" rx="76" ry="12" class="liq" opacity="0.20"/>
+  <ellipse cx="128" cy="215" rx="62" ry="9"  class="liq" opacity="0.34"/>
+
+  <!-- ===== §4 Cast Shadow (3 stacked ellipses, offset slightly right — light from upper-left) ===== -->
+  <ellipse cx="132" cy="215" rx="54" ry="6.4" fill="#3a2818" opacity="0.06"/>
+  <ellipse cx="132" cy="213" rx="49" ry="4.8" fill="#3a2818" opacity="0.12"/>
+  <ellipse cx="128" cy="211" rx="43" ry="3.2" fill="#3a2818" opacity="0.22"/>
+
+  <!-- ===== §5 Ground Puddle (in front of fort, slightly left of center) ===== -->
+  <ellipse cx="113" cy="216" rx="7"   ry="2.2" class="liq"    opacity="0.65"/>
+  <ellipse cx="113" cy="216" rx="4.5" ry="1.3" class="liq-hi" opacity="0.85"/>
+
+  <!-- ===== §4 Side Wall (3/4 perspective, left, always darker) =====
+       Back-top higher than front-top → suggests depth. -->
+  <path d="M 69,210 L 69,124 L 83,130 L 83,210 Z"
+        fill="#7a6a58" stroke="#3a2818" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- AO joint where side meets front face -->
+  <path d="M 79,210 L 79,130 L 83,130 L 83,210 Z"
+        fill="#5a4a3a" opacity="0.5"/>
+
+  <!-- ===== Front wall — base stone ===== -->
+  <rect x="83" y="130" width="90" height="80"
+        fill="#b8a888" stroke="#3a2818" stroke-width="1.5"/>
+
+  <!-- ===== §4 Stone Texture — horizontal mortar courses ===== -->
+  <g stroke="#3a2818" stroke-width="0.4" opacity="0.5">
+    <line x1="84" y1="145" x2="172" y2="145"/>
+    <line x1="84" y1="160" x2="172" y2="160"/>
+    <line x1="84" y1="175" x2="172" y2="175"/>
+    <line x1="84" y1="190" x2="172" y2="190"/>
+  </g>
+  <!-- Vertical joints, alternating offset per course -->
+  <g stroke="#3a2818" stroke-width="0.3" opacity="0.4">
+    <!-- course 130-145 -->
+    <line x1="105" y1="130" x2="105" y2="145"/>
+    <line x1="135" y1="130" x2="135" y2="145"/>
+    <line x1="160" y1="130" x2="160" y2="145"/>
+    <!-- course 145-160 (offset) -->
+    <line x1="95"  y1="145" x2="95"  y2="160"/>
+    <line x1="120" y1="145" x2="120" y2="160"/>
+    <line x1="155" y1="145" x2="155" y2="160"/>
+    <!-- course 160-175 -->
+    <line x1="105" y1="160" x2="105" y2="175"/>
+    <line x1="160" y1="160" x2="160" y2="175"/>
+    <!-- course 175-190 (offset) -->
+    <line x1="95"  y1="175" x2="95"  y2="190"/>
+    <line x1="155" y1="175" x2="155" y2="190"/>
+    <!-- course 190-210 -->
+    <line x1="105" y1="190" x2="105" y2="210"/>
+    <line x1="155" y1="190" x2="155" y2="210"/>
+  </g>
+
+  <!-- ===== §4 Wall Shading overlays (rim/AO/edges, light from upper-left) ===== -->
+  <rect x="82"  y="129" width="92"  height="6"  fill="#d4c4a4" opacity="0.7"/>
+  <rect x="82"  y="203" width="92"  height="7"  fill="#5a4a3a" opacity="0.4"/>
+  <rect x="82"  y="129" width="2.5" height="82" fill="#e0d4b8" opacity="0.85"/>
+  <rect x="168" y="129" width="5"   height="82" fill="#5a4a3a" opacity="0.3"/>
+
+  <!-- ===== §5 Wall Stain (liquid seeped down left wall) — opacity bumped for 128px legibility ===== -->
+  <path d="M 85,148 Q 83,168 86,185 Q 89,198 93,210 L 83,210 Z"
+        class="liq" opacity="0.32"/>
+  <path d="M 87,152 Q 86,175 89,202"
+        class="liq-stroke" stroke-width="0.6" opacity="0.65"/>
+
+  <!-- ===== §5 Glowing Window halo (under window, on wall) ===== -->
+  <ellipse cx="144" cy="158" rx="16" ry="11" class="liq" opacity="0.30"/>
+
+  <!-- ===== §5 Glowing Window (right of gate) ===== -->
+  <rect x="140" y="152" width="8" height="11" class="liq"/>
+  <rect x="140" y="152" width="8" height="3"  class="liq-hi" opacity="0.95"/>
+  <rect x="140" y="152" width="8" height="11"
+        fill="none" stroke="#3a2818" stroke-width="0.6"/>
+
+  <!-- ===== Gate (arched, planked, with iron rivets) ===== -->
+  <path d="M 121,208 L 121,189 Q 121,182 128,182 Q 135,182 135,189 L 135,208 Z"
+        fill="#2a1a0a" stroke="#3a2818" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- Wood plank lines -->
+  <g stroke="#5a3e1e" stroke-width="0.5" opacity="0.75">
+    <line x1="125" y1="186" x2="125" y2="208"/>
+    <line x1="128" y1="183" x2="128" y2="208"/>
+    <line x1="131" y1="186" x2="131" y2="208"/>
+  </g>
+  <!-- Iron rivets -->
+  <g fill="#7a7a7a">
+    <circle cx="123.5" cy="195" r="0.8"/>
+    <circle cx="123.5" cy="204" r="0.8"/>
+    <circle cx="132.5" cy="195" r="0.8"/>
+    <circle cx="132.5" cy="204" r="0.8"/>
+  </g>
+
+  <!-- ===== §5 Gate Glow (light leaks at bottom of gate) ===== -->
+  <ellipse cx="128" cy="206" rx="6.5" ry="3.2" class="liq" opacity="0.35"/>
+  <path d="M 122,208 Q 128,201 134,208"
+        class="liq-stroke" stroke-width="1.6" opacity="0.75"/>
+
+  <!-- ===== §4 Crenellations (4 merlons across top, each with rim light) =====
+       Pattern: 10px edge | 10w | 10g | 10w | 10g | 10w | 10g | 10w | 10px edge = 90 -->
+  <g stroke="#3a2818" stroke-width="1.5">
+    <rect x="93"  y="122" width="10" height="8" fill="#a89878"/>
+    <rect x="113" y="122" width="10" height="8" fill="#a89878"/>
+    <rect x="133" y="122" width="10" height="8" fill="#a89878"/>
+    <rect x="153" y="122" width="10" height="8" fill="#a89878"/>
+  </g>
+  <!-- Merlon top rim lights (separate, no stroke) -->
+  <g fill="#d4c4a4" opacity="0.7">
+    <rect x="94"  y="123" width="8" height="2"/>
+    <rect x="114" y="123" width="8" height="2"/>
+    <rect x="134" y="123" width="8" height="2"/>
+    <rect x="154" y="123" width="8" height="2"/>
+  </g>
+
+  <!-- ===== Banner: pole, finial, triangle, sigil, drip =====
+       Pole rises from center-gap between merlons 2 and 3 (x=128). -->
+  <!-- Pole -->
+  <rect x="127.4" y="92" width="1.2" height="30" fill="#5a3e1e"/>
+  <!-- Finial -->
+  <circle cx="128" cy="90.5" r="1.8" fill="#a8a060" stroke="#3a2818" stroke-width="0.5"/>
+  <!-- Banner triangle (liquid-base color), trails right -->
+  <path d="M 128,95 L 152,99 L 128,110 Z"
+        class="liq" stroke="#3a2818" stroke-width="0.8" stroke-linejoin="round"/>
+  <!-- Sigil: water = teardrop, #e0e8f0 -->
+  <path d="M 138,99 Q 134,103 136,107 Q 140,108.5 141.5,105.5 Q 142,102 138,99 Z"
+        fill="#e0e8f0" stroke="#3a2818" stroke-width="0.4"/>
+  <!-- §5 Banner drip (banner is saturated, drips) -->
+  <ellipse cx="128" cy="112.2" rx="0.7" ry="2.2" class="liq" opacity="0.8"/>
+  <circle  cx="128" cy="116"   r="0.6"           class="liq" opacity="0.55"/>
+</svg>

@@ -23,6 +23,10 @@ export function shapeKindForType(type: NodeTypeId): ShapeKind {
   }
 }
 
+// v2.7.8: tower nodes are drawn from a sprite that's larger than the
+// procedural hex it replaces. Hit-test and visual layout multiply by this.
+export const TOWER_SPRITE_SCALE_FACTOR = 1.7;
+
 export function metricsForType(type: NodeTypeId, level: number, visualScale = 1): ShapeMetrics {
   // v2.7.3 sizes; v2.7.6 multiplies by per-level visualScale so sparse
   // levels render larger nodes without applying any camera transform

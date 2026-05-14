@@ -6,12 +6,20 @@
 //   - level pips along top edge
 //   - units label
 
-import { Container, Graphics, Text } from 'pixi.js';
+import { Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { Node } from '../../engine/entities/Node';
 import type { ContentLibrary } from '../../engine/content/ContentLibrary';
 import type { World, Player } from '../../engine/World';
-import { colorFromHex, hexagonPoints, metricsForType, trianglePoints, type ShapeKind } from '../shapes';
+import {
+  colorFromHex,
+  hexagonPoints,
+  metricsForType,
+  trianglePoints,
+  TOWER_SPRITE_SCALE_FACTOR,
+  type ShapeKind,
+} from '../shapes';
 import { buildLiquidPolyPoints } from '../liquidAnimator';
+import { getTowerTexture } from '../sprites/towerSprites';
 
 const NEUTRAL_OUTLINE = 0x666666;
 const SELECTION_COLOR = 0xffffff;
@@ -42,6 +50,7 @@ export class NodeView {
   private readonly liquidLayer: Container;
   private readonly liquid: Graphics;
   private readonly liquidMask: Graphics;
+  private readonly towerSprite: Sprite;
   private readonly effectsLayer: Graphics;
   private readonly pips: Graphics;
   private readonly unitsLabel: Text;
@@ -58,6 +67,11 @@ export class NodeView {
     this.liquidLayer = new Container();
     this.liquid = new Graphics();
     this.liquidMask = new Graphics();
+    this.towerSprite = new Sprite();
+    this.towerSprite.anchor.set(0.5, 0.55); // slight downward bias so the
+    // tower body looks anchored at the node center; the dirt-base sits
+    // below, the spire/flag above.
+    this.towerSprite.visible = false;
     this.effectsLayer = new Graphics();
     this.pips = new Graphics();
 
@@ -80,6 +94,7 @@ export class NodeView {
     this.container.addChild(this.selectionRing);
     this.container.addChild(this.chrome);
     this.container.addChild(this.liquidLayer);
+    this.container.addChild(this.towerSprite);
     this.container.addChild(this.effectsLayer);
     this.container.addChild(this.pips);
     this.container.addChild(this.unitsLabel);
@@ -114,39 +129,83 @@ export class NodeView {
     const liquidDef = content.liquids[node.liquidType];
     const liquidColor = liquidDef ? colorFromHex(liquidDef.color) : 0x3da9fc;
 
+    // Tower sprite path: when this node is a tower AND its liquid texture is
+    // available, render the sprite in place of the procedural chrome/liquid.
+    const towerTex = node.nodeType === 'tower' ? getTowerTexture(node.liquidType) : null;
+    const useSprite = towerTex !== null;
+
+    // Visual bounding box for layout of selection/pips/label/effects.
+    // For sprites we compute a virtual "size" based on the sprite's actual
+    // display height so rings + pips wrap the tower correctly.
+    let visualHalfY = half;
+    let visualHalfX = half;
+
+    if (useSprite) {
+      this.towerSprite.visible = true;
+      this.towerSprite.texture = towerTex;
+      const tex = towerTex;
+      const displayW = size * TOWER_SPRITE_SCALE_FACTOR;
+      const scale = displayW / tex.width;
+      this.towerSprite.scale.set(scale);
+      // Hide the procedural chrome + liquid layers entirely.
+      this.chrome.clear();
+      this.liquid.clear();
+      this.liquidMask.clear();
+      visualHalfX = (tex.width * scale) / 2;
+      visualHalfY = (tex.height * scale) / 2;
+    } else {
+      this.towerSprite.visible = false;
+    }
+
     // Selection ring — outline at the same shape, padded outward by 6px.
     this.selectionRing.clear();
     if (selected) {
-      drawShape(this.selectionRing, kind, size + 12, radius + 6);
-      this.selectionRing.stroke({ color: SELECTION_COLOR, width: 2, alpha: 0.85 });
+      if (useSprite) {
+        // Rounded rectangle hugging the sprite's actual footprint.
+        this.selectionRing.roundRect(
+          -visualHalfX - 6,
+          -visualHalfY - 6,
+          visualHalfX * 2 + 12,
+          visualHalfY * 2 + 12,
+          10,
+        );
+        this.selectionRing.stroke({ color: SELECTION_COLOR, width: 2, alpha: 0.85 });
+      } else {
+        drawShape(this.selectionRing, kind, size + 12, radius + 6);
+        this.selectionRing.stroke({ color: SELECTION_COLOR, width: 2, alpha: 0.85 });
+      }
     }
 
-    // Chrome — bg fill + owner-color stroke, drawn in the node's shape.
-    this.chrome.clear();
-    drawShape(this.chrome, kind, size, radius);
-    this.chrome.fill({ color: CHROME_BG, alpha: 0.95 });
-    drawShape(this.chrome, kind, size, radius);
-    this.chrome.stroke({ color: ownerColor, width: 2.5, alpha: 0.95 });
+    if (!useSprite) {
+      // Chrome — bg fill + owner-color stroke, drawn in the node's shape.
+      this.chrome.clear();
+      drawShape(this.chrome, kind, size, radius);
+      this.chrome.fill({ color: CHROME_BG, alpha: 0.95 });
+      drawShape(this.chrome, kind, size, radius);
+      this.chrome.stroke({ color: ownerColor, width: 2.5, alpha: 0.95 });
 
-    // Liquid mask — same shape, slightly inset so it sits cleanly inside.
-    const inset = 2;
-    if (size !== this.currentSize) {
-      this.currentSize = size;
+      // Liquid mask — same shape, slightly inset so it sits cleanly inside.
+      const inset = 2;
+      if (size !== this.currentSize) {
+        this.currentSize = size;
+      }
+      this.liquidMask.clear();
+      drawShape(this.liquidMask, kind, size - inset * 2, Math.max(2, radius - inset));
+      this.liquidMask.fill({ color: 0xffffff });
+
+      // Liquid wavy fill.
+      const fillRatio = node.maxUnits > 0 ? node.units / node.maxUnits : 0;
+      const polyPts = buildLiquidPolyPoints(size, size, fillRatio, nowMs);
+      this.liquid
+        .clear()
+        .poly(polyPts)
+        .fill({ color: liquidColor, alpha: 0.92 });
     }
-    this.liquidMask.clear();
-    drawShape(this.liquidMask, kind, size - inset * 2, Math.max(2, radius - inset));
-    this.liquidMask.fill({ color: 0xffffff });
 
-    // Liquid wavy fill.
-    const fillRatio = node.maxUnits > 0 ? node.units / node.maxUnits : 0;
-    const polyPts = buildLiquidPolyPoints(size, size, fillRatio, nowMs);
-    this.liquid
-      .clear()
-      .poly(polyPts)
-      .fill({ color: liquidColor, alpha: 0.92 });
-
-    // Level pips along top edge.
+    // Level pips along top edge. For sprites, sit above the sprite's actual
+    // bounding box (the tower's spire top), not the small `half`.
     this.pips.clear();
+    const pipY = useSprite ? -visualHalfY - 6 : -half - 7;
     if (node.level > 1) {
       const pipRadius = 2.2;
       const spacing = 8;
@@ -154,15 +213,17 @@ export class NodeView {
       const startX = -totalW / 2;
       for (let i = 0; i < node.level; i++) {
         this.pips
-          .circle(startX + i * spacing, -half - 7, pipRadius)
+          .circle(startX + i * spacing, pipY, pipRadius)
           .fill({ color: ownerColor, alpha: 0.95 });
       }
     } else {
-      this.pips.circle(0, -half - 7, 2.2).fill({ color: ownerColor, alpha: 0.95 });
+      this.pips.circle(0, pipY, 2.2).fill({ color: ownerColor, alpha: 0.95 });
     }
 
-    // Units number — floor(units) per §4.2.
+    // Units number — floor(units) per §4.2. For sprite towers we drop the
+    // label below the tower (the building body covers the center anchor).
     this.unitsLabel.text = Math.floor(node.units).toString();
+    this.unitsLabel.position.set(0, useSprite ? visualHalfY + 10 : 0);
 
     // ── Spell / status effects layer ─────────────────────────────────
     this.effectsLayer.clear();
@@ -202,19 +263,28 @@ export class NodeView {
       this.effectsLayer.stroke({ color: 0x9be29b, width: 2.5, alpha: breath });
     }
 
-    // Frozen overlay — translucent cyan over the chrome shape.
+    // Frozen overlay — translucent cyan over the chrome shape (or the sprite
+    // footprint for towers).
     if (node.isFrozen) {
-      drawShape(this.effectsLayer, kind, size, radius);
-      this.effectsLayer.fill({ color: 0x9fdcff, alpha: 0.32 });
-      drawShape(this.effectsLayer, kind, size, radius);
-      this.effectsLayer.stroke({ color: 0xcdefff, width: 1.5, alpha: 0.85 });
+      if (useSprite) {
+        this.effectsLayer
+          .roundRect(-visualHalfX, -visualHalfY, visualHalfX * 2, visualHalfY * 2, 10)
+          .fill({ color: 0x9fdcff, alpha: 0.32 })
+          .roundRect(-visualHalfX, -visualHalfY, visualHalfX * 2, visualHalfY * 2, 10)
+          .stroke({ color: 0xcdefff, width: 1.5, alpha: 0.85 });
+      } else {
+        drawShape(this.effectsLayer, kind, size, radius);
+        this.effectsLayer.fill({ color: 0x9fdcff, alpha: 0.32 });
+        drawShape(this.effectsLayer, kind, size, radius);
+        this.effectsLayer.stroke({ color: 0xcdefff, width: 1.5, alpha: 0.85 });
+      }
     }
 
     // Poison indicator — small green dots circling the perimeter,
     // count = stack count (capped at 4).
     if (node.poisonStacks.length > 0) {
       const stackCount = Math.min(4, node.poisonStacks.length);
-      const r = half + 9;
+      const r = useSprite ? Math.max(visualHalfX, visualHalfY) + 9 : half + 9;
       for (let i = 0; i < stackCount; i++) {
         const a = (Math.PI * 2 * i) / stackCount + nowMs * 0.001;
         const x = Math.cos(a) * r;

@@ -43,7 +43,7 @@
 import type { GameEngine } from '../engine/GameEngine';
 import type { NodeId, Vec2 } from '../types';
 import type { SessionState } from '../render/SessionState';
-import { metricsForType } from '../render/shapes';
+import { metricsForType, TOWER_SPRITE_SCALE_FACTOR } from '../render/shapes';
 import { resolveClick, type ClickAction } from './clickResolver';
 
 const DEAD_ZONE_PX = 5;
@@ -478,7 +478,10 @@ export class InputController {
       const n = this.engine.world.nodes.get(id);
       if (!n) continue;
       const metrics = metricsForType(n.nodeType, n.level, this.engine.world.visualScale);
-      const radius = metrics.size / 2 + HIT_RADIUS_PADDING;
+      // Towers are rendered from a sprite ~TOWER_SPRITE_SCALE_FACTOR× the
+      // procedural hex size; expand the hit radius to match.
+      const sizeMul = n.nodeType === 'tower' ? TOWER_SPRITE_SCALE_FACTOR : 1;
+      const radius = (metrics.size * sizeMul) / 2 + HIT_RADIUS_PADDING;
       const dx = x - n.position.x;
       const dy = y - n.position.y;
       const d = Math.hypot(dx, dy);
