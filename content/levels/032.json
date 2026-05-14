@@ -4,8 +4,6 @@
   "tutorialKey": null,
   "objective": "Storm the fortified center.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
-  "letPlayerChooseLiquid": true,
   "map": {
     "width": 1280,
     "height": 720,
@@ -19,13 +17,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -38,8 +38,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     },
     {
       "id": "p1_b",
@@ -50,8 +50,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     },
     {
       "id": "p1_lab",
@@ -62,8 +62,8 @@
       "ownerId": "p1",
       "nodeType": "lab",
       "level": 2,
-      "liquidType": "water",
-      "units": 60
+      "units": 60,
+      "faction": "azure"
     },
     {
       "id": "ai1_t",
@@ -74,8 +74,8 @@
       "ownerId": "ai1",
       "nodeType": "tower",
       "level": 3,
-      "liquidType": "water",
-      "units": 30
+      "units": 30,
+      "faction": "azure"
     },
     {
       "id": "ai1_a",
@@ -86,8 +86,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 22
+      "units": 22,
+      "faction": "azure"
     },
     {
       "id": "ai1_b",
@@ -98,8 +98,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 22
+      "units": 22,
+      "faction": "azure"
     },
     {
       "id": "ai1_base",
@@ -110,8 +110,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 30
+      "units": 30,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -128,5 +128,7 @@
       180,
       120
     ]
-  }
+  },
+  "introducesFactions": [],
+  "letPlayerChooseFaction": true
 }

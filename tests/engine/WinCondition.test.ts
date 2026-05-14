@@ -55,7 +55,7 @@ describe('WinConditionSystem', () => {
       id: 'ug-mock',
       ownerId: 'p1',
       count: 5,
-      sourceLiquid: 'water',
+      sourceFaction: 'azure',
       fromNodeId: 'p1_a',
       toNodeId: 'neutral',
       path: [{ x: 200, y: 200 }, { x: 600, y: 200 }],
@@ -80,7 +80,7 @@ describe('WinConditionSystem', () => {
       id: 'ug-mock',
       ownerId: 'p1',
       count: 3,
-      sourceLiquid: 'water',
+      sourceFaction: 'azure',
       fromNodeId: 'ai_a', // arbitrary — only ownerId matters for the test
       toNodeId: 'ai_a',
       path: [{ x: 100, y: 200 }, { x: 600, y: 200 }],

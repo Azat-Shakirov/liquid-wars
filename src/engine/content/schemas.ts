@@ -1,19 +1,23 @@
 // Zod schemas — runtime validation of all content JSON at load time (§11).
 // "Bad levels fail loud with a clear error, not silently."
+//
+// v2.8.0: renamed Liquid* → Faction*; player.liquid → player.faction;
+// node.liquidType → node.faction; introducesLiquids → introducesFactions.
+// Spell effects: 'bleed' → 'starve', 'recruit' → 'sabotage'.
 
 import { z } from 'zod';
 
-export const LiquidEffectSchema = z.object({
+export const FactionEffectSchema = z.object({
   type: z.string().min(1),
   value: z.number(),
 });
 
-export const LiquidSchema = z.object({
+export const FactionSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   description: z.string(),
-  effects: z.array(LiquidEffectSchema),
+  effects: z.array(FactionEffectSchema),
 });
 
 export const NodeTypeLevelSchema = z.object({
@@ -45,13 +49,13 @@ export const SpellEffectSchema = z.discriminatedUnion('type', [
     params: z.object({}).optional(),
   }),
   z.object({
-    type: z.literal('bleed'),
+    type: z.literal('starve'),
     params: z.object({
       drainPerSecond: z.number().positive(),
     }),
   }),
   z.object({
-    type: z.literal('recruit'),
+    type: z.literal('sabotage'),
     params: z.object({}).optional(),
   }),
 ]);
@@ -63,6 +67,36 @@ export const SpellSchema = z.object({
   unitCost: z.number().positive(),
   minLabLevel: z.number().int().positive(),
   effect: SpellEffectSchema,
+});
+
+export const ArchetypeBuffSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('productionMultiplier'),
+    value: z.number().positive(),
+  }),
+  z.object({
+    type: z.literal('speedMultiplier'),
+    value: z.number().positive(),
+  }),
+  z.object({
+    type: z.literal('incomingDamageMultiplier'),
+    value: z.number().nonnegative(),
+  }),
+  z.object({
+    type: z.literal('spellConcoctMultiplier'),
+    value: z.number().positive(),
+  }),
+  z.object({
+    type: z.literal('captureCostMultiplier'),
+    value: z.number().positive(),
+  }),
+]);
+
+export const ArchetypeSchema = z.object({
+  id: z.enum(['infantry', 'cavalry', 'elite', 'mage', 'assassin']),
+  name: z.string().min(1),
+  description: z.string(),
+  buff: ArchetypeBuffSchema,
 });
 
 export const AIPersonalitySchema = z.object({
@@ -93,10 +127,15 @@ export const LevelPlayerSchema = z.object({
   id: z.string().min(1),
   type: z.enum(['human', 'ai']),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
-  // Phase 5 — each player owns ONE liquid. All of their owned nodes
-  // inherit it at level load; captures auto-convert to the new owner's
-  // liquid. Liquids cannot mix across players. Required.
-  liquid: z.string().min(1),
+  // v2.8.0 — each player owns ONE faction (cosmetic team color/banner).
+  // All of their owned nodes inherit it at level load; captures auto-
+  // convert to the new owner's faction. Factions cannot mix across
+  // players. Required. Renamed from `liquid` (pre-v2.8.0).
+  faction: z.string().min(1),
+  // v2.8.0 — gameplay-relevant unit class. Determines the player's unit
+  // sprite + a single buff (defined in content/archetypes/<id>.json).
+  // Required as of v2.8.0.
+  archetype: z.enum(['infantry', 'cavalry', 'elite', 'mage', 'assassin']),
   aiConfigId: z.string().optional(),
 });
 
@@ -106,7 +145,10 @@ export const LevelNodeSchema = z.object({
   ownerId: z.string().nullable(),
   nodeType: z.enum(['house', 'barracks', 'lab', 'tower']),
   level: z.number().int().positive(),
-  liquidType: z.string().min(1),
+  // v2.8.0 — renamed from `liquidType`. Cosmetic faction color of this
+  // node. For owned nodes it matches the owner's faction at level load;
+  // neutrals keep the JSON-declared faction.
+  faction: z.string().min(1),
   units: z.number().nonnegative(),
 });
 
@@ -130,17 +172,22 @@ export const LevelSchema = z.object({
   // Optional persistent banner shown across the top of the game view.
   // Plain string — purely cosmetic, no engine semantics.
   objective: z.string().nullable().optional(),
-  // Phase 5 challenge tier (L31+): if true, GameView shows a liquid
-  // picker modal on load and the player's chosen liquid overrides the
-  // designer-set player.liquid. Levels 1-30 use the designer's default
-  // (this field is false / omitted).
-  letPlayerChooseLiquid: z.boolean().optional(),
+  // v2.8.0 challenge-tier (L31+): if true, LevelSelect's faction picker
+  // overrides the designer-set player.faction. Renamed from
+  // `letPlayerChooseLiquid` pre-v2.8.0.
+  letPlayerChooseFaction: z.boolean().optional(),
+  // v2.8.0 (deferred to v1.1 UI): if true, LevelSelect lets the player
+  // pick the archetype. Designer-locked otherwise (the JSON's archetype
+  // field always wins for MVP).
+  letPlayerChooseArchetype: z.boolean().optional(),
   introducesNodeTypes: z.array(z.string()),
-  introducesLiquids: z.array(z.string()),
+  // v2.8.0 — renamed from introducesLiquids.
+  introducesFactions: z.array(z.string()),
   map: z.object({
     width: z.number().positive(),
     height: z.number().positive(),
-    background: z.string(),
+    // v2.8.0 — typed biome enum (was free-form string).
+    background: z.enum(['grass', 'desert', 'snow', 'jungle', 'ruins', 'stone']),
   }),
   terrain: z.object({
     walls: z.array(WallSchema),

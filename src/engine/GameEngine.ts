@@ -1,9 +1,9 @@
 // GameEngine — owns World, runs the deterministic 60Hz tick (§3.1, §8).
 // Engine code remains pure TS: no PIXI, no DOM, no React. (§2 hard rule.)
 
-import { TICK_MS, type LiquidId, type NodeId, type NodeTypeId, type SpellId } from '../types';
+import { TICK_MS, type FactionId, type NodeId, type NodeTypeId, type SpellId } from '../types';
 import type { ContentLibrary, LevelDef } from './content/ContentLibrary';
-import { effectValueForLiquid } from './effects/EffectRegistry';
+import { effectValueForFaction } from './effects/EffectRegistry';
 import { registerCoreEffects } from './effects/registerCoreEffects';
 import { buildWorldFromLevel, type World } from './World';
 import { pathTotalDistance, vec2Distance } from './path';
@@ -51,7 +51,7 @@ export class GameEngine {
     this.systems = [
       new ProductionSystem(content),
       new SpellConcoctionSystem(content),
-      new MovementSystem(),
+      new MovementSystem(content),
       this.towerInterceptSystem,
       new CombatSystem(content),
       new EffectSystem(),
@@ -60,11 +60,11 @@ export class GameEngine {
     this.ais = [];
     for (const p of this.world.players) {
       if (p.type !== 'ai') continue;
-      // v2.7 auto-select-by-liquid: when the level doesn't specify
-      // aiConfigId, use the AI's liquid as the personality key (each
-      // liquid has a matching personality file in content/ai/).
+      // v2.7 auto-select by faction: when the level doesn't specify
+      // aiConfigId, use the AI's faction as the personality key (each
+      // faction has a matching personality file in content/ai/).
       // Explicit aiConfigId still wins for testing / special cases.
-      const configId = p.aiConfigId ?? p.liquid;
+      const configId = p.aiConfigId ?? p.faction;
       const personality = content.ai[configId];
       if (!personality) {
         throw new Error(`AI player '${p.id}' references unknown personality '${configId}'`);
@@ -126,14 +126,14 @@ export class GameEngine {
       const totalDistance = pathTotalDistance(path);
       if (totalDistance === 0) continue;
 
-      const baseSpeed = this.computeSpeedForSource(source.nodeType, source.liquidType);
+      const baseSpeed = this.computeSpeedForSource(source.nodeType, source.faction);
       const ticksToArrive = Math.max(1, Math.ceil(totalDistance / (baseSpeed * TICK_MS)));
 
       const ug: UnitGroup = {
         id: `ug${this.world.nextUnitGroupId++}`,
         ownerId: source.ownerId,
         count: sendCount,
-        sourceLiquid: source.liquidType,
+        sourceFaction: source.faction,
         fromNodeId: source.id,
         toNodeId: target.id,
         path,
@@ -280,26 +280,25 @@ export class GameEngine {
         target.productionProgress = 0;
         break;
       }
-      case 'bleed': {
-        // Bleed (per user spec patch): permanent until target is
-        // captured by a non-owner. Stops production (handled in
-        // ProductionSystem) and drains drainPerSecond units/sec
-        // (handled in EffectSystem). expiresTick set to a sentinel
-        // value past any reachable tick so EffectSystem treats it
-        // as permanent; CombatSystem clears stacks on capture.
-        target.poisonStacks.push({
+      case 'starve': {
+        // v2.8.0 — renamed from bleed; mechanic identical to v2.7 bleed
+        // (no time expiry — drains until enemy capture). Stops
+        // production (handled in ProductionSystem) and drains
+        // drainPerSecond units/sec (handled in EffectSystem).
+        // CombatSystem clears stacks on hostile capture.
+        target.starveStacks.push({
           sourcePlayerId: lab.ownerId,
           drainPerSecond: spell.effect.params.drainPerSecond,
-          expiresTick: Number.MAX_SAFE_INTEGER,
         });
         break;
       }
-      case 'recruit': {
-        // §7.2 — target flips to caster; units preserved; ends bleed;
-        // cancels target's concoction.
+      case 'sabotage': {
+        // v2.8.0 — renamed from recruit; mechanic unchanged. Target
+        // flips to caster; units preserved; ends starve; cancels
+        // target's concoction.
         target.ownerId = lab.ownerId;
         target.spellQueue = null;
-        target.poisonStacks = [];
+        target.starveStacks = [];
         break;
       }
     }
@@ -310,7 +309,7 @@ export class GameEngine {
     return { ok: true };
   }
 
-  private computeSpeedForSource(nodeType: NodeTypeId, liquidId: LiquidId): number {
+  private computeSpeedForSource(nodeType: NodeTypeId, factionId: FactionId): number {
     const typeDef = this.content.nodeTypes[nodeType];
     let speed = BASE_UNIT_SPEED_PX_PER_MS;
 
@@ -320,9 +319,9 @@ export class GameEngine {
       speed *= typeDef.sendSpeedPenalty;
     }
 
-    const liquid = this.content.liquids[liquidId];
-    if (liquid) {
-      speed *= effectValueForLiquid(liquid, 'travelSpeedMultiplier');
+    const faction = this.content.factions[factionId];
+    if (faction) {
+      speed *= effectValueForFaction(faction, 'travelSpeedMultiplier');
     }
     return speed;
   }

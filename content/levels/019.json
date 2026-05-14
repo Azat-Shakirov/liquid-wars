@@ -8,9 +8,6 @@
   },
   "objective": "Sweep the red side with cheap rolling captures.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [
-    "blood"
-  ],
   "map": {
     "width": 1280,
     "height": 720,
@@ -24,13 +21,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "blood"
+      "faction": "crimson",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -43,8 +42,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "blood",
-      "units": 14
+      "units": 14,
+      "faction": "crimson"
     },
     {
       "id": "p1_b2",
@@ -55,8 +54,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "blood",
-      "units": 14
+      "units": 14,
+      "faction": "crimson"
     },
     {
       "id": "p1_b3",
@@ -67,8 +66,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 1,
-      "liquidType": "blood",
-      "units": 8
+      "units": 8,
+      "faction": "crimson"
     },
     {
       "id": "neutral",
@@ -79,8 +78,8 @@
       "ownerId": null,
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 10
+      "units": 10,
+      "faction": "azure"
     },
     {
       "id": "ai1_b1",
@@ -91,8 +90,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 18
+      "units": 18,
+      "faction": "azure"
     },
     {
       "id": "ai1_b2",
@@ -103,8 +102,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 18
+      "units": 18,
+      "faction": "azure"
     },
     {
       "id": "ai1_base",
@@ -115,8 +114,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 26
+      "units": 26,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -133,5 +132,8 @@
       100,
       60
     ]
-  }
+  },
+  "introducesFactions": [
+    "crimson"
+  ]
 }

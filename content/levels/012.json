@@ -8,7 +8,6 @@
   },
   "objective": "Capture the neutral Tower, then break the red side.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -49,13 +48,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -68,8 +69,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "p_b2",
@@ -80,8 +81,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "p_h",
@@ -92,8 +93,8 @@
       "ownerId": "p1",
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 12
+      "units": 12,
+      "faction": "azure"
     },
     {
       "id": "neutral_t",
@@ -104,8 +105,8 @@
       "ownerId": null,
       "nodeType": "tower",
       "level": 1,
-      "liquidType": "water",
-      "units": 10
+      "units": 10,
+      "faction": "azure"
     },
     {
       "id": "ai_h",
@@ -116,8 +117,8 @@
       "ownerId": "ai1",
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 12
+      "units": 12,
+      "faction": "azure"
     },
     {
       "id": "ai_b1",
@@ -128,8 +129,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "ai_b2",
@@ -140,8 +141,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -158,5 +159,6 @@
       150,
       100
     ]
-  }
+  },
+  "introducesFactions": []
 }

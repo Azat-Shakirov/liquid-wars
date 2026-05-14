@@ -126,12 +126,12 @@ export class NodeView {
       : undefined;
     const ownerColor = owner ? colorFromHex(owner.color) : NEUTRAL_OUTLINE;
 
-    const liquidDef = content.liquids[node.liquidType];
-    const liquidColor = liquidDef ? colorFromHex(liquidDef.color) : 0x3da9fc;
+    const factionDef = content.factions[node.faction];
+    const liquidColor = factionDef ? colorFromHex(factionDef.color) : 0x3da9fc;
 
-    // Tower sprite path: when this node is a tower AND its liquid texture is
-    // available, render the sprite in place of the procedural chrome/liquid.
-    const towerTex = node.nodeType === 'tower' ? getTowerTexture(node.liquidType) : null;
+    // Tower sprite path: when this node is a tower AND its faction texture
+    // is available, render the sprite in place of the procedural shape.
+    const towerTex = node.nodeType === 'tower' ? getTowerTexture(node.faction) : null;
     const useSprite = towerTex !== null;
 
     // Visual bounding box for layout of selection/pips/label/effects.
@@ -280,10 +280,10 @@ export class NodeView {
       }
     }
 
-    // Poison indicator — small green dots circling the perimeter,
+    // Starve indicator — small green dots circling the perimeter,
     // count = stack count (capped at 4).
-    if (node.poisonStacks.length > 0) {
-      const stackCount = Math.min(4, node.poisonStacks.length);
+    if (node.starveStacks.length > 0) {
+      const stackCount = Math.min(4, node.starveStacks.length);
       const r = useSprite ? Math.max(visualHalfX, visualHalfY) + 9 : half + 9;
       for (let i = 0; i < stackCount; i++) {
         const a = (Math.PI * 2 * i) / stackCount + nowMs * 0.001;

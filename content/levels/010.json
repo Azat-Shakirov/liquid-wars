@@ -8,7 +8,6 @@
   },
   "objective": "Route through the gap and capture the red base.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -62,13 +61,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -81,8 +82,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_bot",
@@ -93,8 +94,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     },
     {
       "id": "ai1_top",
@@ -105,8 +106,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "ai1_bot",
@@ -117,8 +118,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "ai1_base",
@@ -129,8 +130,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     },
     {
       "id": "p1_1",
@@ -141,8 +142,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_2",
@@ -153,8 +154,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_3",
@@ -165,8 +166,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_4",
@@ -177,8 +178,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_5",
@@ -189,8 +190,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_6",
@@ -201,8 +202,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     },
     {
       "id": "p1_7",
@@ -213,8 +214,8 @@
       "ownerId": null,
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 5
+      "units": 5,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -231,5 +232,6 @@
       100,
       60
     ]
-  }
+  },
+  "introducesFactions": []
 }

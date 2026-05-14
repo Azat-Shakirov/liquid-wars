@@ -72,7 +72,7 @@ export class UnitGroupView {
     else if (dx < -0.5) this.facingRight = false;
 
     const frame = Math.floor(nowMs / WALK_FRAME_MS) & 1;
-    const tex = getUnitFrame(ug.sourceLiquid, frame);
+    const tex = getUnitFrame(ug.sourceFaction, frame);
 
     if (tex !== null) {
       this.sprite.visible = true;
@@ -90,8 +90,8 @@ export class UnitGroupView {
       this.sprite.visible = false;
       const owner = world.players.find((p) => p.id === ug.ownerId);
       const outlineColor = owner ? colorFromHex(owner.color) : 0xffffff;
-      const liquidDef = content.liquids[ug.sourceLiquid];
-      const fillColor = liquidDef ? colorFromHex(liquidDef.color) : 0x3da9fc;
+      const factionDef = content.factions[ug.sourceFaction];
+      const fillColor = factionDef ? colorFromHex(factionDef.color) : 0x3da9fc;
       const baseRadius = 5;
       const raw = Math.min(baseRadius + Math.sqrt(Math.max(1, ug.count)) * 0.6, 14);
       const radius = raw * world.visualScale;

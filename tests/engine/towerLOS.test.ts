@@ -17,7 +17,7 @@ function injectStationaryEnemy(engine: GameEngine, atX: number, atY: number) {
     id: 'ug1',
     ownerId: 'ai1',
     count: 10,
-    sourceLiquid: 'water',
+    sourceFaction: 'azure',
     fromNodeId: 'src',
     toNodeId: 'dst',
     path: [{ x: atX, y: atY }, { x: atX, y: atY }],

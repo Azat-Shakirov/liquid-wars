@@ -16,7 +16,7 @@ import type {
   LevelNodeDef,
   LevelPlayerDef,
 } from '../../engine/content/ContentLibrary';
-import type { LiquidId, NodeTypeId } from '../../types';
+import type { FactionId, NodeTypeId } from '../../types';
 
 // Wall shape is defined inline on LevelDef.terrain; alias it here for the
 // editor's local helpers without modifying the public type.
@@ -45,12 +45,12 @@ function newLevel(id: number): LevelDef {
     name: `Level ${id}`,
     tutorialKey: null,
     introducesNodeTypes: [],
-    introducesLiquids: [],
+    introducesFactions: [],
     map: { width: CANVAS_W, height: CANVAS_H, background: 'stone' },
     terrain: { walls: [] },
     players: [
-      { id: 'p1',  type: 'human', color: '#3da9fc', liquid: 'water' as LiquidId },
-      { id: 'ai1', type: 'ai',    color: '#e63946', liquid: 'water' as LiquidId },
+      { id: 'p1',  type: 'human', color: '#3da9fc', faction: 'azure' as FactionId, archetype: 'infantry' },
+      { id: 'ai1', type: 'ai',    color: '#e63946', faction: 'crimson' as FactionId, archetype: 'infantry' },
     ],
     nodes: [],
     winCondition: { type: 'controlAll' },
@@ -96,7 +96,7 @@ function nextWallId(level: LevelDef): string {
 export function EditorView() {
   const navigate = useSessionStore((s) => s.navigate);
   const content = useMemo<ContentLibrary>(() => loadContent(), []);
-  const liquidIds = useMemo(() => Object.keys(content.liquids).sort(), [content.liquids]);
+  const factionIds = useMemo(() => Object.keys(content.factions).sort(), [content.factions]);
   const sortedLevelIds = useMemo(
     () => Object.keys(content.levels).map(Number).sort((a, b) => a - b),
     [content.levels],
@@ -285,9 +285,9 @@ export function EditorView() {
         ownerId: addNodeOwner,
         nodeType: addNodeType,
         level: addNodeLevel,
-        liquidType: addNodeOwner
-          ? (level.players.find((p) => p.id === addNodeOwner)?.liquid ?? 'water')
-          : 'water',
+        faction: addNodeOwner
+          ? (level.players.find((p) => p.id === addNodeOwner)?.faction ?? 'azure')
+          : 'azure',
         units: addNodeUnits,
       };
       setLevel((lv) => ({ ...lv, nodes: [...lv.nodes, newNode] }));
@@ -451,11 +451,11 @@ export function EditorView() {
     }));
   }
 
-  function updatePlayerLiquid(playerId: string, liquid: LiquidId) {
+  function updatePlayerFaction(playerId: string, faction: FactionId) {
     setLevel((lv) => ({
       ...lv,
-      players: lv.players.map((p) => (p.id === playerId ? { ...p, liquid } : p)),
-      nodes: lv.nodes.map((n) => (n.ownerId === playerId ? { ...n, liquidType: liquid } : n)),
+      players: lv.players.map((p) => (p.id === playerId ? { ...p, faction } : p)),
+      nodes: lv.nodes.map((n) => (n.ownerId === playerId ? { ...n, faction } : n)),
     }));
   }
 
@@ -464,7 +464,7 @@ export function EditorView() {
     const id = `ai${aiCount + 1}`;
     const palette = ['#e63946', '#1a1a24', '#5cd65c', '#a01010', '#7a3da9'];
     const color = palette[aiCount % palette.length]!;
-    const newPlayer: LevelPlayerDef = { id, type: 'ai', color, liquid: 'water' as LiquidId };
+    const newPlayer: LevelPlayerDef = { id, type: 'ai', color, faction: 'crimson' as FactionId, archetype: 'infantry' };
     setLevel((lv) => ({ ...lv, players: [...lv.players, newPlayer] }));
   }
 
@@ -579,11 +579,11 @@ export function EditorView() {
               <span style={{ minWidth: 36 }}>{p.id}</span>
               <span style={{ opacity: 0.6, fontSize: 11 }}>{p.type}</span>
               <select
-                value={p.liquid}
-                onChange={(e) => updatePlayerLiquid(p.id, e.target.value as LiquidId)}
+                value={p.faction}
+                onChange={(e) => updatePlayerFaction(p.id, e.target.value as FactionId)}
                 style={{ ...selectStyle, flex: 1 }}
               >
-                {liquidIds.map((lid) => <option key={lid} value={lid}>{lid}</option>)}
+                {factionIds.map((fid) => <option key={fid} value={fid}>{fid}</option>)}
               </select>
               {p.id !== 'p1' && (
                 <button style={smallButtonStyle} onClick={() => removePlayer(p.id)}>×</button>
@@ -612,10 +612,10 @@ export function EditorView() {
                   value={selectedNode.ownerId ?? '__neutral__'}
                   onChange={(e) => {
                     const v = e.target.value === '__neutral__' ? null : e.target.value;
-                    const liquid = v
-                      ? (level.players.find((p) => p.id === v)?.liquid ?? selectedNode.liquidType)
-                      : selectedNode.liquidType;
-                    updateNode(selectedNode.id, { ownerId: v, liquidType: liquid });
+                    const faction = v
+                      ? (level.players.find((p) => p.id === v)?.faction ?? selectedNode.faction)
+                      : selectedNode.faction;
+                    updateNode(selectedNode.id, { ownerId: v, faction });
                   }}
                   style={{ ...selectStyle, flex: 1 }}
                 >
@@ -647,11 +647,11 @@ export function EditorView() {
                   style={{ ...selectStyle, width: 80 }} />
               </div>
               <div style={fieldStyle}>
-                <span style={inlineLabelStyle}>liquid</span>
-                <select value={selectedNode.liquidType}
-                  onChange={(e) => updateNode(selectedNode.id, { liquidType: e.target.value })}
+                <span style={inlineLabelStyle}>faction</span>
+                <select value={selectedNode.faction}
+                  onChange={(e) => updateNode(selectedNode.id, { faction: e.target.value })}
                   style={{ ...selectStyle, flex: 1 }}>
-                  {liquidIds.map((lid) => <option key={lid} value={lid}>{lid}</option>)}
+                  {factionIds.map((fid) => <option key={fid} value={fid}>{fid}</option>)}
                 </select>
               </div>
               <div style={fieldStyle}>

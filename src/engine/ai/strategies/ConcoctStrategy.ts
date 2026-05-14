@@ -19,7 +19,7 @@ import type { Strategy, StrategyDecision } from './BaseStrategy';
 import type { World, Player } from '../../World';
 import type { AIPersonalityDef, ContentLibrary } from '../../content/ContentLibrary';
 
-const SPELL_PREFERENCE: readonly string[] = ['freeze', 'recruit', 'bleed'];
+const SPELL_PREFERENCE: readonly string[] = ['freeze', 'sabotage', 'starve'];
 const LAB_RESERVE_BUFFER = 5;
 
 export const ConcoctStrategy: Strategy = {

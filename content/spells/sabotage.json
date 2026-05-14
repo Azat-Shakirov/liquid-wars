@@ -1,0 +1,10 @@
+{
+  "id": "sabotage",
+  "name": "Sabotage",
+  "concoctTimeMs": 15000,
+  "unitCost": 50,
+  "minLabLevel": 3,
+  "effect": {
+    "type": "sabotage"
+  }
+}

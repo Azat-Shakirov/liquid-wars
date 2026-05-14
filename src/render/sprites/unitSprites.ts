@@ -1,46 +1,46 @@
-// Unit sprite registry. Loads per-liquid infantry PNGs in two walk-cycle
+// Unit sprite registry. Loads per-faction infantry PNGs in two walk-cycle
 // frames; UnitGroupView alternates frames to animate the march.
 
 import { Assets, type Texture } from 'pixi.js';
-import type { LiquidId } from '../../types';
+import type { FactionId } from '../../types';
 
-import infantryWater0 from './units/infantry-water-0.png';
-import infantryWater1 from './units/infantry-water-1.png';
-import infantryBlood0 from './units/infantry-blood-0.png';
-import infantryBlood1 from './units/infantry-blood-1.png';
-import infantrySlime0 from './units/infantry-slime-0.png';
-import infantrySlime1 from './units/infantry-slime-1.png';
-import infantryVenom0 from './units/infantry-venom-0.png';
-import infantryVenom1 from './units/infantry-venom-1.png';
-import infantryInk0 from './units/infantry-ink-0.png';
-import infantryInk1 from './units/infantry-ink-1.png';
+import infantryAzure0 from './units/infantry-azure-0.png';
+import infantryAzure1 from './units/infantry-azure-1.png';
+import infantryCrimson0 from './units/infantry-crimson-0.png';
+import infantryCrimson1 from './units/infantry-crimson-1.png';
+import infantryVerdant0 from './units/infantry-verdant-0.png';
+import infantryVerdant1 from './units/infantry-verdant-1.png';
+import infantryAmethyst0 from './units/infantry-amethyst-0.png';
+import infantryAmethyst1 from './units/infantry-amethyst-1.png';
+import infantryShadow0 from './units/infantry-shadow-0.png';
+import infantryShadow1 from './units/infantry-shadow-1.png';
 
 type FramePair = [Texture, Texture];
 
-const SPRITE_URLS: Record<LiquidId, [string, string]> = {
-  water: [infantryWater0, infantryWater1],
-  blood: [infantryBlood0, infantryBlood1],
-  slime: [infantrySlime0, infantrySlime1],
-  venom: [infantryVenom0, infantryVenom1],
-  ink: [infantryInk0, infantryInk1],
+const SPRITE_URLS: Record<FactionId, [string, string]> = {
+  azure: [infantryAzure0, infantryAzure1],
+  crimson: [infantryCrimson0, infantryCrimson1],
+  verdant: [infantryVerdant0, infantryVerdant1],
+  amethyst: [infantryAmethyst0, infantryAmethyst1],
+  shadow: [infantryShadow0, infantryShadow1],
 };
 
-const frames = new Map<LiquidId, FramePair>();
+const frames = new Map<FactionId, FramePair>();
 let loaded = false;
 
 export async function loadUnitTextures(): Promise<void> {
   if (loaded) return;
-  for (const [liquid, urls] of Object.entries(SPRITE_URLS)) {
+  for (const [faction, urls] of Object.entries(SPRITE_URLS)) {
     const t0 = (await Assets.load(urls[0])) as Texture;
     const t1 = (await Assets.load(urls[1])) as Texture;
-    frames.set(liquid, [t0, t1]);
+    frames.set(faction, [t0, t1]);
   }
   loaded = true;
 }
 
-// Get the requested walk frame for a given liquid; 0 or 1 indices.
-export function getUnitFrame(liquid: LiquidId, frame: number): Texture | null {
-  const pair = frames.get(liquid);
+// Get the requested walk frame for a given faction; 0 or 1 indices.
+export function getUnitFrame(faction: FactionId, frame: number): Texture | null {
+  const pair = frames.get(faction);
   if (!pair) return null;
   return pair[frame & 1] ?? null;
 }

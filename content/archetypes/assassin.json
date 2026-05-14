@@ -1,0 +1,9 @@
+{
+  "id": "assassin",
+  "name": "Assassin",
+  "description": "Hooded killers — captures cost a fraction of usual.",
+  "buff": {
+    "type": "captureCostMultiplier",
+    "value": 0.4
+  }
+}

@@ -1,13 +1,13 @@
 // UnitGroup entity — full shape per §4.3.
-// Phase 0 defines the type only; construction logic ships in Phase 1.
+// v2.8.0: sourceLiquid → sourceFaction.
 
-import type { LiquidId, NodeId, PlayerId, UnitGroupId, Vec2 } from '../../types';
+import type { FactionId, NodeId, PlayerId, UnitGroupId, Vec2 } from '../../types';
 
 export interface UnitGroup {
   id: UnitGroupId;
   ownerId: PlayerId;
   count: number;
-  sourceLiquid: LiquidId;
+  sourceFaction: FactionId;
   fromNodeId: NodeId;
   toNodeId: NodeId;
   path: Vec2[];

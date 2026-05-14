@@ -14,7 +14,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { GameEngine } from '../engine/GameEngine';
 import type { SessionState } from '../render/SessionState';
-import type { LiquidId, NodeId } from '../types';
+import type { FactionId, NodeId } from '../types';
 
 interface Props {
   engine: GameEngine;
@@ -152,7 +152,7 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Prop
         <span style={ownerLabelStyle}>{ownerLabel}</span>
       </div>
 
-      {renderLiquidChip(engine, node.liquidType as LiquidId)}
+      {renderFactionChip(engine, node.faction as FactionId)}
 
       <div style={rowStyle}>
         <span>Units</span>
@@ -202,11 +202,11 @@ export function NodeInfoPanel({ engine, session, hoveredNodeId, canvasEl }: Prop
         <span style={valueStyle}>{sendSpeed} px/sec</span>
       </div>
 
-      {node.poisonStacks.length > 0 && (
+      {node.starveStacks.length > 0 && (
         <div style={{ ...rowStyle, color: '#9be29b' }}>
-          <span>Bleeding</span>
+          <span>Starving</span>
           <span style={valueStyle}>
-            −{node.poisonStacks.reduce((s, x) => s + x.drainPerSecond, 0)} u/sec
+            −{node.starveStacks.reduce((s, x) => s + x.drainPerSecond, 0)} u/sec
           </span>
         </div>
       )}
@@ -336,15 +336,15 @@ function capitalize(s: string): string {
   return s.length === 0 ? s : s[0]!.toUpperCase() + s.slice(1);
 }
 
-function renderLiquidChip(engine: GameEngine, liquidId: LiquidId) {
-  const liquid = engine.content.liquids[liquidId];
-  if (!liquid) return null;
+function renderFactionChip(engine: GameEngine, factionId: FactionId) {
+  const faction = engine.content.factions[factionId];
+  if (!faction) return null;
   return (
     <div style={liquidChipStyle}>
-      <span style={{ ...liquidSwatchStyle, background: liquid.color }} />
+      <span style={{ ...liquidSwatchStyle, background: faction.color }} />
       <div style={liquidTextStyle}>
-        <div style={liquidNameStyle}>{liquid.name}</div>
-        <div style={liquidDescStyle}>{liquid.description}</div>
+        <div style={liquidNameStyle}>{faction.name}</div>
+        <div style={liquidDescStyle}>{faction.description}</div>
       </div>
     </div>
   );

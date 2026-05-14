@@ -1,0 +1,9 @@
+{
+  "id": "mage",
+  "name": "Mage",
+  "description": "Battle-mages — labs concoct spells three times faster.",
+  "buff": {
+    "type": "spellConcoctMultiplier",
+    "value": 3.0
+  }
+}

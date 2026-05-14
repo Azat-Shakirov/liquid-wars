@@ -1,8 +1,9 @@
-// EffectSystem (§7.2, §20 item 10) — runs after CombatSystem each tick.
+// EffectSystem (§7.2, §20 item 10, §20 item 41) — runs after CombatSystem each tick.
 //
-//   • Drains poison: for every node with poisonStacks, subtract
-//     drainPerSecond * dtSec total per stack from node.units (floored
-//     at 0). Removes stacks whose expiresTick has passed.
+//   • Drains starve: for every node with starveStacks, subtract
+//     drainPerSecond * dtSec total per stack from node.units (floored at 0).
+//     v2.8.0: stacks NEVER expire by time. They persist until the node is
+//     captured by a non-current-owner (CombatSystem clears stacks on flip).
 //   • Expires freezes: when world.tick reaches frozenUntilTick, the
 //     node thaws (isFrozen → false). Any UnitGroups that were held
 //     in pendingArrivals while the node was frozen are pushed back
@@ -41,18 +42,14 @@ export class EffectSystem {
         }
       }
 
-      // Poison drain + expiry.
-      if (node.poisonStacks.length > 0) {
+      // Starve drain (v2.8.0: no time-expiry pruning anymore).
+      if (node.starveStacks.length > 0) {
         let totalDrain = 0;
-        for (const s of node.poisonStacks) {
+        for (const s of node.starveStacks) {
           totalDrain += s.drainPerSecond * dtSec;
         }
         if (totalDrain > 0) {
           node.units = Math.max(0, node.units - totalDrain);
-        }
-        const live = node.poisonStacks.filter((s) => world.tick < s.expiresTick);
-        if (live.length !== node.poisonStacks.length) {
-          node.poisonStacks = live;
         }
       }
     }

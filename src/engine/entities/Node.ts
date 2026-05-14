@@ -1,7 +1,8 @@
 // Node entity — full shape per §4.2.
-// Phase 0 defines the type only; construction logic ships in Phase 1.
+// v2.8.0: liquidType → faction; poisonStacks → starveStacks; StarveStack
+// no longer has expiresTick (stack persists until enemy capture).
 
-import type { LiquidId, NodeId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
+import type { FactionId, NodeId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
 
 export interface QueuedSpell {
   spellId: SpellId;
@@ -9,10 +10,9 @@ export interface QueuedSpell {
   progress: number;
 }
 
-export interface PoisonStack {
+export interface StarveStack {
   sourcePlayerId: PlayerId;
   drainPerSecond: number;
-  expiresTick: number;
 }
 
 export interface Node {
@@ -22,7 +22,7 @@ export interface Node {
   ownerId: PlayerId | null;
   nodeType: NodeTypeId;
   level: number;
-  liquidType: LiquidId;
+  faction: FactionId;
   units: number;
   maxUnits: number;
   productionProgress: number;
@@ -30,5 +30,7 @@ export interface Node {
   attackCooldownMs: number;
   isFrozen: boolean;
   frozenUntilTick: number;
-  poisonStacks: PoisonStack[];
+  // v2.8.0 — renamed from poisonStacks. Starve stacks no longer expire by
+  // time; they persist until the node is captured by a non-current-owner.
+  starveStacks: StarveStack[];
 }

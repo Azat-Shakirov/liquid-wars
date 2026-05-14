@@ -15,7 +15,7 @@ import { NodeInfoPanel } from './NodeInfoPanel';
 import { TutorialOverlay } from './TutorialOverlay';
 import { ObjectiveBanner } from './ObjectiveBanner';
 import type { TutorialDef } from '../engine/content/ContentLibrary';
-import type { LiquidId, NodeId } from '../types';
+import type { FactionId, NodeId } from '../types';
 import type { LevelDef } from '../engine/content/ContentLibrary';
 import { useHudStore } from '../store/hudStore';
 import { useSessionStore } from '../store/sessionStore';
@@ -106,14 +106,14 @@ export function GameView({ levelId }: GameViewProps) {
         if (!baseLevel) {
           throw new Error(`Level ${levelId} not found.`);
         }
-        // Liquid override is gated on the level being a challenge-tier
-        // level (letPlayerChooseLiquid). On L1-30 we always honor the
+        // Faction override is gated on the level being a challenge-tier
+        // level (letPlayerChooseFaction). On L1-30 we always honor the
         // designer's choice and ignore the LevelSelect picker.
-        const overrideLiquid = baseLevel.letPlayerChooseLiquid
-          ? useSessionStore.getState().playerStartLiquid
+        const overrideFaction = baseLevel.letPlayerChooseFaction
+          ? useSessionStore.getState().playerStartFaction
           : null;
-        const level = overrideLiquid
-          ? applyPlayerLiquidOverride(baseLevel, overrideLiquid)
+        const level = overrideFaction
+          ? applyPlayerFactionOverride(baseLevel, overrideFaction)
           : baseLevel;
         engine = new GameEngine(level, content);
         engineRef = engine;
@@ -287,16 +287,17 @@ function nextLevelId(current: number, available: number[]): number | null {
 }
 
 // Dev playtest helper: returns a shallow-cloned LevelDef whose human
-// player's `liquid` is swapped to `liquidId`. buildWorldFromLevel
+// player's `faction` is swapped to `factionId`. buildWorldFromLevel
 // propagates the override to every node the human owns (per-player
-// liquid model). Enemy + neutral nodes are left alone — the override
-// is for feeling out the player's own buff. Auto-conversion on capture
-// (§4.5) still applies as usual once the player takes enemy territory.
-function applyPlayerLiquidOverride(level: LevelDef, liquidId: LiquidId): LevelDef {
+// faction model). Enemy + neutral nodes are left alone — the override
+// is for feeling out the player's own faction. Auto-conversion on
+// capture (§4.5) still applies as usual once the player takes enemy
+// territory.
+function applyPlayerFactionOverride(level: LevelDef, factionId: FactionId): LevelDef {
   return {
     ...level,
     players: level.players.map((p) =>
-      p.type === 'human' ? { ...p, liquid: liquidId } : p,
+      p.type === 'human' ? { ...p, faction: factionId } : p,
     ),
   };
 }

@@ -1,12 +1,14 @@
 // World — root container for all engine state. Shape per §4.1.
 // Phase 1: instantiates Nodes from a LevelDef + ContentLibrary.
+// v2.8.0: liquid → faction; players gain an `archetype` field.
 
-import type { LiquidId, NodeId, NodeTypeId, PlayerId, Vec2 } from '../types';
+import type { FactionId, NodeId, NodeTypeId, PlayerId, Vec2 } from '../types';
 import type { Node } from './entities/Node';
 import type { UnitGroup } from './entities/UnitGroup';
 import type { ActiveSpellEffect } from './entities/Spell';
 import type { Wall } from './entities/Wall';
 import type {
+  ArchetypeId,
   ContentLibrary,
   LevelDef,
   NodeTypeDef,
@@ -20,7 +22,8 @@ export interface Player {
   id: PlayerId;
   type: 'human' | 'ai';
   color: string;
-  liquid: LiquidId;
+  faction: FactionId;
+  archetype: ArchetypeId;
   aiConfigId?: string;
 }
 
@@ -78,7 +81,8 @@ export function buildWorldFromLevel(
     id: p.id,
     type: p.type,
     color: p.color,
-    liquid: p.liquid as LiquidId,
+    faction: p.faction as FactionId,
+    archetype: p.archetype,
     ...(p.aiConfigId !== undefined ? { aiConfigId: p.aiConfigId } : {}),
   }));
 
@@ -92,23 +96,23 @@ export function buildWorldFromLevel(
   const nodes = new Map<NodeId, Node>();
   const nodeOrder: NodeId[] = [];
 
-  // Phase 5: each player owns ONE liquid; owned nodes inherit it at load.
-  // Neutral nodes (ownerId null) keep the JSON-declared liquidType.
-  const playerLiquid = new Map<string, LiquidId>();
+  // v2.8.0: each player owns ONE faction; owned nodes inherit it at load.
+  // Neutral nodes (ownerId null) keep the JSON-declared faction.
+  const playerFaction = new Map<string, FactionId>();
   for (const pdef of level.players) {
-    if (!content.liquids[pdef.liquid as LiquidId]) {
-      throw new Error(`Level ${level.id} player '${pdef.id}' references unknown liquid '${pdef.liquid}'`);
+    if (!content.factions[pdef.faction as FactionId]) {
+      throw new Error(`Level ${level.id} player '${pdef.id}' references unknown faction '${pdef.faction}'`);
     }
-    playerLiquid.set(pdef.id, pdef.liquid as LiquidId);
+    playerFaction.set(pdef.id, pdef.faction as FactionId);
   }
 
   for (const ndef of level.nodes) {
     const typeDef = content.nodeTypes[ndef.nodeType as NodeTypeId];
     if (!typeDef) throw new Error(`Level ${level.id} references unknown nodeType '${ndef.nodeType}'`);
-    const ownerLiquid = ndef.ownerId !== null ? playerLiquid.get(ndef.ownerId) : undefined;
-    const effectiveLiquid = (ownerLiquid ?? ndef.liquidType) as LiquidId;
-    if (!content.liquids[effectiveLiquid]) {
-      throw new Error(`Level ${level.id} references unknown liquid '${effectiveLiquid}'`);
+    const ownerFaction = ndef.ownerId !== null ? playerFaction.get(ndef.ownerId) : undefined;
+    const effectiveFaction = (ownerFaction ?? ndef.faction) as FactionId;
+    if (!content.factions[effectiveFaction]) {
+      throw new Error(`Level ${level.id} references unknown faction '${effectiveFaction}'`);
     }
     const stats = nodeTypeLevelStats(typeDef, ndef.level);
     const pos: Vec2 = vec2FromTuple(ndef.position);
@@ -124,7 +128,7 @@ export function buildWorldFromLevel(
       ownerId: ndef.ownerId,
       nodeType: ndef.nodeType,
       level: ndef.level,
-      liquidType: effectiveLiquid,
+      faction: effectiveFaction,
       units: ndef.units,
       maxUnits: stats.maxUnits,
       productionProgress: 0,
@@ -132,7 +136,7 @@ export function buildWorldFromLevel(
       attackCooldownMs: 0,
       isFrozen: false,
       frozenUntilTick: 0,
-      poisonStacks: [],
+      starveStacks: [],
     };
     nodes.set(node.id, node);
     nodeOrder.push(node.id);

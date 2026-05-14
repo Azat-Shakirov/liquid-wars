@@ -4,8 +4,6 @@
   "tutorialKey": null,
   "objective": "An Ink fortress behind walls.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
-  "letPlayerChooseLiquid": true,
   "map": {
     "width": 1280,
     "height": 720,
@@ -72,13 +70,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#1a1a24",
-      "liquid": "ink"
+      "faction": "shadow",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -91,8 +91,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "units": 24,
+      "faction": "azure"
     },
     {
       "id": "p1_b2",
@@ -103,8 +103,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "units": 24,
+      "faction": "azure"
     },
     {
       "id": "p1_lab",
@@ -115,8 +115,8 @@
       "ownerId": "p1",
       "nodeType": "lab",
       "level": 3,
-      "liquidType": "water",
-      "units": 80
+      "units": 80,
+      "faction": "azure"
     },
     {
       "id": "p1_b3",
@@ -127,8 +127,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "ai1_tower1",
@@ -139,8 +139,8 @@
       "ownerId": "ai1",
       "nodeType": "tower",
       "level": 4,
-      "liquidType": "ink",
-      "units": 50
+      "units": 50,
+      "faction": "shadow"
     },
     {
       "id": "ai1_b1",
@@ -151,8 +151,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "ink",
-      "units": 24
+      "units": 24,
+      "faction": "shadow"
     },
     {
       "id": "ai1_b2",
@@ -163,8 +163,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "ink",
-      "units": 24
+      "units": 24,
+      "faction": "shadow"
     },
     {
       "id": "ai1_keep",
@@ -175,8 +175,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 4,
-      "liquidType": "ink",
-      "units": 38
+      "units": 38,
+      "faction": "shadow"
     }
   ],
   "winCondition": {
@@ -193,5 +193,7 @@
       220,
       150
     ]
-  }
+  },
+  "introducesFactions": [],
+  "letPlayerChooseFaction": true
 }

@@ -1,9 +1,0 @@
-{
-  "id": "slime",
-  "name": "Slime",
-  "color": "#5cd65c",
-  "description": "Labs on slime nodes concoct spells at 2× speed.",
-  "effects": [
-    { "type": "spellSpeedMultiplier", "value": 2.0 }
-  ]
-}

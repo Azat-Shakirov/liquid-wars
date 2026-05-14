@@ -8,8 +8,6 @@
   },
   "objective": "Four factions. One survivor. Be it.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
-  "letPlayerChooseLiquid": true,
   "map": {
     "width": 1280,
     "height": 720,
@@ -23,31 +21,36 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#1a1a24",
-      "liquid": "ink"
+      "faction": "shadow",
+      "archetype": "infantry"
     },
     {
       "id": "ai3",
       "type": "ai",
       "color": "#5cd65c",
-      "liquid": "slime"
+      "faction": "verdant",
+      "archetype": "infantry"
     },
     {
       "id": "ai4",
       "type": "ai",
       "color": "#a01010",
-      "liquid": "blood"
+      "faction": "crimson",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -60,8 +63,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "units": 24,
+      "faction": "azure"
     },
     {
       "id": "p1_lab",
@@ -72,8 +75,8 @@
       "ownerId": "p1",
       "nodeType": "lab",
       "level": 3,
-      "liquidType": "water",
-      "units": 90
+      "units": 90,
+      "faction": "azure"
     },
     {
       "id": "p1_b",
@@ -84,8 +87,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "ai1_a",
@@ -96,8 +99,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "ai1_b",
@@ -108,8 +111,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "water",
-      "units": 24
+      "units": 24,
+      "faction": "azure"
     },
     {
       "id": "ai1_c",
@@ -120,8 +123,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "ai2_a",
@@ -132,8 +135,8 @@
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "ink",
-      "units": 16
+      "units": 16,
+      "faction": "shadow"
     },
     {
       "id": "ai2_b",
@@ -144,8 +147,8 @@
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "ink",
-      "units": 24
+      "units": 24,
+      "faction": "shadow"
     },
     {
       "id": "ai2_c",
@@ -156,8 +159,8 @@
       "ownerId": "ai2",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "ink",
-      "units": 16
+      "units": 16,
+      "faction": "shadow"
     },
     {
       "id": "ai3_a",
@@ -168,8 +171,8 @@
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "slime",
-      "units": 16
+      "units": 16,
+      "faction": "verdant"
     },
     {
       "id": "ai3_lab",
@@ -180,8 +183,8 @@
       "ownerId": "ai3",
       "nodeType": "lab",
       "level": 3,
-      "liquidType": "slime",
-      "units": 80
+      "units": 80,
+      "faction": "verdant"
     },
     {
       "id": "ai3_b",
@@ -192,8 +195,8 @@
       "ownerId": "ai3",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "slime",
-      "units": 16
+      "units": 16,
+      "faction": "verdant"
     },
     {
       "id": "ai4_a",
@@ -204,8 +207,8 @@
       "ownerId": "ai4",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "blood",
-      "units": 16
+      "units": 16,
+      "faction": "crimson"
     },
     {
       "id": "ai4_b",
@@ -216,8 +219,8 @@
       "ownerId": "ai4",
       "nodeType": "barracks",
       "level": 3,
-      "liquidType": "blood",
-      "units": 24
+      "units": 24,
+      "faction": "crimson"
     }
   ],
   "winCondition": {
@@ -234,5 +237,7 @@
       320,
       220
     ]
-  }
+  },
+  "introducesFactions": [],
+  "letPlayerChooseFaction": true
 }

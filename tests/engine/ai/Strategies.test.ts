@@ -25,7 +25,7 @@ describe('UpgradeStrategy', () => {
     const level = makeLevel([
       { id: 'n1', position: [200, 200], ownerId: 'ai1', units: 4, type: 'barracks', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
-    ], { aiLiquid: 'water' });
+    ], { aiFaction: 'azure' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = UpgradeStrategy.decide(engine.world, me, easyAI, content);
@@ -38,7 +38,7 @@ describe('UpgradeStrategy', () => {
     const level = makeLevel([
       { id: 'b1', position: [200, 200], ownerId: 'ai1', units: 49, type: 'barracks', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
-    ], { aiLiquid: 'water' });
+    ], { aiFaction: 'azure' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = UpgradeStrategy.decide(engine.world, me, easyAI, content);
@@ -55,7 +55,7 @@ describe('UpgradeStrategy', () => {
     const level = makeLevel([
       { id: 'b1', position: [200, 200], ownerId: 'ai1', units: 40, type: 'barracks', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
-    ], { aiLiquid: 'water' });
+    ], { aiFaction: 'azure' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     expect(UpgradeStrategy.decide(engine.world, me, easyAI, content)).toBeNull();
@@ -66,7 +66,7 @@ describe('UpgradeStrategy', () => {
     const level = makeLevel([
       { id: 'h1', position: [200, 200], ownerId: 'ai1', units: 19, type: 'house', level: 1 },
       { id: 'p1', position: [50, 50],   ownerId: 'p1',  units: 5 },
-    ], { aiLiquid: 'water' });
+    ], { aiFaction: 'azure' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = UpgradeStrategy.decide(engine.world, me, easyAI, content);
@@ -204,7 +204,7 @@ describe('SpellCastStrategy', () => {
     ]);
     const engine = new GameEngine(level, content);
     const lab = engine.world.nodes.get('l1')!;
-    lab.spellQueue = { spellId: 'recruit', state: 'ready', progress: 1.0 };
+    lab.spellQueue = { spellId: 'sabotage', state: 'ready', progress: 1.0 };
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = SpellCastStrategy.decide(engine.world, me, spellUser, content);
     expect(d!.kind).toBe('cast');
@@ -254,7 +254,7 @@ describe('VultureStrategy', () => {
       { id: 's1', position: [200, 200], ownerId: 'ai1', units: 30, type: 'barracks', level: 2 },
       { id: 'e1', position: [600, 200], ownerId: 'p1',  units: 15 },
       { id: 'e2', position: [800, 200], ownerId: 'p1',  units: 20 },
-    ], { aiLiquid: 'venom' });
+    ], { aiFaction: 'amethyst' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     expect(VultureStrategy.decide(engine.world, me, vulturePersonality, content)).toBeNull();
@@ -265,7 +265,7 @@ describe('VultureStrategy', () => {
       { id: 's1', position: [200, 200], ownerId: 'ai1', units: 30, type: 'barracks', level: 2 },
       { id: 'pp', position: [50, 50],   ownerId: 'p1',  units: 5 },
       { id: 'eL', position: [600, 200], ownerId: 'p1',  units: 3 },
-    ], { aiLiquid: 'venom' });
+    ], { aiFaction: 'amethyst' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = VultureStrategy.decide(engine.world, me, vulturePersonality, content);
@@ -282,7 +282,7 @@ describe('VultureStrategy', () => {
       { id: 'pp', position: [50, 50],   ownerId: 'p1',  units: 5 },
       { id: 'eL', position: [600, 200], ownerId: 'p1',  units: 3 },
       { id: 'nL', position: [620, 200], ownerId: null,  units: 3 },
-    ], { aiLiquid: 'venom' });
+    ], { aiFaction: 'amethyst' });
     const engine = new GameEngine(level, content);
     const me = engine.world.players.find((p) => p.id === 'ai1')!;
     const d = VultureStrategy.decide(engine.world, me, vulturePersonality, content);

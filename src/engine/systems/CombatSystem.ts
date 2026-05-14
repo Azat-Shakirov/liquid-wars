@@ -19,8 +19,8 @@ import type { World } from '../World';
 import type { Node } from '../entities/Node';
 import type { UnitGroup } from '../entities/UnitGroup';
 import type { ContentLibrary } from '../content/ContentLibrary';
-import { effectValueForLiquid } from '../effects/EffectRegistry';
-import type { LiquidId } from '../../types';
+import { effectValueForFaction } from '../effects/EffectRegistry';
+import type { FactionId } from '../../types';
 
 interface FrozenPendingHolder {
   pendingArrivals?: UnitGroup[];
@@ -57,41 +57,36 @@ export class CombatSystem {
         continue;
       }
 
-      this.resolveArrival(ug, target);
+      this.resolveArrival(ug, target, world);
     }
 
     world.unitGroups = remaining;
   }
 
-  private resolveArrival(ug: UnitGroup, target: Node): void {
-    const sourceLiquid = this.content.liquids[ug.sourceLiquid as LiquidId];
+  private resolveArrival(ug: UnitGroup, target: Node, world: World): void {
+    const sourceFaction = this.content.factions[ug.sourceFaction as FactionId];
 
     // True when this arrival is anything other than a friendly
     // reinforcement — i.e. attacking an enemy OR capturing a neutral.
-    // Neutrals are treated as a faction (v2.6.2): their liquid defends
-    // on arrival and their towers apply defenseRate. The original name
-    // `hostileArrival` was preserved for diff readability.
+    // Neutrals are treated as a faction (v2.6.2): their faction defends
+    // on arrival and their towers apply defenseRate.
     const hostileArrival = target.ownerId !== ug.ownerId;
 
     let effectiveCount = ug.count;
 
-    // Step 1: incoming damage modifier from defender's current liquid
+    // Step 1: incoming damage modifier from defender's current faction
     // (§5.3). Capture / attack arrivals only — friendly reinforcements
     // aren't "damage" and must pass through the defender's defensive
-    // liquid unchanged (otherwise capturing an Ink node would halve
-    // your own resupplies).
+    // faction unchanged.
     if (hostileArrival) {
-      const defenderLiquid = this.content.liquids[target.liquidType as LiquidId];
-      if (defenderLiquid) {
-        effectiveCount *= effectValueForLiquid(defenderLiquid, 'incomingDamageMultiplier');
+      const defenderFaction = this.content.factions[target.faction as FactionId];
+      if (defenderFaction) {
+        effectiveCount *= effectValueForFaction(defenderFaction, 'incomingDamageMultiplier');
       }
     }
 
     // Step 1b: Tower per-arrival defense. Towers divide capture/attack
-    // incoming counts by defenseRate (a divisor — rate 2 means a 20-unit
-    // attack hits for 10). Friendly reinforcements pass through
-    // unmodified. Neutral towers defend (v2.6.2) — they're a faction
-    // without send/produce/concoct, not a passive flag.
+    // incoming counts by defenseRate.
     if (hostileArrival && target.nodeType === 'tower') {
       const def = this.content.nodeTypes[target.nodeType];
       const lv = def?.levels.find((l) => l.level === target.level);
@@ -100,23 +95,43 @@ export class CombatSystem {
         effectiveCount = effectiveCount / defenseRate;
       }
     }
+
+    // Step 1c (v2.8.0): defender's archetype `incomingDamageMultiplier`
+    // buff (e.g., Elite 0.3×). Only applies when defender is OWNED by a
+    // player with the archetype; neutrals don't carry one.
+    if (hostileArrival && target.ownerId !== null) {
+      const defenderPlayer = world.players.find((p) => p.id === target.ownerId);
+      if (defenderPlayer) {
+        const arch = this.content.archetypes[defenderPlayer.archetype];
+        if (arch && arch.buff.type === 'incomingDamageMultiplier') {
+          effectiveCount *= arch.buff.value;
+        }
+      }
+    }
+
     if (effectiveCount <= 0) return;
 
-    // Step 2: friendly arrival — top up. Don't clamp to maxUnits;
-    // ProductionSystem drains overflow at 1 unit/sec until the
-    // node is back at the cap (user spec patch). This means
-    // friendly reinforcements never silently vanish on overflow.
+    // Step 2: friendly arrival — top up. ProductionSystem drains
+    // overflow at 1 unit/sec.
     if (target.ownerId !== null && target.ownerId === ug.ownerId) {
       target.units = target.units + effectiveCount;
       return;
     }
 
-    // Step 3+: hostile / neutral. Apply capture-cost multiplier from attacker's liquid.
+    // Step 3+: hostile / neutral. Apply capture-cost multiplier from
+    // attacker's faction (legacy liquid-era effect) AND from attacker's
+    // archetype (v2.8.0 — e.g., Assassin 0.4×).
     let attackPower = effectiveCount;
-    if (sourceLiquid) {
-      const captureCostMult = effectValueForLiquid(sourceLiquid, 'captureCostMultiplier');
-      // captureCostMult < 1 means cheaper to capture; equivalent to amplifying attack.
-      if (captureCostMult > 0) attackPower = effectiveCount / captureCostMult;
+    if (sourceFaction) {
+      const captureCostMult = effectValueForFaction(sourceFaction, 'captureCostMultiplier');
+      if (captureCostMult > 0) attackPower = attackPower / captureCostMult;
+    }
+    const attackerPlayer = world.players.find((p) => p.id === ug.ownerId);
+    if (attackerPlayer) {
+      const arch = this.content.archetypes[attackerPlayer.archetype];
+      if (arch && arch.buff.type === 'captureCostMultiplier' && arch.buff.value > 0) {
+        attackPower = attackPower / arch.buff.value;
+      }
     }
 
     target.units -= attackPower;
@@ -128,12 +143,12 @@ export class CombatSystem {
 
     // Ownership flips. Don't clamp the remainder to maxUnits —
     // ProductionSystem will drain any overflow at 1 unit/sec.
-    const remaining = -target.units; // positive remainder
+    const remaining = -target.units;
     target.ownerId = ug.ownerId;
     target.units = remaining;
-    target.liquidType = ug.sourceLiquid;
+    target.faction = ug.sourceFaction;
     target.spellQueue = null;
-    target.poisonStacks = [];
+    target.starveStacks = [];
     target.productionProgress = 0;
     target.isFrozen = false;
     target.frozenUntilTick = 0;

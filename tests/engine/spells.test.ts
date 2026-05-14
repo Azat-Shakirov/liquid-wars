@@ -35,7 +35,7 @@ describe('startConcoction', () => {
 
   it('rejects a spell whose minLabLevel exceeds the Lab level', () => {
     const engine = new GameEngine(makeLab(1, 60), content);
-    const r = engine.startConcoction('lab1', 'recruit'); // recruit needs Lab L3
+    const r = engine.startConcoction('lab1', 'sabotage'); // recruit needs Lab L3
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.reason).toMatch(/lab level/i);
   });
@@ -149,7 +149,7 @@ describe('castSpell — Freeze (pure neutralize)', () => {
 describe('castSpell — Bleed (permanent until captured)', () => {
   it('adds a permanent bleed stack', () => {
     const engine = new GameEngine(makeLab(2, 80), content);
-    engine.startConcoction('lab1', 'bleed');
+    engine.startConcoction('lab1', 'starve');
     const concoctTicks = Math.ceil((15000 / 1.3) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     const lab = engine.world.nodes.get('lab1')!;
@@ -158,14 +158,14 @@ describe('castSpell — Bleed (permanent until captured)', () => {
     const enemy = engine.world.nodes.get('enemy')!;
     const r = engine.castSpell('lab1', 'enemy');
     expect(r.ok).toBe(true);
-    expect(enemy.poisonStacks.length).toBe(1);
-    expect(enemy.poisonStacks[0]!.drainPerSecond).toBe(1);
-    expect(enemy.poisonStacks[0]!.expiresTick).toBeGreaterThan(1e10);
+    expect(enemy.starveStacks.length).toBe(1);
+    expect(enemy.starveStacks[0]!.drainPerSecond).toBe(1);
+    // v2.8.0: no expiresTick — starve persists until enemy capture.
   });
 
   it('drains 1 unit per second over time and never self-expires', () => {
     const engine = new GameEngine(makeLab(2, 80), content);
-    engine.startConcoction('lab1', 'bleed');
+    engine.startConcoction('lab1', 'starve');
     const concoctTicks = Math.ceil((15000 / 1.3) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     engine.castSpell('lab1', 'enemy');
@@ -177,12 +177,12 @@ describe('castSpell — Bleed (permanent until captured)', () => {
     expect(enemy.units).toBeLessThanOrEqual(11);
     expect(enemy.units).toBeGreaterThanOrEqual(9);
     // Stack still present (no self-expiry).
-    expect(enemy.poisonStacks.length).toBe(1);
+    expect(enemy.starveStacks.length).toBe(1);
   });
 
   it('halts production on bleeding nodes', () => {
     const engine = new GameEngine(makeLab(2, 80), content);
-    engine.startConcoction('lab1', 'bleed');
+    engine.startConcoction('lab1', 'starve');
     const concoctTicks = Math.ceil((15000 / 1.3) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     engine.castSpell('lab1', 'enemy');
@@ -200,12 +200,12 @@ describe('castSpell — Bleed (permanent until captured)', () => {
 
   it('vanishes when the node is captured by a non-owner', () => {
     const engine = new GameEngine(makeLab(2, 80), content);
-    engine.startConcoction('lab1', 'bleed');
+    engine.startConcoction('lab1', 'starve');
     const concoctTicks = Math.ceil((15000 / 1.3) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     engine.castSpell('lab1', 'enemy');
     const enemy = engine.world.nodes.get('enemy')!;
-    expect(enemy.poisonStacks.length).toBe(1);
+    expect(enemy.starveStacks.length).toBe(1);
 
     enemy.units = 5;
     engine.world.nodes.get('mine')!.units = 50;
@@ -215,24 +215,23 @@ describe('castSpell — Bleed (permanent until captured)', () => {
       if (enemy.ownerId === 'p1') break;
     }
     expect(enemy.ownerId).toBe('p1');
-    expect(enemy.poisonStacks.length).toBe(0);
+    expect(enemy.starveStacks.length).toBe(0);
   });
 });
 
 describe('castSpell — Recruit', () => {
   it('flips ownership, preserves units, ends bleed, cancels target spellQueue', () => {
     const engine = new GameEngine(makeLab(3, 100), content);
-    engine.startConcoction('lab1', 'recruit');
+    engine.startConcoction('lab1', 'sabotage');
     const concoctTicks = Math.ceil((15000 / 1.6) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     const lab = engine.world.nodes.get('lab1')!;
     expect(lab.spellQueue?.state).toBe('ready');
 
     const enemy = engine.world.nodes.get('enemy')!;
-    enemy.poisonStacks.push({
+    enemy.starveStacks.push({
       sourcePlayerId: 'p1',
       drainPerSecond: 1,
-      expiresTick: Number.MAX_SAFE_INTEGER,
     });
     const beforeUnits = enemy.units;
 
@@ -240,13 +239,13 @@ describe('castSpell — Recruit', () => {
     expect(r.ok).toBe(true);
     expect(enemy.ownerId).toBe('p1');
     expect(enemy.units).toBe(beforeUnits);
-    expect(enemy.poisonStacks.length).toBe(0);
+    expect(enemy.starveStacks.length).toBe(0);
     expect(enemy.spellQueue).toBeNull();
   });
 
   it('on a neutral target: flips to caster', () => {
     const engine = new GameEngine(makeLab(3, 100), content);
-    engine.startConcoction('lab1', 'recruit');
+    engine.startConcoction('lab1', 'sabotage');
     const concoctTicks = Math.ceil((15000 / 1.6) / TICK_MS) + 5;
     for (let i = 0; i < concoctTicks; i++) engine.tick();
     const r = engine.castSpell('lab1', 'neutral');

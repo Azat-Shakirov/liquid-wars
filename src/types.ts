@@ -2,7 +2,10 @@
 
 export type NodeId = string;
 export type PlayerId = string;
-export type LiquidId = string;
+export type FactionId = string;
+/** @deprecated Pre-v2.8.0 name for FactionId. Kept temporarily as an alias
+ *  for any external code that still imports it; remove once nothing uses it. */
+export type LiquidId = FactionId;
 export type NodeTypeId = 'house' | 'barracks' | 'lab' | 'tower';
 export type SpellId = string;
 export type UnitGroupId = string;

@@ -1,0 +1,9 @@
+{
+  "id": "cavalry",
+  "name": "Cavalry",
+  "description": "Mounted knights — swift across the field.",
+  "buff": {
+    "type": "speedMultiplier",
+    "value": 1.40
+  }
+}

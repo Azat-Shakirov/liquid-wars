@@ -1,19 +1,26 @@
 // ContentLibrary — typed shape of all loaded JSON content. Engine code reads
 // from this struct; the loader builds it from disk via Vite import.meta.glob.
+//
+// v2.8.0: renamed Liquid* → Faction*; player.liquid → player.faction;
+// node.liquidType → node.faction; introducesLiquids → introducesFactions;
+// spell types 'bleed' → 'starve', 'recruit' → 'sabotage'; new Archetype
+// concept (5 archetypes, data-driven buffs).
 
-import type { LiquidId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
+import type { FactionId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
 
-export interface LiquidEffect {
+export type ArchetypeId = 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
+
+export interface FactionEffect {
   type: string;
   value: number;
 }
 
-export interface LiquidDef {
-  id: LiquidId;
+export interface FactionDef {
+  id: FactionId;
   name: string;
   color: string;
   description: string;
-  effects: LiquidEffect[];
+  effects: FactionEffect[];
 }
 
 export interface NodeTypeLevel {
@@ -52,8 +59,8 @@ export interface NodeTypeDef {
 
 export type SpellEffectDef =
   | { type: 'freeze'; params?: Record<string, never> }
-  | { type: 'bleed'; params: { drainPerSecond: number } }
-  | { type: 'recruit'; params?: Record<string, never> };
+  | { type: 'starve'; params: { drainPerSecond: number } }
+  | { type: 'sabotage'; params?: Record<string, never> };
 
 export interface SpellDef {
   id: SpellId;
@@ -62,6 +69,20 @@ export interface SpellDef {
   unitCost: number;
   minLabLevel: number;
   effect: SpellEffectDef;
+}
+
+export type ArchetypeBuffDef =
+  | { type: 'productionMultiplier'; value: number }
+  | { type: 'speedMultiplier'; value: number }
+  | { type: 'incomingDamageMultiplier'; value: number }
+  | { type: 'spellConcoctMultiplier'; value: number }
+  | { type: 'captureCostMultiplier'; value: number };
+
+export interface ArchetypeDef {
+  id: ArchetypeId;
+  name: string;
+  description: string;
+  buff: ArchetypeBuffDef;
 }
 
 export interface AIPersonalityDef {
@@ -86,9 +107,14 @@ export interface LevelPlayerDef {
   id: PlayerId;
   type: 'human' | 'ai';
   color: string;
-  // Phase 5 — required. The player's liquid. Owned nodes inherit it
-  // at level load; captures convert to the new owner's liquid.
-  liquid: LiquidId;
+  // v2.8.0 — required. The player's faction (cosmetic team color/banner).
+  // Owned nodes inherit it at level load; captures convert to the new
+  // owner's faction. Renamed from `liquid` (pre-v2.8.0).
+  faction: FactionId;
+  // v2.8.0 — required. Gameplay-relevant unit class. Determines the
+  // player's unit sprite + single buff (defined in
+  // content/archetypes/<id>.json).
+  archetype: ArchetypeId;
   aiConfigId?: string;
 }
 
@@ -98,7 +124,8 @@ export interface LevelNodeDef {
   ownerId: PlayerId | null;
   nodeType: NodeTypeId;
   level: number;
-  liquidType: LiquidId;
+  // v2.8.0 — renamed from liquidType.
+  faction: FactionId;
   units: number;
 }
 
@@ -106,6 +133,8 @@ export interface TutorialDef {
   title: string;
   body: string;
 }
+
+export type BiomeId = 'grass' | 'desert' | 'snow' | 'jungle' | 'ruins' | 'stone';
 
 export interface LevelDef {
   id: number;
@@ -115,12 +144,16 @@ export interface LevelDef {
   tutorial?: TutorialDef | null;
   // Phase 5: persistent objective banner across the top of the game view.
   objective?: string | null;
-  // Phase 5 challenge tier: when true, GameView prompts the player to
-  // pick their liquid before the level boots.
-  letPlayerChooseLiquid?: boolean;
+  // v2.8.0 challenge tier: when true, LevelSelect's faction picker
+  // overrides the designer-set player.faction.
+  letPlayerChooseFaction?: boolean;
+  // v2.8.0 (UI deferred to v1.1): when true, LevelSelect lets the player
+  // pick the archetype. Designer-locked otherwise.
+  letPlayerChooseArchetype?: boolean;
   introducesNodeTypes: string[];
-  introducesLiquids: string[];
-  map: { width: number; height: number; background: string };
+  // v2.8.0 — renamed from introducesLiquids.
+  introducesFactions: string[];
+  map: { width: number; height: number; background: BiomeId };
   terrain: { walls: { id: string; points: [number, number][] }[] };
   players: LevelPlayerDef[];
   nodes: LevelNodeDef[];
@@ -129,9 +162,10 @@ export interface LevelDef {
 }
 
 export interface ContentLibrary {
-  liquids: Record<LiquidId, LiquidDef>;
+  factions: Record<FactionId, FactionDef>;
   nodeTypes: Record<NodeTypeId, NodeTypeDef>;
   spells: Record<SpellId, SpellDef>;
+  archetypes: Record<ArchetypeId, ArchetypeDef>;
   ai: Record<string, AIPersonalityDef>;
   levels: Record<number, LevelDef>;
 }

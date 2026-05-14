@@ -3,7 +3,7 @@ import { useSessionStore } from '../store/sessionStore';
 import { useProgressStore, isLevelUnlocked } from '../store/progressStore';
 import { loadContent } from '../engine/content/ContentLoader';
 import { buttonStyle, linkStyle, screenStyle, titleStyle } from './menuStyles';
-import type { LiquidId } from '../types';
+import type { FactionId } from '../types';
 
 const STAR_FILLED = '★';
 const STAR_EMPTY = '☆';
@@ -11,8 +11,8 @@ const STAR_EMPTY = '☆';
 export function LevelSelect() {
   const navigate = useSessionStore((s) => s.navigate);
   const startLevel = useSessionStore((s) => s.startLevel);
-  const playerStartLiquid = useSessionStore((s) => s.playerStartLiquid);
-  const setPlayerStartLiquid = useSessionStore((s) => s.setPlayerStartLiquid);
+  const playerStartFaction = useSessionStore((s) => s.playerStartFaction);
+  const setPlayerStartFaction = useSessionStore((s) => s.setPlayerStartFaction);
   const completedLevels = useProgressStore((s) => s.completedLevels);
 
   const content = useMemo(() => loadContent(), []);
@@ -30,14 +30,14 @@ export function LevelSelect() {
     () => content.levels[0] !== undefined,
     [content.levels],
   );
-  const liquidIds = useMemo(
-    () => Object.keys(content.liquids).sort(),
-    [content.liquids],
+  const factionIds = useMemo(
+    () => Object.keys(content.factions).sort(),
+    [content.factions],
   );
   // Only show the challenge-tier picker once at least one level with
-  // letPlayerChooseLiquid exists in the campaign.
+  // letPlayerChooseFaction exists in the campaign.
   const hasChallengeLevels = useMemo(
-    () => sortedIds.some((id) => content.levels[id]?.letPlayerChooseLiquid === true),
+    () => sortedIds.some((id) => content.levels[id]?.letPlayerChooseFaction === true),
     [sortedIds, content.levels],
   );
 
@@ -46,35 +46,35 @@ export function LevelSelect() {
       <div style={{ ...titleStyle, fontSize: 36, marginBottom: 24 }}>Choose a Level</div>
       {hasChallengeLevels && (
         <div style={pickerRowStyle}>
-          <span style={pickerLabelStyle}>Liquid for challenge levels (L31-40)</span>
-          {liquidIds.map((lid) => {
-            const liq = content.liquids[lid as LiquidId]!;
-            const selected = (playerStartLiquid ?? null) === lid;
+          <span style={pickerLabelStyle}>Faction for challenge levels (L31-40)</span>
+          {factionIds.map((fid) => {
+            const fac = content.factions[fid as FactionId]!;
+            const selected = (playerStartFaction ?? null) === fid;
             return (
               <button
-                key={lid}
-                onClick={() => setPlayerStartLiquid(selected ? null : (lid as LiquidId))}
+                key={fid}
+                onClick={() => setPlayerStartFaction(selected ? null : (fid as FactionId))}
                 style={{
                   ...chipStyle,
-                  borderColor: selected ? liq.color : 'rgba(255,255,255,0.15)',
-                  background: selected ? `${liq.color}20` : 'rgba(255,255,255,0.04)',
+                  borderColor: selected ? fac.color : 'rgba(255,255,255,0.15)',
+                  background: selected ? `${fac.color}20` : 'rgba(255,255,255,0.04)',
                 }}
-                title={liq.description}
+                title={fac.description}
               >
-                <span style={{ ...chipSwatchStyle, background: liq.color }} />
-                <span>{liq.name}</span>
+                <span style={{ ...chipSwatchStyle, background: fac.color }} />
+                <span>{fac.name}</span>
               </button>
             );
           })}
           <button
-            onClick={() => setPlayerStartLiquid(null)}
+            onClick={() => setPlayerStartFaction(null)}
             style={{
               ...chipStyle,
               padding: '6px 10px',
-              opacity: playerStartLiquid === null ? 0.45 : 1,
-              cursor: playerStartLiquid === null ? 'default' : 'pointer',
+              opacity: playerStartFaction === null ? 0.45 : 1,
+              cursor: playerStartFaction === null ? 'default' : 'pointer',
             }}
-            disabled={playerStartLiquid === null}
+            disabled={playerStartFaction === null}
           >
             Reset
           </button>

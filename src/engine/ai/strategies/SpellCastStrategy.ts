@@ -66,7 +66,7 @@ export const SpellCastStrategy: Strategy = {
         if (e.units < best.units) return best;
         return e.id < best.id ? e : best;
       }, null);
-    } else if (spellId === 'bleed') {
+    } else if (spellId === 'starve') {
       // Strongest by units. Tiebreak: higher level, then id.
       target = enemies.reduce<Node | null>((best, e) => {
         if (!best) return e;
@@ -76,7 +76,7 @@ export const SpellCastStrategy: Strategy = {
         if (e.level < best.level) return best;
         return e.id < best.id ? e : best;
       }, null);
-    } else if (spellId === 'recruit') {
+    } else if (spellId === 'sabotage') {
       // Weakest enemy by units. Recruit on neutrals is wasteful (no flip
       // benefit since they're already non-self) — only consider enemy-owned.
       const owned = enemies.filter((e) => e.ownerId !== null);

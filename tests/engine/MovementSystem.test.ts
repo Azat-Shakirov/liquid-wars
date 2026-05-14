@@ -14,7 +14,7 @@ function makeUg(overrides: Partial<UnitGroup> = {}): UnitGroup {
     id: 'ug1',
     ownerId: 'p1',
     count: 10,
-    sourceLiquid: 'water',
+    sourceFaction: 'azure',
     fromNodeId: 'a',
     toNodeId: 'b',
     path,
@@ -36,7 +36,7 @@ describe('MovementSystem', () => {
     const world = buildWorldFromLevel(level, content);
     const ug = makeUg();
     world.unitGroups.push(ug);
-    const sys = new MovementSystem();
+    const sys = new MovementSystem(content);
 
     sys.update(world, TICK_MS);
 
@@ -52,7 +52,7 @@ describe('MovementSystem', () => {
     const world = buildWorldFromLevel(level, content);
     const ug = makeUg({ baseSpeed: 1 });
     world.unitGroups.push(ug);
-    const sys = new MovementSystem();
+    const sys = new MovementSystem(content);
 
     for (let i = 0; i < 30; i++) sys.update(world, TICK_MS);
 

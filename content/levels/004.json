@@ -10,7 +10,6 @@
   "introducesNodeTypes": [
     "house"
   ],
-  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -24,13 +23,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -43,8 +44,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 1,
-      "liquidType": "water",
-      "units": 10
+      "units": 10,
+      "faction": "azure"
     },
     {
       "id": "p1_h",
@@ -55,8 +56,8 @@
       "ownerId": "p1",
       "nodeType": "house",
       "level": 1,
-      "liquidType": "water",
-      "units": 18
+      "units": 18,
+      "faction": "azure"
     },
     {
       "id": "ai1_base",
@@ -67,8 +68,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 12
+      "units": 12,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -85,5 +86,6 @@
       70,
       40
     ]
-  }
+  },
+  "introducesFactions": []
 }

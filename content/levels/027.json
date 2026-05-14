@@ -8,7 +8,6 @@
   },
   "objective": "Capture all red nodes. Read the neutrals carefully.",
   "introducesNodeTypes": [],
-  "introducesLiquids": [],
   "map": {
     "width": 1280,
     "height": 720,
@@ -22,13 +21,15 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#e63946",
-      "liquid": "water"
+      "faction": "azure",
+      "archetype": "infantry"
     }
   ],
   "nodes": [
@@ -41,8 +42,8 @@
       "ownerId": "p1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 16
+      "units": 16,
+      "faction": "azure"
     },
     {
       "id": "n_blood",
@@ -53,8 +54,8 @@
       "ownerId": null,
       "nodeType": "barracks",
       "level": 1,
-      "liquidType": "blood",
-      "units": 10
+      "units": 10,
+      "faction": "crimson"
     },
     {
       "id": "n_venom",
@@ -65,8 +66,8 @@
       "ownerId": null,
       "nodeType": "barracks",
       "level": 1,
-      "liquidType": "venom",
-      "units": 10
+      "units": 10,
+      "faction": "amethyst"
     },
     {
       "id": "n_slime",
@@ -77,8 +78,8 @@
       "ownerId": null,
       "nodeType": "lab",
       "level": 1,
-      "liquidType": "slime",
-      "units": 12
+      "units": 12,
+      "faction": "verdant"
     },
     {
       "id": "n_ink",
@@ -89,8 +90,8 @@
       "ownerId": null,
       "nodeType": "tower",
       "level": 1,
-      "liquidType": "ink",
-      "units": 10
+      "units": 10,
+      "faction": "shadow"
     },
     {
       "id": "ai1_b1",
@@ -101,8 +102,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     },
     {
       "id": "ai1_b2",
@@ -113,8 +114,8 @@
       "ownerId": "ai1",
       "nodeType": "barracks",
       "level": 2,
-      "liquidType": "water",
-      "units": 14
+      "units": 14,
+      "faction": "azure"
     }
   ],
   "winCondition": {
@@ -131,5 +132,6 @@
       150,
       100
     ]
-  }
+  },
+  "introducesFactions": []
 }

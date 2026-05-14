@@ -1,0 +1,13 @@
+{
+  "id": "starve",
+  "name": "Starve",
+  "concoctTimeMs": 15000,
+  "unitCost": 35,
+  "minLabLevel": 2,
+  "effect": {
+    "type": "starve",
+    "params": {
+      "drainPerSecond": 1
+    }
+  }
+}

@@ -16,11 +16,13 @@ describe('ProductionSystem', () => {
     const world = buildWorldFromLevel(level, content);
     const sys = new ProductionSystem(content);
 
-    // Barracks lvl 1: productionRate=0.4 units/sec, water productionMultiplier=1.3 → 0.52 units/sec.
+    // v2.8.0: barracks lvl 1 base rate = 0.4 u/s. Infantry archetype
+    // (default in fixtures) multiplies by 1.10 → 0.44 u/s.
+    // (Was 0.52 under the v2.7 Water-faction 1.3× liquid model.)
     for (let i = 0; i < 60; i++) sys.update(world, TICK_MS);
 
     const n = world.nodes.get('n1')!;
-    expect(n.units).toBeCloseTo(0.52, 5);
+    expect(n.units).toBeCloseTo(0.44, 5);
   });
 
   it('caps units at maxUnits', () => {

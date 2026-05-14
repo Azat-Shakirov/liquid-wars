@@ -13,7 +13,7 @@ function ug(over: Partial<UnitGroup>): UnitGroup {
     id: 'ug1',
     ownerId: 'p1',
     count: 10,
-    sourceLiquid: 'water',
+    sourceFaction: 'azure',
     fromNodeId: 'a',
     toNodeId: 'b',
     path: [{ x: 0, y: 0 }, { x: 100, y: 0 }],
@@ -78,72 +78,69 @@ describe('CombatSystem', () => {
     expect(node.units).toBeCloseTo(5, 5);
   });
 
-  it('captured node converts liquid to attacker sourceLiquid (§4.5)', () => {
+  it('captured node converts liquid to attacker sourceFaction (§4.5)', () => {
     const content = makeContent();
     const level = makeLevel([
-      { id: 'b', position: [100, 0], ownerId: 'ai1', liquid: 'water', units: 5 },
+      { id: 'b', position: [100, 0], ownerId: 'ai1', faction: 'azure', units: 5 },
     ]);
     const world = buildWorldFromLevel(level, content);
-    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'blood' }));
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceFaction: 'crimson' }));
     const sys = new CombatSystem(content);
 
     sys.update(world, TICK_MS);
 
-    expect(world.nodes.get('b')!.liquidType).toBe('blood');
+    expect(world.nodes.get('b')!.faction).toBe('crimson');
   });
 
-  it('blood captureCostMultiplier 0.7 amplifies attack power', () => {
+  it('assassin captureCostMultiplier 0.4 amplifies attack power (v2.8.0)', () => {
     const content = makeContent();
     const level = makeLevel([
-      { id: 'b', position: [100, 0], ownerId: 'ai1', liquid: 'water', units: 10 },
-    ]);
+      { id: 'b', position: [100, 0], ownerId: 'ai1', faction: 'azure', units: 10 },
+    ], { humanArchetype: 'assassin' });
     const world = buildWorldFromLevel(level, content);
-    // 8 units of blood vs 10 water → effective attack = 8 / 0.7 ≈ 11.43; defender 10 - 11.43 = -1.43, flips.
-    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 8, sourceLiquid: 'blood' }));
+    // 5 attacker units / 0.4 = 12.5 effective; defender 10 − 12.5 = −2.5, flips.
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 5, sourceFaction: 'crimson' }));
     const sys = new CombatSystem(content);
 
     sys.update(world, TICK_MS);
 
     const node = world.nodes.get('b')!;
     expect(node.ownerId).toBe('p1');
-    expect(node.units).toBeCloseTo(1.4286, 3);
+    expect(node.units).toBeCloseTo(2.5, 3);
   });
 
-  it('ink incomingDamageMultiplier does NOT apply to friendly arrivals', () => {
-    // Regression: pre-fix, ink (0.5) was applied to every arrival
-    // before the friendly/hostile split, so capturing an ink node
-    // halved your own reinforcements. Friendly arrivals must pass
-    // through the defender's liquid unmodified — "incomingDamage" is
-    // an enemy-side concept.
+  it('elite incomingDamageMultiplier does NOT apply to friendly arrivals (v2.8.0)', () => {
+    // Regression analogue of the prior ink-on-friendlies bug: elite
+    // (0.3×) on the defender should NOT halve friendly reinforcements.
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'p1', units: 10 },
-    ], { humanLiquid: 'ink' });
+    ], { humanArchetype: 'elite' });
     const world = buildWorldFromLevel(level, content);
-    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceFaction: 'azure' }));
     const sys = new CombatSystem(content);
 
     sys.update(world, TICK_MS);
 
-    // 10 + 12 = 22 (full friendly count, NOT 10 + 6).
+    // 10 + 12 = 22 (full friendly count, NOT 10 + 12*0.3 = 13.6).
     expect(world.nodes.get('b')!.units).toBe(22);
   });
 
-  it('ink incomingDamageMultiplier 0.5 halves attacker effectiveness', () => {
+  it('elite incomingDamageMultiplier 0.3 reduces attacker effectiveness (v2.8.0)', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'ai1', units: 10 },
-    ], { aiLiquid: 'ink' });
+    ], { aiArchetype: 'elite' });
     const world = buildWorldFromLevel(level, content);
-    // 12 water vs 10 ink → effective = 12 * 0.5 = 6; defender 10 - 6 = 4, holds.
-    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceLiquid: 'water' }));
+    // 12 attacker units × 0.3 = 3.6 effective; defender 10 − 3.6 = 6.4, holds.
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceFaction: 'azure' }));
     const sys = new CombatSystem(content);
 
     sys.update(world, TICK_MS);
 
     const node = world.nodes.get('b')!;
     expect(node.ownerId).toBe('ai1');
-    expect(node.units).toBeCloseTo(4, 5);
+    expect(node.units).toBeCloseTo(6.4, 5);
   });
 
   it('multiple arrivals same tick resolve in arrivalTick then id order', () => {

@@ -1,53 +1,93 @@
 // Hand-built ContentLibrary fixtures for headless engine tests.
 // Avoids depending on Vite's import.meta.glob inside the test environment.
+//
+// v2.8.0: renamed Liquid* → Faction*; bleed → starve; recruit → sabotage.
+// Fixture factions are COSMETIC (effects[] empty) per v2.8.0 model.
+// Archetypes added with their gameplay buffs.
 
 import type {
   AIPersonalityDef,
+  ArchetypeDef,
   ContentLibrary,
+  FactionDef,
   LevelDef,
-  LiquidDef,
   NodeTypeDef,
   SpellDef,
 } from '../../src/engine/content/ContentLibrary';
 
-export const water: LiquidDef = {
-  id: 'water',
-  name: 'Water',
+export const azure: FactionDef = {
+  id: 'azure',
+  name: 'Azure',
   color: '#3da9fc',
-  description: '30% production boost.',
-  effects: [{ type: 'productionMultiplier', value: 1.3 }],
+  description: 'Knights of the azure banner.',
+  effects: [],
 };
 
-export const blood: LiquidDef = {
-  id: 'blood',
-  name: 'Blood',
+export const crimson: FactionDef = {
+  id: 'crimson',
+  name: 'Crimson',
   color: '#a01010',
-  description: 'Cheaper captures.',
-  effects: [{ type: 'captureCostMultiplier', value: 0.7 }],
+  description: 'Knights of the crimson banner.',
+  effects: [],
 };
 
-export const ink: LiquidDef = {
-  id: 'ink',
-  name: 'Ink',
+export const shadow: FactionDef = {
+  id: 'shadow',
+  name: 'Shadow',
   color: '#0a0a14',
-  description: 'Halves incoming.',
-  effects: [{ type: 'incomingDamageMultiplier', value: 0.5 }],
+  description: 'Knights of the shadow banner.',
+  effects: [],
 };
 
-export const slime: LiquidDef = {
-  id: 'slime',
-  name: 'Slime',
+export const verdant: FactionDef = {
+  id: 'verdant',
+  name: 'Verdant',
   color: '#5cd65c',
-  description: 'Faster spell concoction.',
-  effects: [{ type: 'spellSpeedMultiplier', value: 2.0 }],
+  description: 'Knights of the verdant banner.',
+  effects: [],
 };
 
-export const venom: LiquidDef = {
-  id: 'venom',
-  name: 'Venom',
+export const amethyst: FactionDef = {
+  id: 'amethyst',
+  name: 'Amethyst',
   color: '#7a3da9',
-  description: 'Faster unit travel.',
-  effects: [{ type: 'travelSpeedMultiplier', value: 1.4 }],
+  description: 'Knights of the amethyst banner.',
+  effects: [],
+};
+
+export const infantryArch: ArchetypeDef = {
+  id: 'infantry',
+  name: 'Infantry',
+  description: '+10% production',
+  buff: { type: 'productionMultiplier', value: 1.1 },
+};
+
+export const cavalryArch: ArchetypeDef = {
+  id: 'cavalry',
+  name: 'Cavalry',
+  description: '+40% travel speed',
+  buff: { type: 'speedMultiplier', value: 1.4 },
+};
+
+export const eliteArch: ArchetypeDef = {
+  id: 'elite',
+  name: 'Elite',
+  description: '0.3x incoming damage',
+  buff: { type: 'incomingDamageMultiplier', value: 0.3 },
+};
+
+export const mageArch: ArchetypeDef = {
+  id: 'mage',
+  name: 'Mage',
+  description: '3x spell concoct speed',
+  buff: { type: 'spellConcoctMultiplier', value: 3.0 },
+};
+
+export const assassinArch: ArchetypeDef = {
+  id: 'assassin',
+  name: 'Assassin',
+  description: '0.4x capture cost',
+  buff: { type: 'captureCostMultiplier', value: 0.4 },
 };
 
 export const barracks: NodeTypeDef = {
@@ -82,8 +122,8 @@ export const lab: NodeTypeDef = {
   producesUnits: false,
   levels: [
     { level: 1, concoctSpeed: 1.0, unlockedSpells: ['freeze'], maxUnits: 60, upgradeCostFromHouse: 10 },
-    { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'bleed'], maxUnits: 90, upgradeCost: 20 },
-    { level: 3, concoctSpeed: 1.6, unlockedSpells: ['freeze', 'bleed', 'recruit'], maxUnits: 120, upgradeCost: 35 },
+    { level: 2, concoctSpeed: 1.3, unlockedSpells: ['freeze', 'starve'], maxUnits: 90, upgradeCost: 20 },
+    { level: 3, concoctSpeed: 1.6, unlockedSpells: ['freeze', 'starve', 'sabotage'], maxUnits: 120, upgradeCost: 35 },
   ],
 };
 
@@ -105,22 +145,22 @@ export const freezeSpell: SpellDef = {
   effect: { type: 'freeze' },
 };
 
-export const bleedSpell: SpellDef = {
-  id: 'bleed',
-  name: 'Bleed',
+export const starveSpell: SpellDef = {
+  id: 'starve',
+  name: 'Starve',
   concoctTimeMs: 15000,
   unitCost: 35,
   minLabLevel: 2,
-  effect: { type: 'bleed', params: { drainPerSecond: 1 } },
+  effect: { type: 'starve', params: { drainPerSecond: 1 } },
 };
 
-export const recruitSpell: SpellDef = {
-  id: 'recruit',
-  name: 'Recruit',
+export const sabotageSpell: SpellDef = {
+  id: 'sabotage',
+  name: 'Sabotage',
   concoctTimeMs: 15000,
   unitCost: 50,
   minLabLevel: 3,
-  effect: { type: 'recruit' },
+  effect: { type: 'sabotage' },
 };
 
 export const easyAI: AIPersonalityDef = {
@@ -132,41 +172,41 @@ export const easyAI: AIPersonalityDef = {
 };
 
 // v2.7 — fixture personalities mirror content/ai/*.json so tests that
-// construct levels WITHOUT aiConfigId can auto-select by liquid.
-export const waterAI: AIPersonalityDef = {
-  id: 'water',
+// construct levels WITHOUT aiConfigId can auto-select by faction.
+export const azureAI: AIPersonalityDef = {
+  id: 'azure',
   decisionIntervalMs: 2500,
   weights: { aggression: 0.5, defense: 0.4, economy: 0.6, spellUse: 0 },
   thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30 },
   strategies: ['UpgradeStrategy', 'DumbStrategy'],
 };
 
-export const inkAI: AIPersonalityDef = {
-  id: 'ink',
+export const shadowAI: AIPersonalityDef = {
+  id: 'shadow',
   decisionIntervalMs: 3000,
   weights: { aggression: 0.3, defense: 0.9, economy: 0.7, spellUse: 0 },
   thresholds: { minSourceUnits: 20, attackRatio: 1.5, upgradeUnitsReserve: 35 },
   strategies: ['UpgradeStrategy', 'DumbStrategy'],
 };
 
-export const slimeAI: AIPersonalityDef = {
-  id: 'slime',
+export const verdantAI: AIPersonalityDef = {
+  id: 'verdant',
   decisionIntervalMs: 2000,
   weights: { aggression: 0.4, defense: 0.3, economy: 0.6, spellUse: 0.9 },
   thresholds: { minSourceUnits: 12, attackRatio: 1.0, upgradeUnitsReserve: 30, maxOwnedNodes: 4 },
   strategies: ['SpellCastStrategy', 'ConcoctStrategy', 'UpgradeStrategy', 'DumbStrategy'],
 };
 
-export const bloodAI: AIPersonalityDef = {
-  id: 'blood',
+export const crimsonAI: AIPersonalityDef = {
+  id: 'crimson',
   decisionIntervalMs: 2000,
   weights: { aggression: 0.9, defense: 0.2, economy: 0.4, spellUse: 0 },
   thresholds: { minSourceUnits: 8, attackRatio: 0.9, upgradeUnitsReserve: 25 },
   strategies: ['DumbStrategy', 'UpgradeStrategy'],
 };
 
-export const venomAI: AIPersonalityDef = {
-  id: 'venom',
+export const amethystAI: AIPersonalityDef = {
+  id: 'amethyst',
   decisionIntervalMs: 1500,
   weights: { aggression: 0.8, defense: 0.2, economy: 0.4, spellUse: 0 },
   thresholds: { minSourceUnits: 10, attackRatio: 1.0, upgradeUnitsReserve: 25 },
@@ -175,16 +215,24 @@ export const venomAI: AIPersonalityDef = {
 
 export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLibrary {
   return {
-    liquids: { water, blood, ink, slime, venom, ...(overrides.liquids ?? {}) },
+    factions: { azure, crimson, shadow, verdant, amethyst, ...(overrides.factions ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
-    spells: { freeze: freezeSpell, bleed: bleedSpell, recruit: recruitSpell, ...(overrides.spells ?? {}) },
+    spells: { freeze: freezeSpell, starve: starveSpell, sabotage: sabotageSpell, ...(overrides.spells ?? {}) },
+    archetypes: {
+      infantry: infantryArch,
+      cavalry: cavalryArch,
+      elite: eliteArch,
+      mage: mageArch,
+      assassin: assassinArch,
+      ...(overrides.archetypes ?? {}),
+    },
     ai: {
       easy: easyAI,
-      water: waterAI,
-      ink: inkAI,
-      slime: slimeAI,
-      blood: bloodAI,
-      venom: venomAI,
+      azure: azureAI,
+      shadow: shadowAI,
+      verdant: verdantAI,
+      crimson: crimsonAI,
+      amethyst: amethystAI,
       ...(overrides.ai ?? {}),
     },
     levels: { ...(overrides.levels ?? {}) },
@@ -196,7 +244,7 @@ export interface NodeSeed {
   position: [number, number];
   ownerId: string | null;
   level?: number;
-  liquid?: string;
+  faction?: string;
   units: number;
   type?: 'barracks' | 'tower' | 'lab' | 'house';
 }
@@ -207,24 +255,28 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
   height?: number;
   humanId?: string;
   aiId?: string;
-  humanLiquid?: string;
-  aiLiquid?: string;
+  humanFaction?: string;
+  aiFaction?: string;
+  humanArchetype?: 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
+  aiArchetype?: 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
 } = {}): LevelDef {
   const humanId = opts.humanId ?? 'p1';
   const aiId = opts.aiId ?? 'ai1';
-  const humanLiquid = opts.humanLiquid ?? 'water';
-  const aiLiquid = opts.aiLiquid ?? 'water';
+  const humanFaction = opts.humanFaction ?? 'azure';
+  const aiFaction = opts.aiFaction ?? 'azure';
+  const humanArchetype = opts.humanArchetype ?? 'infantry';
+  const aiArchetype = opts.aiArchetype ?? 'infantry';
   return {
     id: opts.id ?? 1,
     name: 'fixture',
     tutorialKey: null,
     introducesNodeTypes: [],
-    introducesLiquids: [],
+    introducesFactions: [],
     map: { width: opts.width ?? 1280, height: opts.height ?? 720, background: 'stone' },
     terrain: { walls: [] },
     players: [
-      { id: humanId, type: 'human', color: '#3da9fc', liquid: humanLiquid },
-      { id: aiId, type: 'ai', color: '#e63946', liquid: aiLiquid, aiConfigId: 'easy' },
+      { id: humanId, type: 'human', color: '#3da9fc', faction: humanFaction, archetype: humanArchetype },
+      { id: aiId, type: 'ai', color: '#e63946', faction: aiFaction, archetype: aiArchetype, aiConfigId: 'easy' },
     ],
     nodes: nodeSeeds.map((n) => ({
       id: n.id,
@@ -232,7 +284,7 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
       ownerId: n.ownerId,
       nodeType: n.type ?? 'barracks',
       level: n.level ?? 1,
-      liquidType: n.liquid ?? 'water',
+      faction: n.faction ?? 'azure',
       units: n.units,
     })),
     winCondition: { type: 'controlAll' },

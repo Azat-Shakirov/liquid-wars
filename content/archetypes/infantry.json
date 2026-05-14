@@ -1,0 +1,9 @@
+{
+  "id": "infantry",
+  "name": "Infantry",
+  "description": "Foot soldiers — disciplined, prolific.",
+  "buff": {
+    "type": "productionMultiplier",
+    "value": 1.10
+  }
+}
