@@ -15,11 +15,11 @@ import {
   hexagonPoints,
   metricsForType,
   trianglePoints,
-  TOWER_SPRITE_SCALE_FACTOR,
+  NODE_SPRITE_SCALE_FACTOR,
   type ShapeKind,
 } from '../shapes';
 import { buildLiquidPolyPoints } from '../liquidAnimator';
-import { getTowerTexture } from '../sprites/towerSprites';
+import { getNodeTexture } from '../sprites/nodeSprites';
 
 const NEUTRAL_OUTLINE = 0x666666;
 const SELECTION_COLOR = 0xffffff;
@@ -129,22 +129,21 @@ export class NodeView {
     const factionDef = content.factions[node.faction];
     const liquidColor = factionDef ? colorFromHex(factionDef.color) : 0x3da9fc;
 
-    // Tower sprite path: when this node is a tower AND its faction texture
-    // is available, render the sprite in place of the procedural shape.
-    const towerTex = node.nodeType === 'tower' ? getTowerTexture(node.faction) : null;
-    const useSprite = towerTex !== null;
+    // Sprite path (v2.8.1): when this node's (type × faction) texture is
+    // available, render the sprite in place of the procedural shape.
+    const nodeTex = getNodeTexture(node.nodeType, node.faction);
+    const useSprite = nodeTex !== null;
 
     // Visual bounding box for layout of selection/pips/label/effects.
-    // For sprites we compute a virtual "size" based on the sprite's actual
-    // display height so rings + pips wrap the tower correctly.
     let visualHalfY = half;
     let visualHalfX = half;
 
     if (useSprite) {
       this.towerSprite.visible = true;
-      this.towerSprite.texture = towerTex;
-      const tex = towerTex;
-      const displayW = size * TOWER_SPRITE_SCALE_FACTOR;
+      this.towerSprite.texture = nodeTex;
+      const tex = nodeTex;
+      const scaleFactor = NODE_SPRITE_SCALE_FACTOR[node.nodeType];
+      const displayW = size * scaleFactor;
       const scale = displayW / tex.width;
       this.towerSprite.scale.set(scale);
       // Hide the procedural chrome + liquid layers entirely.

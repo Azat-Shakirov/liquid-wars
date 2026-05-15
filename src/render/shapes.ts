@@ -23,9 +23,22 @@ export function shapeKindForType(type: NodeTypeId): ShapeKind {
   }
 }
 
-// v2.7.8: tower nodes are drawn from a sprite that's larger than the
-// procedural hex it replaces. Hit-test and visual layout multiply by this.
-export const TOWER_SPRITE_SCALE_FACTOR = 1.7;
+// v2.7.8/v2.8.1: node sprites are drawn larger than the procedural shape
+// they replace. Per-type factor (house smallest, tower tallest). Hit-test
+// math in InputController.pickNodeAt uses the same factor so the cursor
+// lands on what you see.
+export const NODE_SPRITE_SCALE_FACTOR: Record<NodeTypeId, number> = {
+  house: 1.7,
+  // v2.8.1 — bumped from 1.7 so the small faction-color banner reads
+  // clearly. Makes barracks visually slightly larger than lab/tower
+  // (acceptable; barracks is the production hub).
+  barracks: 2.0,
+  lab: 1.7,
+  tower: 1.7,
+};
+
+/** @deprecated v2.8.1 — use NODE_SPRITE_SCALE_FACTOR[type] instead. */
+export const TOWER_SPRITE_SCALE_FACTOR = NODE_SPRITE_SCALE_FACTOR.tower;
 
 export function metricsForType(type: NodeTypeId, level: number, visualScale = 1): ShapeMetrics {
   // v2.7.3 sizes; v2.7.6 multiplies by per-level visualScale so sparse

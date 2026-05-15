@@ -12,7 +12,7 @@
 //   8. Selection box       — dashed rectangle while box-selecting
 //   9. HUD overlay         — tick counter / status string
 
-import { Application, Container, Graphics, Text } from 'pixi.js';
+import { Application, Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { World } from '../engine/World';
 import type { ContentLibrary } from '../engine/content/ContentLibrary';
 import type { TowerShot } from '../engine/systems/TowerInterceptSystem';
@@ -22,8 +22,9 @@ import { UnitGroupView } from './views/UnitGroupView';
 import { SelectionBoxView } from './views/SelectionBoxView';
 import { colorFromHex } from './shapes';
 import type { SessionState } from './SessionState';
-import { loadTowerTextures } from './sprites/towerSprites';
+import { loadNodeTextures } from './sprites/nodeSprites';
 import { loadUnitTextures } from './sprites/unitSprites';
+import { loadBiomeTextures, getBiomeTexture } from './sprites/biomeSprites';
 
 interface ClickRipple {
   x: number;
@@ -74,6 +75,9 @@ export class PixiRenderer {
 
   // Walls are static per level — redraw only when the level id changes.
   private lastWallsLevelId: number | null = null;
+  // Biome floor is static per level — track separately from walls.
+  private lastBiomeLevelId: number | null = null;
+  private biomeSprite: Sprite | null = null;
 
   private readonly nodeViews = new Map<string, NodeView>();
   private readonly unitViews = new Map<string, UnitGroupView>();
@@ -164,7 +168,7 @@ export class PixiRenderer {
       resolution: window.devicePixelRatio,
     });
     host.appendChild(app.canvas);
-    await Promise.all([loadTowerTextures(), loadUnitTextures()]);
+    await Promise.all([loadNodeTextures(), loadUnitTextures(), loadBiomeTextures()]);
     return new PixiRenderer(app, host, content);
   }
 
@@ -175,6 +179,7 @@ export class PixiRenderer {
     nowMs: number,
     recentTowerShots: ReadonlyArray<TowerShot> = [],
   ): void {
+    this.syncBiome(world);
     this.syncWalls(world);
     this.syncNodes(world, session, nowMs, alpha);
     this.syncUnitGroups(world, alpha, nowMs);
@@ -185,6 +190,36 @@ export class PixiRenderer {
     this.selectionBoxView.update(session.boxSelect);
     this.drawRipples(nowMs);
     this.updateHud(world);
+  }
+
+  // Biome floor is static per level — only swap the sprite when the
+  // level id changes. Stretches one biome texture to fill the map's
+  // declared width × height. Falls back to no sprite (canvas background
+  // shows through) when the biome has no texture registered.
+  private syncBiome(world: World): void {
+    if (this.lastBiomeLevelId === world.level.id) return;
+    this.lastBiomeLevelId = world.level.id;
+
+    // Clear the prior sprite.
+    if (this.biomeSprite) {
+      this.bgLayer.removeChild(this.biomeSprite);
+      this.biomeSprite.destroy();
+      this.biomeSprite = null;
+    }
+
+    const tex = getBiomeTexture(world.level.map.background);
+    if (!tex) return;
+    const s = new Sprite(tex);
+    s.x = 0;
+    s.y = 0;
+    s.width = world.level.map.width;
+    s.height = world.level.map.height;
+    // v2.8.1: ~55% alpha so the biome reads as atmosphere, not the main
+    // focus. Buildings + units sit on top with full opacity and pop
+    // against the muted floor. (User feedback: dunes felt too bright.)
+    s.alpha = 0.55;
+    this.biomeSprite = s;
+    this.bgLayer.addChild(s);
   }
 
   // Walls are static per level — only redraw when the level changes.

@@ -2,156 +2,49 @@
   "id": 0,
   "name": "Sprite Sandbox",
   "tutorialKey": null,
-  "objective": "Tower-sprite preview (dev sandbox). Top row: neutral towers in all 5 liquid colors. Middle row: faction-owned towers showing pip count + ownership outline. Bottom row: barracks for interaction.",
+  "objective": "All 4 node types × all 5 factions on one screen. Row 1 = houses; row 2 = barracks; row 3 = labs; row 4 = towers. Bottom corners: player + AI barracks for unit-flight interaction.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
     "height": 720,
-    "background": "stone"
+    "background": "desert"
   },
   "terrain": {
     "walls": []
   },
   "players": [
-    {
-      "id": "p1",
-      "type": "human",
-      "color": "#3da9fc",
-      "faction": "azure",
-      "archetype": "infantry"
-    },
-    {
-      "id": "ai1",
-      "type": "ai",
-      "color": "#e63946",
-      "faction": "crimson",
-      "archetype": "infantry"
-    }
+    { "id": "p1",  "type": "human", "color": "#3da9fc", "faction": "azure",   "archetype": "infantry" },
+    { "id": "ai1", "type": "ai",    "color": "#e63946", "faction": "crimson", "archetype": "infantry", "aiConfigId": "easy" }
   ],
   "nodes": [
-    {
-      "id": "tn_water",
-      "position": [
-        200,
-        180
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 3,
-      "units": 6,
-      "faction": "azure"
-    },
-    {
-      "id": "tn_blood",
-      "position": [
-        420,
-        180
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 3,
-      "units": 6,
-      "faction": "crimson"
-    },
-    {
-      "id": "tn_slime",
-      "position": [
-        640,
-        180
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 3,
-      "units": 6,
-      "faction": "verdant"
-    },
-    {
-      "id": "tn_venom",
-      "position": [
-        860,
-        180
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 3,
-      "units": 6,
-      "faction": "amethyst"
-    },
-    {
-      "id": "tn_ink",
-      "position": [
-        1080,
-        180
-      ],
-      "ownerId": null,
-      "nodeType": "tower",
-      "level": 3,
-      "units": 6,
-      "faction": "shadow"
-    },
-    {
-      "id": "p1_tower",
-      "position": [
-        380,
-        420
-      ],
-      "ownerId": "p1",
-      "nodeType": "tower",
-      "level": 5,
-      "units": 25,
-      "faction": "azure"
-    },
-    {
-      "id": "ai1_tower",
-      "position": [
-        900,
-        420
-      ],
-      "ownerId": "ai1",
-      "nodeType": "tower",
-      "level": 5,
-      "units": 25,
-      "faction": "crimson"
-    },
-    {
-      "id": "p1_barracks",
-      "position": [
-        200,
-        600
-      ],
-      "ownerId": "p1",
-      "nodeType": "barracks",
-      "level": 1,
-      "units": 10,
-      "faction": "azure"
-    },
-    {
-      "id": "ai1_barracks",
-      "position": [
-        1080,
-        600
-      ],
-      "ownerId": "ai1",
-      "nodeType": "barracks",
-      "level": 1,
-      "units": 6,
-      "faction": "crimson"
-    }
+    { "id": "h_az", "position": [200, 100], "ownerId": null, "nodeType": "house",    "level": 1, "units": 5, "faction": "azure" },
+    { "id": "h_cr", "position": [420, 100], "ownerId": null, "nodeType": "house",    "level": 1, "units": 5, "faction": "crimson" },
+    { "id": "h_vr", "position": [640, 100], "ownerId": null, "nodeType": "house",    "level": 1, "units": 5, "faction": "verdant" },
+    { "id": "h_am", "position": [860, 100], "ownerId": null, "nodeType": "house",    "level": 1, "units": 5, "faction": "amethyst" },
+    { "id": "h_sh", "position": [1080,100], "ownerId": null, "nodeType": "house",    "level": 1, "units": 5, "faction": "shadow" },
+
+    { "id": "b_az", "position": [200, 260], "ownerId": null, "nodeType": "barracks", "level": 2, "units": 10, "faction": "azure" },
+    { "id": "b_cr", "position": [420, 260], "ownerId": null, "nodeType": "barracks", "level": 2, "units": 10, "faction": "crimson" },
+    { "id": "b_vr", "position": [640, 260], "ownerId": null, "nodeType": "barracks", "level": 2, "units": 10, "faction": "verdant" },
+    { "id": "b_am", "position": [860, 260], "ownerId": null, "nodeType": "barracks", "level": 2, "units": 10, "faction": "amethyst" },
+    { "id": "b_sh", "position": [1080,260], "ownerId": null, "nodeType": "barracks", "level": 2, "units": 10, "faction": "shadow" },
+
+    { "id": "l_az", "position": [200, 420], "ownerId": null, "nodeType": "lab",      "level": 2, "units": 12, "faction": "azure" },
+    { "id": "l_cr", "position": [420, 420], "ownerId": null, "nodeType": "lab",      "level": 2, "units": 12, "faction": "crimson" },
+    { "id": "l_vr", "position": [640, 420], "ownerId": null, "nodeType": "lab",      "level": 2, "units": 12, "faction": "verdant" },
+    { "id": "l_am", "position": [860, 420], "ownerId": null, "nodeType": "lab",      "level": 2, "units": 12, "faction": "amethyst" },
+    { "id": "l_sh", "position": [1080,420], "ownerId": null, "nodeType": "lab",      "level": 2, "units": 12, "faction": "shadow" },
+
+    { "id": "t_az", "position": [200, 560], "ownerId": null, "nodeType": "tower",    "level": 3, "units": 8, "faction": "azure" },
+    { "id": "t_cr", "position": [420, 560], "ownerId": null, "nodeType": "tower",    "level": 3, "units": 8, "faction": "crimson" },
+    { "id": "t_vr", "position": [640, 560], "ownerId": null, "nodeType": "tower",    "level": 3, "units": 8, "faction": "verdant" },
+    { "id": "t_am", "position": [860, 560], "ownerId": null, "nodeType": "tower",    "level": 3, "units": 8, "faction": "amethyst" },
+    { "id": "t_sh", "position": [1080,560], "ownerId": null, "nodeType": "tower",    "level": 3, "units": 8, "faction": "shadow" },
+
+    { "id": "p1_base",  "position": [120, 670], "ownerId": "p1",  "nodeType": "barracks", "level": 2, "units": 20, "faction": "azure" },
+    { "id": "ai1_base", "position": [1160,670], "ownerId": "ai1", "nodeType": "barracks", "level": 2, "units": 20, "faction": "crimson" }
   ],
-  "winCondition": {
-    "type": "controlAll"
-  },
-  "starThresholds": {
-    "time": [
-      600000,
-      300000,
-      120000
-    ],
-    "units": [
-      200,
-      100,
-      50
-    ]
-  },
+  "winCondition": { "type": "controlAll" },
+  "starThresholds": { "time": [600000, 300000, 120000], "units": [200, 100, 50] },
   "introducesFactions": []
 }
