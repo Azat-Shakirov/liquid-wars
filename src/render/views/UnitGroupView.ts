@@ -88,16 +88,18 @@ export class UnitGroupView {
 
       const spriteHalfH = (tex.height * baseScale) / 2;
       const spriteHalfW = (tex.width * baseScale) / 2;
-      // Foot-shadow ellipse beneath the soldier so they tread on the
-      // floor instead of floating above it. Sized from the sprite
-      // footprint and pinned at the base of the sprite.
+      // Tight contact shadow at the soldier's feet. Anchor on the sprite
+      // is (0.5, 0.55) so the bottom of the sprite is at +spriteHalfH * 0.9.
+      // The shadow ellipse is small (a third of the sprite width) and sits
+      // a hair above the bottom edge so it reads as feet-on-ground rather
+      // than a wide blob below.
       this.groundShadow.clear();
-      const sShadowRX = Math.max(4, spriteHalfW * 0.55);
-      const sShadowRY = Math.max(2, spriteHalfH * 0.12);
-      const sShadowCY = spriteHalfH - sShadowRY * 0.5;
+      const sShadowRX = Math.max(3, spriteHalfW * 0.32);
+      const sShadowRY = Math.max(1.5, spriteHalfH * 0.07);
+      const sShadowCY = spriteHalfH * 0.85;
       this.groundShadow
         .ellipse(0, sShadowCY, sShadowRX, sShadowRY)
-        .fill({ color: 0x000000, alpha: 0.35 });
+        .fill({ color: 0x000000, alpha: 0.40 });
       this.label.position.set(0, spriteHalfH + 2);
     } else {
       // Pre-load fallback: procedural droplet (first frame only).

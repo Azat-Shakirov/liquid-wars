@@ -45,7 +45,6 @@ function drawShape(g: Graphics, kind: ShapeKind, size: number, cornerRadius: num
 
 export class NodeView {
   readonly container: Container;
-  private readonly groundShadow: Graphics;
   private readonly selectionRing: Graphics;
   private readonly chrome: Graphics;
   private readonly liquidLayer: Container;
@@ -63,7 +62,6 @@ export class NodeView {
     this.container = new Container();
     this.container.position.set(node.position.x, node.position.y);
 
-    this.groundShadow = new Graphics();
     this.selectionRing = new Graphics();
     this.chrome = new Graphics();
     this.liquidLayer = new Container();
@@ -93,9 +91,6 @@ export class NodeView {
     });
     this.unitsLabel.anchor.set(0.5);
 
-    // Ground shadow sits at the bottom of the z-order so the sprite,
-    // chrome, ring, and effects all paint on top of it.
-    this.container.addChild(this.groundShadow);
     this.container.addChild(this.selectionRing);
     this.container.addChild(this.chrome);
     this.container.addChild(this.liquidLayer);
@@ -161,19 +156,10 @@ export class NodeView {
       this.towerSprite.visible = false;
     }
 
-    // Ground contact shadow — a soft ellipse beneath the sprite/chrome
-    // so the building reads as standing ON the floor instead of
-    // pasted over it. Sized from the visual footprint and pushed down
-    // to the base of the sprite.
-    this.groundShadow.clear();
-    const shadowRX = useSprite ? visualHalfX * 0.85 : half * 0.95;
-    const shadowRY = useSprite ? Math.max(5, visualHalfY * 0.18) : Math.max(4, half * 0.22);
-    const shadowCY = useSprite ? visualHalfY - shadowRY * 0.4 : half - shadowRY * 0.5;
-    this.groundShadow
-      .ellipse(0, shadowCY + 2, shadowRX * 1.15, shadowRY * 1.25)
-      .fill({ color: 0x000000, alpha: 0.18 })
-      .ellipse(0, shadowCY, shadowRX, shadowRY)
-      .fill({ color: 0x000000, alpha: 0.32 });
+    // No procedural ground shadow for sprite nodes: each building source
+    // already includes its own dirt/grass platform that grounds it.
+    // Stacking a generic ellipse below it created a visible "two-grounds"
+    // artifact (v2.8.2 ellipse → removed in v2.8.4).
 
     // Selection ring — outline at the same shape, padded outward by 6px.
     this.selectionRing.clear();
