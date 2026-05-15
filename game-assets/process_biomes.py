@@ -26,8 +26,11 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 SOURCES = [
     # (source filename, biome id, strategy)
-    ("dunes.jpeg", "desert", "full"),
-    ("grass.jpeg", "grass",  "colorkey"),
+    ("dunes.jpeg",      "desert", "full"),
+    # v2.8.3: replaced grass.jpeg (colorkey diamond, never tileable)
+    # with test-grass.jpeg — a painterly edge-to-edge source that
+    # matches the building/unit illustration style. Saved full-frame.
+    ("test-grass.jpeg", "grass",  "full"),
 ]
 
 # Distance from sampled corner-background to treat as transparent.
