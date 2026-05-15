@@ -23,6 +23,7 @@ function countScale(count: number): number {
 
 export class UnitGroupView {
   readonly container: Container;
+  private readonly groundShadow: Graphics;
   private readonly droplet: Graphics;
   private readonly sprite: Sprite;
   private readonly label: Text;
@@ -35,6 +36,7 @@ export class UnitGroupView {
   constructor(ug: UnitGroup) {
     this.groupId = ug.id;
     this.container = new Container();
+    this.groundShadow = new Graphics();
     this.droplet = new Graphics();
     this.sprite = new Sprite();
     this.sprite.anchor.set(0.5, 0.55);
@@ -49,6 +51,7 @@ export class UnitGroupView {
       },
     });
     this.label.anchor.set(0.5, -1.0);
+    this.container.addChild(this.groundShadow);
     this.container.addChild(this.droplet);
     this.container.addChild(this.sprite);
     this.container.addChild(this.label);
@@ -84,10 +87,22 @@ export class UnitGroupView {
       this.droplet.clear();
 
       const spriteHalfH = (tex.height * baseScale) / 2;
+      const spriteHalfW = (tex.width * baseScale) / 2;
+      // Foot-shadow ellipse beneath the soldier so they tread on the
+      // floor instead of floating above it. Sized from the sprite
+      // footprint and pinned at the base of the sprite.
+      this.groundShadow.clear();
+      const sShadowRX = Math.max(4, spriteHalfW * 0.55);
+      const sShadowRY = Math.max(2, spriteHalfH * 0.12);
+      const sShadowCY = spriteHalfH - sShadowRY * 0.5;
+      this.groundShadow
+        .ellipse(0, sShadowCY, sShadowRX, sShadowRY)
+        .fill({ color: 0x000000, alpha: 0.35 });
       this.label.position.set(0, spriteHalfH + 2);
     } else {
       // Pre-load fallback: procedural droplet (first frame only).
       this.sprite.visible = false;
+      this.groundShadow.clear();
       const owner = world.players.find((p) => p.id === ug.ownerId);
       const outlineColor = owner ? colorFromHex(owner.color) : 0xffffff;
       const factionDef = content.factions[ug.sourceFaction];

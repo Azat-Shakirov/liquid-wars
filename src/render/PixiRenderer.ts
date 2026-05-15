@@ -12,7 +12,7 @@
 //   8. Selection box       — dashed rectangle while box-selecting
 //   9. HUD overlay         — tick counter / status string
 
-import { Application, Container, Graphics, Sprite, Text } from 'pixi.js';
+import { Application, ColorMatrixFilter, Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { World } from '../engine/World';
 import type { ContentLibrary } from '../engine/content/ContentLibrary';
 import type { TowerShot } from '../engine/systems/TowerInterceptSystem';
@@ -196,11 +196,17 @@ export class PixiRenderer {
   // level id changes. Stretches one biome texture to fill the map's
   // declared width × height. Falls back to no sprite (canvas background
   // shows through) when the biome has no texture registered.
+  //
+  // v2.8.2 cohesion pass: floor is now (a) desaturated via a
+  // ColorMatrixFilter so a photographic source reads as painterly,
+  // (b) tinted toward a warm-neutral grey to share palette with the
+  // building chrome, and (c) dimmed further (alpha 0.40) so the floor
+  // sits as backdrop. Combined with per-node/per-unit drop shadows,
+  // sprites feel grounded IN the scene rather than pasted ON TOP.
   private syncBiome(world: World): void {
     if (this.lastBiomeLevelId === world.level.id) return;
     this.lastBiomeLevelId = world.level.id;
 
-    // Clear the prior sprite.
     if (this.biomeSprite) {
       this.bgLayer.removeChild(this.biomeSprite);
       this.biomeSprite.destroy();
@@ -214,10 +220,11 @@ export class PixiRenderer {
     s.y = 0;
     s.width = world.level.map.width;
     s.height = world.level.map.height;
-    // v2.8.1: ~55% alpha so the biome reads as atmosphere, not the main
-    // focus. Buildings + units sit on top with full opacity and pop
-    // against the muted floor. (User feedback: dunes felt too bright.)
-    s.alpha = 0.55;
+    s.alpha = 0.40;
+    s.tint = 0x8a8278;
+    const grade = new ColorMatrixFilter();
+    grade.saturate(-0.45, false);
+    s.filters = [grade];
     this.biomeSprite = s;
     this.bgLayer.addChild(s);
   }
