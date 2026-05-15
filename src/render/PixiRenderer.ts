@@ -7,10 +7,11 @@
 //   3. Connection hints    — drag/hover line from selected source(s) to target
 //   4. Nodes               — NodeView containers
 //   5. Tower attack range  — Phase 2
-//   6. Unit groups         — UnitGroupView containers
-//   7. Spell effects       — Phase 2
-//   8. Selection box       — dashed rectangle while box-selecting
-//   9. HUD overlay         — tick counter / status string
+//   6. Particles           — foot-puff dust, etc (v2.8.5; below units)
+//   7. Unit groups         — UnitGroupView containers
+//   8. Spell effects       — Phase 2
+//   9. Selection box       — dashed rectangle while box-selecting
+//  10. HUD overlay         — tick counter / status string
 
 import { Application, Container, Graphics, Sprite, Text } from 'pixi.js';
 import type { World } from '../engine/World';
@@ -59,6 +60,7 @@ export class PixiRenderer {
   private readonly rangeLayer: Container;
   private readonly hintLayer: Container;
   private readonly nodeLayer: Container;
+  private readonly particleLayer: Container;
   private readonly unitLayer: Container;
   private readonly beamLayer: Container;
   private readonly boxLayer: Container;
@@ -98,6 +100,7 @@ export class PixiRenderer {
     this.rangeLayer = new Container();
     this.hintLayer = new Container();
     this.nodeLayer = new Container();
+    this.particleLayer = new Container();
     this.unitLayer = new Container();
     this.beamLayer = new Container();
     this.boxLayer = new Container();
@@ -109,6 +112,7 @@ export class PixiRenderer {
     this.worldRoot.addChild(this.rangeLayer);
     this.worldRoot.addChild(this.hintLayer);
     this.worldRoot.addChild(this.nodeLayer);
+    this.worldRoot.addChild(this.particleLayer);
     this.worldRoot.addChild(this.unitLayer);
     this.worldRoot.addChild(this.beamLayer);
     this.worldRoot.addChild(this.boxLayer);
@@ -383,7 +387,7 @@ export class PixiRenderer {
       present.add(ug.id);
       let view = this.unitViews.get(ug.id);
       if (!view) {
-        view = new UnitGroupView(ug);
+        view = new UnitGroupView(ug, this.particleLayer);
         this.unitViews.set(ug.id, view);
         this.unitLayer.addChild(view.container);
       }

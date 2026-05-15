@@ -16,6 +16,24 @@ import { getUnitFrame } from '../sprites/unitSprites';
 const SPRITE_BASE_DISPLAY_HEIGHT = 30;
 const WALK_FRAME_MS = 220;
 
+// Walk animation (v2.8.5): one full bob+wobble cycle per pair of frame swaps,
+// i.e. one cycle per step. Pixi Y is down, so we bob the sprite up (negative
+// Y offset) relative to its container. The container origin stays glued to
+// the ground so the foot-shadow + particle-puffs don't move with the body.
+const BOB_PHASE_RATE = Math.PI / WALK_FRAME_MS; // rad/ms — π per frame swap
+const BOB_AMPLITUDE = 1.6;                       // px at visualScale = 1
+const WOBBLE_AMPLITUDE = 0.05;                   // ±0.05 rad ≈ ±2.9°
+const PUFF_INTERVAL_MS = 280;                    // dust every ~0.28s while moving
+const PUFF_LIFETIME_MS = 520;                    // fade-out duration per puff
+
+interface FootPuff {
+  graphics: Graphics;
+  spawnedMs: number;
+  baseRX: number;
+  baseRY: number;
+  driftX: number;
+}
+
 function countScale(count: number): number {
   const c = Math.max(1, count);
   return Math.min(1.5, 0.85 + Math.sqrt(c) * 0.06);
@@ -23,6 +41,10 @@ function countScale(count: number): number {
 
 export class UnitGroupView {
   readonly container: Container;
+  // Foot-puff dust particles live in a world-space layer (owned by
+  // PixiRenderer), not in this container — the container moves with the
+  // unit each frame; particles need to stay where they were spawned.
+  private readonly particleLayer: Container;
   private readonly groundShadow: Graphics;
   private readonly droplet: Graphics;
   private readonly sprite: Sprite;
@@ -32,10 +54,15 @@ export class UnitGroupView {
   // We treat that as the "natural" heading; if the group is moving right we
   // flip horizontally so the soldier faces right.
   private facingRight = false;
+  // Walk animation state. lastPuffMs gates new puff emission (every
+  // PUFF_INTERVAL_MS while moving).
+  private lastPuffMs = 0;
+  private readonly puffs: FootPuff[] = [];
 
-  constructor(ug: UnitGroup) {
+  constructor(ug: UnitGroup, particleLayer: Container) {
     this.groupId = ug.id;
     this.container = new Container();
+    this.particleLayer = particleLayer;
     this.groundShadow = new Graphics();
     this.droplet = new Graphics();
     this.sprite = new Sprite();
@@ -77,6 +104,11 @@ export class UnitGroupView {
     const frame = Math.floor(nowMs / WALK_FRAME_MS) & 1;
     const tex = getUnitFrame(ug.sourceFaction, frame);
 
+    // Distance moved this tick — used as the "is the unit moving?" gate for
+    // bob/lean/foot-puff. Stationary clumps (e.g. just-arrived) don't bob.
+    const dy = ug.position.y - ug.previousPosition.y;
+    const moving = Math.abs(dx) + Math.abs(dy) > 0.25;
+
     if (tex !== null) {
       this.sprite.visible = true;
       this.sprite.texture = tex;
@@ -88,6 +120,23 @@ export class UnitGroupView {
 
       const spriteHalfH = (tex.height * baseScale) / 2;
       const spriteHalfW = (tex.width * baseScale) / 2;
+
+      // ── Walk animation (v2.8.5) ───────────────────────────────────────
+      // Bob: lift the sprite up (negative Y) on the upswing of a step;
+      // the container stays glued to the ground so the shadow + puffs
+      // remain on the floor.  Wobble: small rocking rotation in sync with
+      // the bob — reads as a marching step rather than a static glide.
+      if (moving) {
+        const bobPhase = nowMs * BOB_PHASE_RATE;
+        const bobY = -Math.abs(Math.sin(bobPhase)) * BOB_AMPLITUDE * world.visualScale;
+        const wobble = Math.sin(bobPhase) * WOBBLE_AMPLITUDE;
+        this.sprite.position.set(0, bobY);
+        this.sprite.rotation = this.facingRight ? -wobble : wobble;
+      } else {
+        this.sprite.position.set(0, 0);
+        this.sprite.rotation = 0;
+      }
+
       // Tight contact shadow at the soldier's feet. Anchor on the sprite
       // is (0.5, 0.55) so the bottom of the sprite is at +spriteHalfH * 0.9.
       // The shadow ellipse is small (a third of the sprite width) and sits
@@ -101,6 +150,24 @@ export class UnitGroupView {
         .ellipse(0, sShadowCY, sShadowRX, sShadowRY)
         .fill({ color: 0x000000, alpha: 0.40 });
       this.label.position.set(0, spriteHalfH + 2);
+
+      // ── Foot-puff emission (v2.8.5) ───────────────────────────────────
+      // While moving, drop a small dust ellipse at the unit's current
+      // world position every PUFF_INTERVAL_MS. Stored in particleLayer
+      // (world-space) so it stays put as the unit walks away.
+      if (moving && nowMs - this.lastPuffMs >= PUFF_INTERVAL_MS) {
+        this.lastPuffMs = nowMs;
+        const baseRX = Math.max(2, spriteHalfW * 0.28);
+        const baseRY = Math.max(1, spriteHalfH * 0.06);
+        const g = new Graphics();
+        g.ellipse(0, 0, baseRX, baseRY).fill({ color: 0xb8a88f, alpha: 0.55 });
+        g.position.set(px, py + sShadowCY);
+        this.particleLayer.addChild(g);
+        // Small lateral drift opposite the direction of travel — dust
+        // kicks back behind the foot. Scale by tick velocity sign.
+        const drift = dx > 0 ? -0.6 : dx < 0 ? 0.6 : 0;
+        this.puffs.push({ graphics: g, spawnedMs: nowMs, baseRX, baseRY, driftX: drift });
+      }
     } else {
       // Pre-load fallback: procedural droplet (first frame only).
       this.sprite.visible = false;
@@ -123,9 +190,35 @@ export class UnitGroupView {
 
     const c = Math.floor(ug.count);
     this.label.text = c > 0 ? c.toString() : '';
+
+    // ── Foot-puff lifecycle (v2.8.5) ────────────────────────────────────
+    // Tick every active puff regardless of whether the unit is moving —
+    // existing puffs need to fade out even after the unit stops or arrives.
+    for (let i = this.puffs.length - 1; i >= 0; i--) {
+      const p = this.puffs[i]!;
+      const age = nowMs - p.spawnedMs;
+      if (age >= PUFF_LIFETIME_MS) {
+        this.particleLayer.removeChild(p.graphics);
+        p.graphics.destroy();
+        this.puffs.splice(i, 1);
+        continue;
+      }
+      const t = age / PUFF_LIFETIME_MS;          // 0 → 1
+      p.graphics.alpha = 0.55 * (1 - t);          // fade out
+      const scale = 1 + t * 0.8;                  // expand a bit as it dissipates
+      p.graphics.scale.set(scale, scale);
+      p.graphics.x += p.driftX;                   // gentle lateral drift
+    }
   }
 
   destroy(): void {
+    // Particles live in a parent-owned world-space layer; remove them
+    // explicitly so unit teardown doesn't leak Graphics objects.
+    for (const p of this.puffs) {
+      this.particleLayer.removeChild(p.graphics);
+      p.graphics.destroy();
+    }
+    this.puffs.length = 0;
     this.container.destroy({ children: true });
   }
 

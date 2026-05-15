@@ -25,6 +25,33 @@ const NEUTRAL_OUTLINE = 0x666666;
 const SELECTION_COLOR = 0xffffff;
 const CHROME_BG = 0x1c1c22;
 
+// Capture flash (v2.8.5): sprite scale-pulses + a ring of particles bursts
+// outward in the new owner's color when ownerId flips. Particles are pure
+// math state, redrawn each frame into effectsLayer.
+const CAPTURE_FLASH_MS = 600;
+const CAPTURE_PULSE_AMPLITUDE = 0.18;
+const CAPTURE_PARTICLE_COUNT = 18;
+const CAPTURE_PARTICLE_DRIFT = 38;
+
+// Production pulse (v2.8.5): a single expanding ring drawn under the node
+// each time floor(node.units) ticks up. Reads as a fresh unit minted.
+const PRODUCTION_PULSE_MS = 420;
+const PRODUCTION_PULSE_R_START = 5;
+const PRODUCTION_PULSE_R_END = 24;
+const PRODUCTION_PULSE_COLOR = 0xffd479;
+
+interface CaptureParticle {
+  angle: number;
+  baseRadius: number;
+  size: number;
+}
+
+interface CaptureFlashState {
+  startMs: number;
+  color: number;
+  particles: CaptureParticle[];
+}
+
 function drawShape(g: Graphics, kind: ShapeKind, size: number, cornerRadius: number): void {
   const half = size / 2;
   switch (kind) {
@@ -56,9 +83,21 @@ export class NodeView {
   private readonly unitsLabel: Text;
   private readonly nodeId: string;
   private currentSize = 0;
+  // Capture-flash state. lastOwnerId is initialized to the node's owner at
+  // construction time so the very-first update() doesn't fire a phantom
+  // flash. captureFlash carries the in-progress animation, cleared when
+  // age exceeds CAPTURE_FLASH_MS.
+  private lastOwnerId: string | null;
+  private captureFlash: CaptureFlashState | null = null;
+  // Production pulse state: track floor(units) so we can detect integer
+  // crossings. productionPulseStartMs is null when no pulse is active.
+  private lastUnitFloor: number;
+  private productionPulseStartMs: number | null = null;
 
   constructor(node: Node) {
     this.nodeId = node.id;
+    this.lastOwnerId = node.ownerId;
+    this.lastUnitFloor = Math.floor(node.units);
     this.container = new Container();
     this.container.position.set(node.position.x, node.position.y);
 
@@ -126,6 +165,36 @@ export class NodeView {
       : undefined;
     const ownerColor = owner ? colorFromHex(owner.color) : NEUTRAL_OUTLINE;
 
+    // ── Capture-flash detection (v2.8.5) ────────────────────────────────
+    // Fire a burst when ownerId flips between distinct values (covers
+    // neutral→owned, owned→owned via sabotage, owned→neutral if it ever
+    // happens). Burst color = new owner's color, fading to a neutral
+    // grey-white tint for going-to-neutral so the flash still reads.
+    const capturedThisFrame = node.ownerId !== this.lastOwnerId;
+    if (capturedThisFrame) {
+      const burstColor = owner ? ownerColor : 0xdddddd;
+      const particles: CaptureParticle[] = [];
+      for (let i = 0; i < CAPTURE_PARTICLE_COUNT; i++) {
+        particles.push({
+          angle: (Math.PI * 2 * i) / CAPTURE_PARTICLE_COUNT,
+          baseRadius: 4 + (i % 3) * 2,
+          size: 2.2 + (i % 4) * 0.5,
+        });
+      }
+      this.captureFlash = { startMs: nowMs, color: burstColor, particles };
+      this.lastOwnerId = node.ownerId;
+    }
+
+    // ── Production pulse detection (v2.8.5) ─────────────────────────────
+    // Fire a ring when floor(units) increments. Suppressed on the capture
+    // frame so we don't double-stack with the capture flash (a capture
+    // resets units to ~1 which trivially looks like a fresh unit gain).
+    const unitFloor = Math.floor(node.units);
+    if (unitFloor > this.lastUnitFloor && !capturedThisFrame) {
+      this.productionPulseStartMs = nowMs;
+    }
+    this.lastUnitFloor = unitFloor;
+
     const factionDef = content.factions[node.faction];
     const liquidColor = factionDef ? colorFromHex(factionDef.color) : 0x3da9fc;
 
@@ -138,20 +207,36 @@ export class NodeView {
     let visualHalfY = half;
     let visualHalfX = half;
 
+    // Capture-flash sprite pulse — multiplies the base scale, peaking
+    // at 1 + AMPLITUDE midway through the flash, returning to 1 at end.
+    let captureScalePulse = 1;
+    if (this.captureFlash) {
+      const t = (nowMs - this.captureFlash.startMs) / CAPTURE_FLASH_MS;
+      if (t >= 1) {
+        this.captureFlash = null;
+      } else {
+        captureScalePulse = 1 + CAPTURE_PULSE_AMPLITUDE * Math.sin(t * Math.PI);
+      }
+    }
+
     if (useSprite) {
       this.towerSprite.visible = true;
       this.towerSprite.texture = nodeTex;
       const tex = nodeTex;
       const scaleFactor = NODE_SPRITE_SCALE_FACTOR[node.nodeType];
       const displayW = size * scaleFactor;
-      const scale = displayW / tex.width;
-      this.towerSprite.scale.set(scale);
+      const baseScale = displayW / tex.width;
+      // Sprite scale gets the capture-flash pulse multiplier; the layout
+      // bounds (visualHalfX/Y, used for selection ring / pips / label)
+      // stay at the unpulsed scale so the chrome around the sprite
+      // doesn't visibly breathe.
+      this.towerSprite.scale.set(baseScale * captureScalePulse);
       // Hide the procedural chrome + liquid layers entirely.
       this.chrome.clear();
       this.liquid.clear();
       this.liquidMask.clear();
-      visualHalfX = (tex.width * scale) / 2;
-      visualHalfY = (tex.height * scale) / 2;
+      visualHalfX = (tex.width * baseScale) / 2;
+      visualHalfY = (tex.height * baseScale) / 2;
     } else {
       this.towerSprite.visible = false;
     }
@@ -231,6 +316,39 @@ export class NodeView {
 
     // ── Spell / status effects layer ─────────────────────────────────
     this.effectsLayer.clear();
+
+    // Capture-flash particle burst (v2.8.5). Each particle is on its own
+    // angle; they radiate outward + fade over CAPTURE_FLASH_MS.
+    if (this.captureFlash) {
+      const t = (nowMs - this.captureFlash.startMs) / CAPTURE_FLASH_MS;
+      const alpha = Math.max(0, 1 - t) * 0.9;
+      const drift = CAPTURE_PARTICLE_DRIFT * t;
+      for (const p of this.captureFlash.particles) {
+        const r = p.baseRadius + drift;
+        const x = Math.cos(p.angle) * r;
+        const y = Math.sin(p.angle) * r;
+        this.effectsLayer
+          .circle(x, y, p.size * (1 - t * 0.4))
+          .fill({ color: this.captureFlash.color, alpha });
+      }
+    }
+
+    // Production pulse — single expanding ring near the node base.
+    if (this.productionPulseStartMs !== null) {
+      const t = (nowMs - this.productionPulseStartMs) / PRODUCTION_PULSE_MS;
+      if (t >= 1) {
+        this.productionPulseStartMs = null;
+      } else {
+        const r = PRODUCTION_PULSE_R_START + (PRODUCTION_PULSE_R_END - PRODUCTION_PULSE_R_START) * t;
+        const alpha = 0.8 * (1 - t);
+        // Anchor the ring at the node's foot (visualHalfY * 0.55), not the
+        // sprite center — reads as "rising from the building's base."
+        const cy = useSprite ? visualHalfY * 0.55 : 0;
+        this.effectsLayer
+          .circle(0, cy, r)
+          .stroke({ color: PRODUCTION_PULSE_COLOR, width: 2, alpha });
+      }
+    }
 
     // Concoction progress arc on Lab.
     if (node.spellQueue && node.spellQueue.state === 'concocting') {
