@@ -1,5 +1,5 @@
 {
-  "id": "blood",
+  "id": "crimson",
   "decisionIntervalMs": 2000,
   "weights": {
     "aggression": 0.9,

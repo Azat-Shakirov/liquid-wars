@@ -1,5 +1,5 @@
 {
-  "id": "ink",
+  "id": "shadow",
   "decisionIntervalMs": 3000,
   "weights": {
     "aggression": 0.3,
