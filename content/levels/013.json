@@ -13,7 +13,7 @@
   "map": {
     "width": 1280,
     "height": 720,
-    "background": "stone"
+    "background": "desert"
   },
   "terrain": {
     "walls": []
