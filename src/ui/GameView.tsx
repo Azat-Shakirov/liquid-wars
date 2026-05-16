@@ -293,11 +293,29 @@ function nextLevelId(current: number, available: number[]): number | null {
 // is for feeling out the player's own faction. Auto-conversion on
 // capture (§4.5) still applies as usual once the player takes enemy
 // territory.
+//
+// v2.8.7-followup: also swaps archetype to match the new faction.
+// The campaign uses a deterministic faction→archetype mapping so each
+// banner color has a coherent identity (azure=infantry, crimson=archer,
+// verdant=mage, amethyst=cavalry, shadow=knight). Letting the human's
+// faction change without the archetype would break that contract — a
+// "crimson archer-themed" run would render azure infantry sprites.
+const ARCHETYPE_BY_FACTION: Record<string, 'infantry' | 'archer' | 'mage' | 'cavalry' | 'knight'> = {
+  azure:    'infantry',
+  crimson:  'archer',
+  verdant:  'mage',
+  amethyst: 'cavalry',
+  shadow:   'knight',
+};
+
 function applyPlayerFactionOverride(level: LevelDef, factionId: FactionId): LevelDef {
+  const newArchetype = ARCHETYPE_BY_FACTION[factionId];
   return {
     ...level,
     players: level.players.map((p) =>
-      p.type === 'human' ? { ...p, faction: factionId } : p,
+      p.type === 'human'
+        ? { ...p, faction: factionId, archetype: newArchetype ?? p.archetype }
+        : p,
     ),
   };
 }

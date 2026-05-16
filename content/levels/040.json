@@ -29,28 +29,28 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "infantry"
+      "archetype": "archer"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#5cd65c",
       "faction": "verdant",
-      "archetype": "infantry"
+      "archetype": "mage"
     },
     {
       "id": "ai3",
       "type": "ai",
       "color": "#7a3da9",
       "faction": "amethyst",
-      "archetype": "infantry"
+      "archetype": "cavalry"
     },
     {
       "id": "ai4",
       "type": "ai",
       "color": "#0a0a14",
       "faction": "shadow",
-      "archetype": "infantry"
+      "archetype": "knight"
     }
   ],
   "nodes": [

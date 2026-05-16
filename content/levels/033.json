@@ -25,14 +25,14 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "infantry"
+      "archetype": "archer"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#5cd65c",
       "faction": "verdant",
-      "archetype": "infantry"
+      "archetype": "mage"
     }
   ],
   "nodes": [
