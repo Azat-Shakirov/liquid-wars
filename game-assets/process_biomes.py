@@ -26,11 +26,19 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 SOURCES = [
     # (source filename, biome id, strategy)
-    ("dunes.jpeg",      "desert", "full"),
+    # v2.8.7: dunes.jpeg (photographic) retired; replaced with painterly
+    # desert.jpeg. snow / jungle / ruins added — all painterly full-frame.
+    # For jungle, two sources were generated (jungle.jpeg + jungle-1.jpeg);
+    # jungle-1 picked because it tiles more evenly (jungle.jpeg has a
+    # compositional center hole that betrays edges when tiled).
+    ("desert.jpeg",     "desert", "full"),
     # v2.8.3: replaced grass.jpeg (colorkey diamond, never tileable)
     # with test-grass.jpeg — a painterly edge-to-edge source that
     # matches the building/unit illustration style. Saved full-frame.
     ("test-grass.jpeg", "grass",  "full"),
+    ("snow.jpeg",       "snow",   "full"),
+    ("jungle-1.jpeg",   "jungle", "full"),
+    ("ruins.jpeg",      "ruins",  "full"),
 ]
 
 # Distance from sampled corner-background to treat as transparent.

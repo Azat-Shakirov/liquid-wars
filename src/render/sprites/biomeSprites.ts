@@ -2,19 +2,26 @@
 // init; PixiRenderer draws it as a stretched Sprite filling the map at
 // z=0 (below walls, nodes, units).
 //
-// v2.8.1: introduces biome rendering. Two biomes shipped initially
-// (desert, grass). Other biomes (snow/jungle/ruins) fall back to no
-// floor sprite (the canvas's default dark background shows through).
+// v2.8.7: snow / jungle / ruins added — all painterly full-frame sources.
+// "stone" biome intentionally has no floor sprite (the canvas's default
+// dark background shows through, preserving the v2.7.x look used by ~40
+// existing levels).
 
 import { Assets, type Texture } from 'pixi.js';
 import type { BiomeId } from '../../engine/content/ContentLibrary';
 
 import desertBgUrl from './biomes/desert-bg.png';
 import grassBgUrl from './biomes/grass-bg.png';
+import snowBgUrl from './biomes/snow-bg.png';
+import jungleBgUrl from './biomes/jungle-bg.png';
+import ruinsBgUrl from './biomes/ruins-bg.png';
 
 const SPRITE_URLS: Partial<Record<BiomeId, string>> = {
   desert: desertBgUrl,
   grass: grassBgUrl,
+  snow: snowBgUrl,
+  jungle: jungleBgUrl,
+  ruins: ruinsBgUrl,
 };
 
 const textures = new Map<BiomeId, Texture>();

@@ -12,6 +12,7 @@ import { QuitScreen } from './ui/QuitScreen';
 import { GameView } from './ui/GameView';
 import { EditorView } from './ui/editor/EditorView';
 import { VariantSandbox } from './ui/dev/VariantSandbox';
+import { BiomeSandbox } from './ui/dev/BiomeSandbox';
 
 const DEV = import.meta.env.DEV;
 
@@ -22,8 +23,9 @@ export default function App() {
   const navigate = useSessionStore((s) => s.navigate);
 
   // DEV-only URL bootstrap: ?level=N jumps straight to game view at level N;
-  // ?variants jumps to the unit-walk-cycle variant sandbox. Both used by the
-  // author for sprite review without clicking through the menu.
+  // ?variants jumps to the unit-walk-cycle variant sandbox; ?biomes jumps to
+  // the biome-floor preview sandbox. Author tools — production users never
+  // hit these.
   useEffect(() => {
     if (!DEV) return;
     const params = new URLSearchParams(window.location.search);
@@ -37,6 +39,8 @@ export default function App() {
     }
     if (params.has('variants')) {
       navigate('variantSandbox');
+    } else if (params.has('biomes')) {
+      navigate('biomeSandbox');
     }
   }, [startLevel, navigate]);
 
@@ -60,5 +64,8 @@ export default function App() {
     case 'variantSandbox':
       if (!DEV) return <MainMenu />;
       return <VariantSandbox />;
+    case 'biomeSandbox':
+      if (!DEV) return <MainMenu />;
+      return <BiomeSandbox />;
   }
 }
