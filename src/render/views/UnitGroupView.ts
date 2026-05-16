@@ -45,6 +45,11 @@ export class UnitGroupView {
   // PixiRenderer), not in this container — the container moves with the
   // unit each frame; particles need to stay where they were spawned.
   private readonly particleLayer: Container;
+  // Faction-colored ring on the ground under the unit. Strategy-game
+  // team marker (AoE/SC2 style) — survives at any zoom and instantly
+  // identifies whose unit this is, where the cape-recolor alone reads
+  // too subtle at game scale.
+  private readonly teamRing: Graphics;
   private readonly groundShadow: Graphics;
   private readonly droplet: Graphics;
   private readonly sprite: Sprite;
@@ -63,6 +68,7 @@ export class UnitGroupView {
     this.groupId = ug.id;
     this.container = new Container();
     this.particleLayer = particleLayer;
+    this.teamRing = new Graphics();
     this.groundShadow = new Graphics();
     this.droplet = new Graphics();
     this.sprite = new Sprite();
@@ -78,6 +84,9 @@ export class UnitGroupView {
       },
     });
     this.label.anchor.set(0.5, -1.0);
+    // Z-order: team ring (outer ground marker) → contact shadow (dark
+    // ellipse inside it) → procedural droplet (fallback) → sprite → label.
+    this.container.addChild(this.teamRing);
     this.container.addChild(this.groundShadow);
     this.container.addChild(this.droplet);
     this.container.addChild(this.sprite);
@@ -155,6 +164,22 @@ export class UnitGroupView {
       this.groundShadow
         .ellipse(0, sShadowCY, sShadowRX, sShadowRY)
         .fill({ color: 0x000000, alpha: 0.40 });
+
+      // Faction team ring. Same Y as the contact shadow, but ~1.7×
+      // wider — sits as a visible colored halo around the soldier's
+      // feet. Filled with the faction color at low alpha + a stroke at
+      // full alpha so the ring reads cleanly even when overlapping the
+      // contact shadow underneath.
+      const factionDef = content.factions[ug.sourceFaction];
+      const factionColor = factionDef ? colorFromHex(factionDef.color) : 0xffffff;
+      const ringRX = sShadowRX * 1.7;
+      const ringRY = sShadowRY * 1.7;
+      this.teamRing.clear()
+        .ellipse(0, sShadowCY, ringRX, ringRY)
+        .fill({ color: factionColor, alpha: 0.30 })
+        .ellipse(0, sShadowCY, ringRX, ringRY)
+        .stroke({ color: factionColor, width: 1.8, alpha: 0.95 });
+
       this.label.position.set(0, spriteHalfH + 2);
 
       // ── Foot-puff emission (v2.8.5) ───────────────────────────────────
@@ -178,6 +203,7 @@ export class UnitGroupView {
       // Pre-load fallback: procedural droplet (first frame only).
       this.sprite.visible = false;
       this.groundShadow.clear();
+      this.teamRing.clear();
       const owner = world.players.find((p) => p.id === ug.ownerId);
       const outlineColor = owner ? colorFromHex(owner.color) : 0xffffff;
       const factionDef = content.factions[ug.sourceFaction];
