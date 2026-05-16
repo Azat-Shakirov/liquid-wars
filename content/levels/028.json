@@ -4,9 +4,9 @@
   "tutorialKey": "multi_faction",
   "tutorial": {
     "title": "Walled sectors, guarded gaps",
-    "body": "Two stone walls split the map into three sectors: you on the left, Water (red) in the middle, Ink (black) on the right. The only way across is through the narrow gaps — and a neutral tower sits in each gap, shooting at anyone trying to pass.\n\nYou win when BOTH enemy factions are eliminated. You can let Water and Ink fight each other through the right gap, or capture a neutral tower yourself to turn its guns on them.\n\nNeutral nodes don't count toward the win condition — only enemies do."
+    "body": "Two stone walls split the map into three sectors: you on the left, Water (red) in the middle, Ink (black) on the right. The only way across is through the narrow gaps \u2014 and a neutral tower sits in each gap, shooting at anyone trying to pass.\n\nYou win when BOTH enemy factions are eliminated. You can let Water and Ink fight each other through the right gap, or capture a neutral tower yourself to turn its guns on them.\n\nNeutral nodes don't count toward the win condition \u2014 only enemies do."
   },
-  "objective": "Eliminate both enemy factions. Neutral towers guard the gaps — capture or avoid them.",
+  "objective": "Eliminate both enemy factions. Neutral towers guard the gaps \u2014 capture or avoid them.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -80,15 +80,15 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     },
     {
       "id": "ai2",
       "type": "ai",
-      "color": "#1a1a24",
-      "faction": "shadow",
+      "color": "#5cd65c",
+      "faction": "verdant",
       "archetype": "infantry"
     }
   ],
@@ -139,7 +139,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_s",
@@ -151,7 +151,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai2_n",
@@ -163,7 +163,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "ai2_s",
@@ -175,7 +175,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "ai2_base",
@@ -187,7 +187,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "nt_left",
@@ -199,7 +199,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "nt_right",
@@ -211,7 +211,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "neutral"
     }
   ],
   "winCondition": {

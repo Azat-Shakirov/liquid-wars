@@ -4,7 +4,7 @@
   "tutorialKey": "bleed_practice",
   "tutorial": {
     "title": "Bleed multiple key nodes",
-    "body": "The enemy has spread production across several strong nodes. Bleed each one in turn — once their network stops producing, your push becomes trivial.\n\nKeep your Lab fed. It can't produce its own units."
+    "body": "The enemy has spread production across several strong nodes. Bleed each one in turn \u2014 once their network stops producing, your push becomes trivial.\n\nKeep your Lab fed. It can't produce its own units."
   },
   "objective": "Bleed the enemy network until it collapses.",
   "introducesNodeTypes": [],
@@ -27,8 +27,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 22,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b4",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 22,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

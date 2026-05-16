@@ -4,7 +4,7 @@
   "tutorialKey": "slime_practice",
   "tutorial": {
     "title": "Lab L3 + Slime",
-    "body": "Your Lab is L3 on Slime. Every spell — Freeze, Bleed, Recruit — concocts in 7.5 seconds.\n\nThe enemy is bigger than you. Use Recruit aggressively: every flip changes the unit balance by twice the captured units."
+    "body": "Your Lab is L3 on Slime. Every spell \u2014 Freeze, Bleed, Recruit \u2014 concocts in 7.5 seconds.\n\nThe enemy is bigger than you. Use Recruit aggressively: every flip changes the unit balance by twice the captured units."
   },
   "objective": "Tempo the red side into submission.",
   "introducesNodeTypes": [],
@@ -21,14 +21,14 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "faction": "verdant",
+      "faction": "azure",
       "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -43,7 +43,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "p1_b2",
@@ -55,7 +55,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "p1_lab",
@@ -67,7 +67,7 @@
       "nodeType": "lab",
       "level": 3,
       "units": 90,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "ai1_b1",
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b4",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -127,7 +127,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

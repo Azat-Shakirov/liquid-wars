@@ -4,7 +4,7 @@
   "tutorialKey": "campaign_finale",
   "tutorial": {
     "title": "The campaign closer",
-    "body": "Everything you've learned, in one fight.\n\nYou are Slime — fast spells, weaker production. The enemy is fortified Ink with Towers and a strong keep. You have a Lab L3 and full toolkit access.\n\nBreak them. Then prepare for the challenge tier — every level beyond this, YOU choose the liquid."
+    "body": "Everything you've learned, in one fight.\n\nYou are Slime \u2014 fast spells, weaker production. The enemy is fortified Ink with Towers and a strong keep. You have a Lab L3 and full toolkit access.\n\nBreak them. Then prepare for the challenge tier \u2014 every level beyond this, YOU choose the liquid."
   },
   "objective": "End the Ink fortress. Close the campaign.",
   "introducesNodeTypes": [],
@@ -48,14 +48,14 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "faction": "verdant",
+      "faction": "azure",
       "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#1a1a24",
-      "faction": "shadow",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -70,7 +70,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "p1_b2",
@@ -82,7 +82,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "p1_b3",
@@ -94,7 +94,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "p1_lab",
@@ -106,7 +106,7 @@
       "nodeType": "lab",
       "level": 3,
       "units": 90,
-      "faction": "verdant"
+      "faction": "azure"
     },
     {
       "id": "ai1_t1",
@@ -118,7 +118,7 @@
       "nodeType": "tower",
       "level": 3,
       "units": 30,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b1",
@@ -130,7 +130,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -142,7 +142,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_keep",
@@ -154,7 +154,7 @@
       "nodeType": "barracks",
       "level": 4,
       "units": 36,
-      "faction": "shadow"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

@@ -4,7 +4,7 @@
   "tutorialKey": "recruit_practice",
   "tutorial": {
     "title": "Recruit a chain reaction",
-    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines — suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
+    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines \u2014 suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
   },
   "objective": "Recruit deep, then sweep the rest.",
   "introducesNodeTypes": [],
@@ -27,8 +27,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b4",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_back",
@@ -127,7 +127,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

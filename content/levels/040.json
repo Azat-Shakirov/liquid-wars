@@ -27,29 +27,29 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     },
     {
       "id": "ai2",
-      "type": "ai",
-      "color": "#1a1a24",
-      "faction": "shadow",
-      "archetype": "infantry"
-    },
-    {
-      "id": "ai3",
       "type": "ai",
       "color": "#5cd65c",
       "faction": "verdant",
       "archetype": "infantry"
     },
     {
+      "id": "ai3",
+      "type": "ai",
+      "color": "#7a3da9",
+      "faction": "amethyst",
+      "archetype": "infantry"
+    },
+    {
       "id": "ai4",
       "type": "ai",
-      "color": "#a01010",
-      "faction": "crimson",
+      "color": "#0a0a14",
+      "faction": "shadow",
       "archetype": "infantry"
     }
   ],
@@ -100,7 +100,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b",
@@ -112,7 +112,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_c",
@@ -124,7 +124,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai2_a",
@@ -136,7 +136,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "ai2_b",
@@ -148,7 +148,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "ai2_c",
@@ -160,7 +160,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "verdant"
     },
     {
       "id": "ai3_a",
@@ -172,7 +172,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_lab",
@@ -184,7 +184,7 @@
       "nodeType": "lab",
       "level": 3,
       "units": 80,
-      "faction": "verdant"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_b",
@@ -196,7 +196,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "amethyst"
     },
     {
       "id": "ai4_a",
@@ -208,7 +208,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "crimson"
+      "faction": "shadow"
     },
     {
       "id": "ai4_b",
@@ -220,7 +220,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "crimson"
+      "faction": "shadow"
     }
   ],
   "winCondition": {

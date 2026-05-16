@@ -4,7 +4,7 @@
   "tutorialKey": "venom",
   "tutorial": {
     "title": "Venom: faster strikes",
-    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach — speed past it before it can intercept enough."
+    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach \u2014 speed past it before it can intercept enough."
   },
   "objective": "Strike fast and overrun the red side.",
   "introducesNodeTypes": [],
@@ -21,14 +21,14 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "faction": "amethyst",
+      "faction": "azure",
       "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -43,7 +43,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "amethyst"
+      "faction": "azure"
     },
     {
       "id": "p1_front",
@@ -55,7 +55,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "amethyst"
+      "faction": "azure"
     },
     {
       "id": "ai1_tower",
@@ -67,7 +67,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 20,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b1",
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

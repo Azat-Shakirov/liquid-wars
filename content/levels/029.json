@@ -4,7 +4,7 @@
   "tutorialKey": "multi_faction_practice",
   "tutorial": {
     "title": "Four corners, one center",
-    "body": "The map is split into four quadrants by a stone cross. Each corner holds a faction — you (Water), Water (red), Slime (green), and Blood (crimson). The only way between quadrants is through the central crossroads, and a neutral tower stands at its heart, attacking anyone who crosses.\n\nSlime concocts fast. Blood captures cheaply. Water out-produces. They'll fight each other through the center if you let them — or you can seize the central tower and dictate the engagement.\n\nYou win when all three enemy factions are gone."
+    "body": "The map is split into four quadrants by a stone cross. Each corner holds a faction \u2014 you (Water), Water (red), Slime (green), and Blood (crimson). The only way between quadrants is through the central crossroads, and a neutral tower stands at its heart, attacking anyone who crosses.\n\nSlime concocts fast. Blood captures cheaply. Water out-produces. They'll fight each other through the center if you let them \u2014 or you can seize the central tower and dictate the engagement.\n\nYou win when all three enemy factions are gone."
   },
   "objective": "Outlast or outplay all three factions. The center tower is the key.",
   "introducesNodeTypes": [],
@@ -80,8 +80,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     },
     {
@@ -94,8 +94,8 @@
     {
       "id": "ai3",
       "type": "ai",
-      "color": "#a01010",
-      "faction": "crimson",
+      "color": "#7a3da9",
+      "faction": "amethyst",
       "archetype": "infantry"
     }
   ],
@@ -146,7 +146,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -158,7 +158,7 @@
       "nodeType": "barracks",
       "level": 1,
       "units": 8,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -170,7 +170,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai2_b1",
@@ -218,7 +218,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "crimson"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_b2",
@@ -230,7 +230,7 @@
       "nodeType": "barracks",
       "level": 1,
       "units": 8,
-      "faction": "crimson"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_base",
@@ -242,7 +242,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "crimson"
+      "faction": "amethyst"
     },
     {
       "id": "nt_center",
@@ -254,7 +254,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "neutral"
     }
   ],
   "winCondition": {

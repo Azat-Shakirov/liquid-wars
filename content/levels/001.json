@@ -29,8 +29,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -57,7 +57,7 @@
       "nodeType": "barracks",
       "level": 1,
       "units": 6,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

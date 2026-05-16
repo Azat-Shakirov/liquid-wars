@@ -13,24 +13,28 @@ import houseCrimsonUrl from './nodes/house-crimson.png';
 import houseVerdantUrl from './nodes/house-verdant.png';
 import houseAmethystUrl from './nodes/house-amethyst.png';
 import houseShadowUrl from './nodes/house-shadow.png';
+import houseNeutralUrl from './nodes/house-neutral.png';
 
 import barracksAzureUrl from './nodes/barracks-azure.png';
 import barracksCrimsonUrl from './nodes/barracks-crimson.png';
 import barracksVerdantUrl from './nodes/barracks-verdant.png';
 import barracksAmethystUrl from './nodes/barracks-amethyst.png';
 import barracksShadowUrl from './nodes/barracks-shadow.png';
+import barracksNeutralUrl from './nodes/barracks-neutral.png';
 
 import labAzureUrl from './nodes/lab-azure.png';
 import labCrimsonUrl from './nodes/lab-crimson.png';
 import labVerdantUrl from './nodes/lab-verdant.png';
 import labAmethystUrl from './nodes/lab-amethyst.png';
 import labShadowUrl from './nodes/lab-shadow.png';
+import labNeutralUrl from './nodes/lab-neutral.png';
 
 import towerAzureUrl from './nodes/tower-azure.png';
 import towerCrimsonUrl from './nodes/tower-crimson.png';
 import towerVerdantUrl from './nodes/tower-verdant.png';
 import towerAmethystUrl from './nodes/tower-amethyst.png';
 import towerShadowUrl from './nodes/tower-shadow.png';
+import towerNeutralUrl from './nodes/tower-neutral.png';
 
 const SPRITE_URLS: Record<NodeTypeId, Record<FactionId, string>> = {
   house: {
@@ -39,6 +43,7 @@ const SPRITE_URLS: Record<NodeTypeId, Record<FactionId, string>> = {
     verdant: houseVerdantUrl,
     amethyst: houseAmethystUrl,
     shadow: houseShadowUrl,
+    neutral: houseNeutralUrl,
   },
   barracks: {
     azure: barracksAzureUrl,
@@ -46,6 +51,7 @@ const SPRITE_URLS: Record<NodeTypeId, Record<FactionId, string>> = {
     verdant: barracksVerdantUrl,
     amethyst: barracksAmethystUrl,
     shadow: barracksShadowUrl,
+    neutral: barracksNeutralUrl,
   },
   lab: {
     azure: labAzureUrl,
@@ -53,6 +59,7 @@ const SPRITE_URLS: Record<NodeTypeId, Record<FactionId, string>> = {
     verdant: labVerdantUrl,
     amethyst: labAmethystUrl,
     shadow: labShadowUrl,
+    neutral: labNeutralUrl,
   },
   tower: {
     azure: towerAzureUrl,
@@ -60,6 +67,7 @@ const SPRITE_URLS: Record<NodeTypeId, Record<FactionId, string>> = {
     verdant: towerVerdantUrl,
     amethyst: towerAmethystUrl,
     shadow: towerShadowUrl,
+    neutral: towerNeutralUrl,
   },
 };
 

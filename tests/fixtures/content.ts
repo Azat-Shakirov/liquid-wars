@@ -55,6 +55,14 @@ export const amethyst: FactionDef = {
   effects: [],
 };
 
+export const neutral: FactionDef = {
+  id: 'neutral',
+  name: 'Neutral',
+  color: '#8a8a8a',
+  description: 'Unclaimed holdings. Captured nodes adopt the new owner\'s banner.',
+  effects: [],
+};
+
 export const infantryArch: ArchetypeDef = {
   id: 'infantry',
   name: 'Infantry',
@@ -215,7 +223,7 @@ export const amethystAI: AIPersonalityDef = {
 
 export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLibrary {
   return {
-    factions: { azure, crimson, shadow, verdant, amethyst, ...(overrides.factions ?? {}) },
+    factions: { azure, crimson, shadow, verdant, amethyst, neutral, ...(overrides.factions ?? {}) },
     nodeTypes: { barracks, tower, lab, house, ...(overrides.nodeTypes ?? {}) } as ContentLibrary['nodeTypes'],
     spells: { freeze: freezeSpell, starve: starveSpell, sabotage: sabotageSpell, ...(overrides.spells ?? {}) },
     archetypes: {

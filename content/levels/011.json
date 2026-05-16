@@ -4,7 +4,7 @@
   "tutorialKey": "walls_practice",
   "tutorial": {
     "title": "Walls in numbers",
-    "body": "Multiple walls form a maze. Your hover-preview lines show the exact route units will take.\n\nPlan around the geometry — sometimes a longer route is the only route."
+    "body": "Multiple walls form a maze. Your hover-preview lines show the exact route units will take.\n\nPlan around the geometry \u2014 sometimes a longer route is the only route."
   },
   "objective": "Find your way through and capture every red node.",
   "introducesNodeTypes": [],
@@ -119,8 +119,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -135,7 +135,7 @@
       "nodeType": "barracks",
       "level": 5,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_bot",
@@ -147,7 +147,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "n_mid",
@@ -159,7 +159,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "n_top",
@@ -171,7 +171,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 20,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_top",
@@ -183,7 +183,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_bot",
@@ -195,7 +195,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "p1_1",
@@ -231,7 +231,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_4",
@@ -243,7 +243,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_5",
@@ -255,7 +255,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     }
   ],
   "winCondition": {

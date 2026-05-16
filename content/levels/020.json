@@ -4,7 +4,7 @@
   "tutorialKey": "blood_practice",
   "tutorial": {
     "title": "Blood spreads",
-    "body": "Every node you capture becomes Blood. Soon your whole front line is sending cheap-capture attackers.\n\nThe enemy has fortified — more nodes, higher levels. Lean on the snowball."
+    "body": "Every node you capture becomes Blood. Soon your whole front line is sending cheap-capture attackers.\n\nThe enemy has fortified \u2014 more nodes, higher levels. Lean on the snowball."
   },
   "objective": "Snowball Blood across the map until red is gone.",
   "introducesNodeTypes": [],
@@ -21,14 +21,14 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "faction": "crimson",
+      "faction": "azure",
       "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -43,7 +43,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "p1_b2",
@@ -55,7 +55,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "p1_b3",
@@ -67,7 +67,7 @@
       "nodeType": "barracks",
       "level": 1,
       "units": 8,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "neutral_a",
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "neutral_b",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_b1",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -127,7 +127,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -139,7 +139,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

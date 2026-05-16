@@ -23,8 +23,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -75,7 +75,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_t2",
@@ -87,7 +87,7 @@
       "nodeType": "tower",
       "level": 2,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_t3",
@@ -99,7 +99,7 @@
       "nodeType": "tower",
       "level": 3,
       "units": 30,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b1",
@@ -111,7 +111,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -123,7 +123,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -135,7 +135,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

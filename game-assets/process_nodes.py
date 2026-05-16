@@ -48,6 +48,7 @@ LIQUID_HUES = {
     "amethyst": 285,
 }
 INK_FACTION = "shadow"
+NEUTRAL_FACTION = "neutral"
 
 
 def blue_mask(rgba: np.ndarray) -> np.ndarray:
@@ -100,6 +101,56 @@ def recolor_to_shadow(rgba: np.ndarray, mask: np.ndarray) -> np.ndarray:
         pixels[i, 0], pixels[i, 1], pixels[i, 2] = nr, ng, nb
     out[mask, :3] = np.clip(pixels[:, :3] * 255.0, 0, 255).astype(np.uint8)
     return out
+
+
+def recolor_to_neutral(rgba: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Desaturate the team-color elements to a stone-grey tone.
+
+    Stronger desat than shadow (sat * 0.0 vs shadow's 0.15) and value
+    nudged toward mid-grey (val * 0.75 + 0.15) so the result lands at
+    a readable medium grey on any biome floor, neither too dark (would
+    confuse with shadow) nor too bright (would clash with snow).
+    """
+    out = rgba.copy()
+    if not mask.any():
+        return out
+    pixels = rgba[mask].astype(np.float32) / 255.0
+    for i in range(len(pixels)):
+        r, g, b = pixels[i, 0], pixels[i, 1], pixels[i, 2]
+        _, sat, val = colorsys.rgb_to_hsv(r, g, b)
+        target_val = val * 0.75 + 0.15
+        nr, ng, nb = colorsys.hsv_to_rgb(0.0, 0.0, target_val)
+        pixels[i, 0], pixels[i, 1], pixels[i, 2] = nr, ng, nb
+    out[mask, :3] = np.clip(pixels[:, :3] * 255.0, 0, 255).astype(np.uint8)
+    return out
+
+
+def make_neutral_tower(src_path: Path, dst: Path) -> None:
+    """Generate tower-neutral.png by full-image desaturation of an existing
+    tower PNG (we use tower-azure.png as the seed since it's the canonical
+    blue source). Towers are mono-tinted (no isolated team-color mask),
+    so the entire tower needs to become grey rather than just a banner.
+
+    Procedure: load → HSV-convert per pixel → set sat to 0 → lerp value
+    toward 0.55 (mid-grey) by 30% so the tower doesn't end up pure
+    black/white, just stone-toned.
+    """
+    img = Image.open(src_path).convert("RGBA")
+    arr = np.array(img)
+    alpha = arr[..., 3]
+    rgb = arr[..., :3].astype(np.float32) / 255.0
+    for y in range(arr.shape[0]):
+        for x in range(arr.shape[1]):
+            if alpha[y, x] == 0:
+                continue
+            r, g, b = rgb[y, x]
+            _, sat, val = colorsys.rgb_to_hsv(r, g, b)
+            target_val = val * 0.70 + 0.55 * 0.30
+            nr, ng, nb = colorsys.hsv_to_rgb(0.0, 0.0, target_val)
+            rgb[y, x] = (nr, ng, nb)
+    arr[..., :3] = np.clip(rgb * 255.0, 0, 255).astype(np.uint8)
+    Image.fromarray(arr, mode="RGBA").save(dst, format="PNG", optimize=True)
+    print(f"  -> {dst.relative_to(ROOT)}  ({arr.shape[1]}x{arr.shape[0]})  (tower desat)")
 
 
 def colorkey_remove(img: Image.Image) -> Image.Image:
@@ -159,6 +210,13 @@ def main() -> int:
             recolored = recolor_to_hue(arr, mask, hue)
             finalize(recolored, OUT_DIR / f"{node_type}-{faction}.png")
         finalize(recolor_to_shadow(arr, mask), OUT_DIR / f"{node_type}-{INK_FACTION}.png")
+        finalize(recolor_to_neutral(arr, mask), OUT_DIR / f"{node_type}-{NEUTRAL_FACTION}.png")
+
+    # Tower neutral: full-image desaturate of tower-azure.png (no isolated
+    # team-color mask to drive a per-element recolor like the other types).
+    print("tower: desaturating tower-azure.png → tower-neutral.png")
+    make_neutral_tower(OUT_DIR / "tower-azure.png", OUT_DIR / "tower-neutral.png")
+
     print("done.")
     return 0
 

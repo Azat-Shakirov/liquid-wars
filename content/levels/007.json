@@ -4,7 +4,7 @@
   "tutorialKey": "upgrade_practice",
   "tutorial": {
     "title": "Push to tier 3",
-    "body": "Reaching L3 barracks gives you 1.2 u/sec production vs L1's 0.4 u/sec — three times the output.\n\nThe enemy already has L2 forces. To win, you'll need to climb to L3 on at least one node."
+    "body": "Reaching L3 barracks gives you 1.2 u/sec production vs L1's 0.4 u/sec \u2014 three times the output.\n\nThe enemy already has L2 forces. To win, you'll need to climb to L3 on at least one node."
   },
   "objective": "Reach L3 production and crush the red side.",
   "introducesNodeTypes": [],
@@ -27,8 +27,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -55,7 +55,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_bot",
@@ -67,7 +67,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_top",
@@ -79,7 +79,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_bot",
@@ -91,7 +91,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_base",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 10,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "p1_1",
@@ -115,7 +115,7 @@
       "nodeType": "tower",
       "level": 3,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     }
   ],
   "winCondition": {

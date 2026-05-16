@@ -4,7 +4,7 @@
   "tutorialKey": "walls",
   "tutorial": {
     "title": "Walls block movement",
-    "body": "Stone walls cut across the map. Units cannot pass through them — they route around automatically.\n\nHover-preview lines now follow the actual routed path. Find the gap and push through."
+    "body": "Stone walls cut across the map. Units cannot pass through them \u2014 they route around automatically.\n\nHover-preview lines now follow the actual routed path. Find the gap and push through."
   },
   "objective": "Route through the gap and capture the red base.",
   "introducesNodeTypes": [],
@@ -67,8 +67,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -83,7 +83,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_bot",
@@ -107,7 +107,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_bot",
@@ -119,7 +119,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_base",
@@ -131,7 +131,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "p1_1",
@@ -143,7 +143,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_2",
@@ -155,7 +155,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_3",
@@ -167,7 +167,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_4",
@@ -179,7 +179,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_5",
@@ -191,7 +191,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_6",
@@ -203,7 +203,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "p1_7",
@@ -215,7 +215,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 5,
-      "faction": "azure"
+      "faction": "neutral"
     }
   ],
   "winCondition": {

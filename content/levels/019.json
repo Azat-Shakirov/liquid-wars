@@ -4,7 +4,7 @@
   "tutorialKey": "blood",
   "tutorial": {
     "title": "Blood: cheaper captures",
-    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid — Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
+    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid \u2014 Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
   },
   "objective": "Sweep the red side with cheap rolling captures.",
   "introducesNodeTypes": [],
@@ -21,14 +21,14 @@
       "id": "p1",
       "type": "human",
       "color": "#3da9fc",
-      "faction": "crimson",
+      "faction": "azure",
       "archetype": "infantry"
     },
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -43,7 +43,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "p1_b2",
@@ -55,7 +55,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "p1_b3",
@@ -67,7 +67,7 @@
       "nodeType": "barracks",
       "level": 1,
       "units": 8,
-      "faction": "crimson"
+      "faction": "azure"
     },
     {
       "id": "neutral",
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai1_b1",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 18,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 18,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 26,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

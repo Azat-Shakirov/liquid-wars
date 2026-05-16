@@ -76,8 +76,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#1a1a24",
-      "faction": "shadow",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -140,7 +140,7 @@
       "nodeType": "tower",
       "level": 4,
       "units": 50,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b1",
@@ -152,7 +152,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -164,7 +164,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_keep",
@@ -176,7 +176,7 @@
       "nodeType": "barracks",
       "level": 4,
       "units": 38,
-      "faction": "shadow"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

@@ -4,7 +4,7 @@
   "tutorialKey": "ink_practice",
   "tutorial": {
     "title": "Ink at scale",
-    "body": "The Ink enemy has built a deep defensive network. Brute force costs you twice as many units. Plan with spells, or accept the grind.\n\nNote: when you capture an Ink node, it becomes YOUR liquid — Ink defense is gone the moment you flip it."
+    "body": "The Ink enemy has built a deep defensive network. Brute force costs you twice as many units. Plan with spells, or accept the grind.\n\nNote: when you capture an Ink node, it becomes YOUR liquid \u2014 Ink defense is gone the moment you flip it."
   },
   "objective": "Break the Ink network and capture everything red.",
   "introducesNodeTypes": [],
@@ -27,8 +27,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#1a1a24",
-      "faction": "shadow",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b4",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "shadow"
+      "faction": "crimson"
     },
     {
       "id": "ai1_base",
@@ -127,7 +127,7 @@
       "nodeType": "barracks",
       "level": 4,
       "units": 36,
-      "faction": "shadow"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

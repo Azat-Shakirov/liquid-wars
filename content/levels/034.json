@@ -23,8 +23,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#5cd65c",
-      "faction": "verdant",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -75,7 +75,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b",
@@ -87,7 +87,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "verdant"
+      "faction": "crimson"
     },
     {
       "id": "ai1_lab",
@@ -99,7 +99,7 @@
       "nodeType": "lab",
       "level": 3,
       "units": 80,
-      "faction": "verdant"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

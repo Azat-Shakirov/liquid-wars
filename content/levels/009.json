@@ -4,7 +4,7 @@
   "tutorialKey": "tower_practice",
   "tutorial": {
     "title": "Two towers cover wider ground",
-    "body": "Tower ranges overlap when placed near each other — enemy units crossing the corridor between them get chipped twice.\n\nYou have two Houses to convert. Use both as Towers (or one Tower + one Barracks)."
+    "body": "Tower ranges overlap when placed near each other \u2014 enemy units crossing the corridor between them get chipped twice.\n\nYou have two Houses to convert. Use both as Towers (or one Tower + one Barracks)."
   },
   "objective": "Hold the corridor, then break through.",
   "introducesNodeTypes": [],
@@ -27,8 +27,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -79,7 +79,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b2",
@@ -91,7 +91,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b3",
@@ -103,7 +103,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b4",
@@ -115,7 +115,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 14,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {

@@ -23,8 +23,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     },
     {
@@ -37,8 +37,8 @@
     {
       "id": "ai3",
       "type": "ai",
-      "color": "#a01010",
-      "faction": "crimson",
+      "color": "#7a3da9",
+      "faction": "amethyst",
       "archetype": "infantry"
     }
   ],
@@ -77,7 +77,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_b",
@@ -89,7 +89,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai1_c",
@@ -101,7 +101,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai2_a",
@@ -149,7 +149,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "crimson"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_b",
@@ -161,7 +161,7 @@
       "nodeType": "barracks",
       "level": 3,
       "units": 24,
-      "faction": "crimson"
+      "faction": "amethyst"
     },
     {
       "id": "ai3_c",
@@ -173,7 +173,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "crimson"
+      "faction": "amethyst"
     }
   ],
   "winCondition": {

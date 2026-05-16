@@ -1,0 +1,7 @@
+{
+  "id": "neutral",
+  "name": "Neutral",
+  "color": "#8a8a8a",
+  "description": "Unclaimed holdings. Captured nodes adopt the new owner's banner.",
+  "effects": []
+}

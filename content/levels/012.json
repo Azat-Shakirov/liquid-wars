@@ -4,7 +4,7 @@
   "tutorialKey": "chokepoint",
   "tutorial": {
     "title": "Towers + chokepoints lock down terrain",
-    "body": "A neutral Tower sits in the gap. Whoever captures it controls the corridor — its range covers the entire opening and its defense rate makes it hard to take back.\n\nRace the enemy. If they get there first, you'll need overwhelming numbers."
+    "body": "A neutral Tower sits in the gap. Whoever captures it controls the corridor \u2014 its range covers the entire opening and its defense rate makes it hard to take back.\n\nRace the enemy. If they get there first, you'll need overwhelming numbers."
   },
   "objective": "Capture the neutral Tower, then break the red side.",
   "introducesNodeTypes": [],
@@ -54,8 +54,8 @@
     {
       "id": "ai1",
       "type": "ai",
-      "color": "#e63946",
-      "faction": "azure",
+      "color": "#a01010",
+      "faction": "crimson",
       "archetype": "infantry"
     }
   ],
@@ -106,7 +106,7 @@
       "nodeType": "tower",
       "level": 1,
       "units": 10,
-      "faction": "azure"
+      "faction": "neutral"
     },
     {
       "id": "ai_h",
@@ -118,7 +118,7 @@
       "nodeType": "house",
       "level": 1,
       "units": 12,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai_b1",
@@ -130,7 +130,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     },
     {
       "id": "ai_b2",
@@ -142,7 +142,7 @@
       "nodeType": "barracks",
       "level": 2,
       "units": 16,
-      "faction": "azure"
+      "faction": "crimson"
     }
   ],
   "winCondition": {
