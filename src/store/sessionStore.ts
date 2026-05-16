@@ -6,7 +6,7 @@
 import { create } from 'zustand';
 import type { FactionId } from '../types';
 
-export type Route = 'menu' | 'levelSelect' | 'settings' | 'credits' | 'game' | 'quit' | 'editor';
+export type Route = 'menu' | 'levelSelect' | 'settings' | 'credits' | 'game' | 'quit' | 'editor' | 'variantSandbox';
 
 interface SessionStore {
   route: Route;

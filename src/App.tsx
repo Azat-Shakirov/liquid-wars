@@ -11,6 +11,7 @@ import { Credits } from './ui/Credits';
 import { QuitScreen } from './ui/QuitScreen';
 import { GameView } from './ui/GameView';
 import { EditorView } from './ui/editor/EditorView';
+import { VariantSandbox } from './ui/dev/VariantSandbox';
 
 const DEV = import.meta.env.DEV;
 
@@ -18,9 +19,11 @@ export default function App() {
   const route = useSessionStore((s) => s.route);
   const selectedLevelId = useSessionStore((s) => s.selectedLevelId);
   const startLevel = useSessionStore((s) => s.startLevel);
+  const navigate = useSessionStore((s) => s.navigate);
 
-  // DEV-only URL bootstrap: ?level=N jumps straight to game view at level N.
-  // Used by author + headless screenshot tooling for the sprite sandbox.
+  // DEV-only URL bootstrap: ?level=N jumps straight to game view at level N;
+  // ?variants jumps to the unit-walk-cycle variant sandbox. Both used by the
+  // author for sprite review without clicking through the menu.
   useEffect(() => {
     if (!DEV) return;
     const params = new URLSearchParams(window.location.search);
@@ -29,9 +32,13 @@ export default function App() {
       const id = Number(rawLevel);
       if (Number.isInteger(id) && id >= 0) {
         startLevel(id);
+        return;
       }
     }
-  }, [startLevel]);
+    if (params.has('variants')) {
+      navigate('variantSandbox');
+    }
+  }, [startLevel, navigate]);
 
   switch (route) {
     case 'menu':
@@ -50,5 +57,8 @@ export default function App() {
     case 'editor':
       if (!DEV) return <MainMenu />;
       return <EditorView />;
+    case 'variantSandbox':
+      if (!DEV) return <MainMenu />;
+      return <VariantSandbox />;
   }
 }
