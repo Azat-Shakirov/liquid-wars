@@ -1,0 +1,9 @@
+{
+  "id": "archer",
+  "name": "Archer",
+  "description": "Marksmen — soften defenders from range; captures cost less.",
+  "buff": {
+    "type": "captureCostMultiplier",
+    "value": 0.4
+  }
+}

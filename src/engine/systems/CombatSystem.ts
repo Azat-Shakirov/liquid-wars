@@ -97,7 +97,7 @@ export class CombatSystem {
     }
 
     // Step 1c (v2.8.0): defender's archetype `incomingDamageMultiplier`
-    // buff (e.g., Elite 0.3×). Only applies when defender is OWNED by a
+    // buff (e.g., Knight 0.3×). Only applies when defender is OWNED by a
     // player with the archetype; neutrals don't carry one.
     if (hostileArrival && target.ownerId !== null) {
       const defenderPlayer = world.players.find((p) => p.id === target.ownerId);
@@ -120,7 +120,7 @@ export class CombatSystem {
 
     // Step 3+: hostile / neutral. Apply capture-cost multiplier from
     // attacker's faction (legacy liquid-era effect) AND from attacker's
-    // archetype (v2.8.0 — e.g., Assassin 0.4×).
+    // archetype (v2.8.0 — e.g., Archer 0.4×).
     let attackPower = effectiveCount;
     if (sourceFaction) {
       const captureCostMult = effectValueForFaction(sourceFaction, 'captureCostMultiplier');

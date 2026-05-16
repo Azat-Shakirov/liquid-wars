@@ -93,7 +93,7 @@ export const ArchetypeBuffSchema = z.discriminatedUnion('type', [
 ]);
 
 export const ArchetypeSchema = z.object({
-  id: z.enum(['infantry', 'cavalry', 'elite', 'mage', 'assassin']),
+  id: z.enum(['infantry', 'cavalry', 'knight', 'mage', 'archer']),
   name: z.string().min(1),
   description: z.string(),
   buff: ArchetypeBuffSchema,
@@ -135,7 +135,7 @@ export const LevelPlayerSchema = z.object({
   // v2.8.0 — gameplay-relevant unit class. Determines the player's unit
   // sprite + a single buff (defined in content/archetypes/<id>.json).
   // Required as of v2.8.0.
-  archetype: z.enum(['infantry', 'cavalry', 'elite', 'mage', 'assassin']),
+  archetype: z.enum(['infantry', 'cavalry', 'knight', 'mage', 'archer']),
   aiConfigId: z.string().optional(),
 });
 

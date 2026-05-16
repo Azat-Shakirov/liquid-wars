@@ -69,9 +69,9 @@ export const cavalryArch: ArchetypeDef = {
   buff: { type: 'speedMultiplier', value: 1.4 },
 };
 
-export const eliteArch: ArchetypeDef = {
-  id: 'elite',
-  name: 'Elite',
+export const knightArch: ArchetypeDef = {
+  id: 'knight',
+  name: 'Knight',
   description: '0.3x incoming damage',
   buff: { type: 'incomingDamageMultiplier', value: 0.3 },
 };
@@ -83,9 +83,9 @@ export const mageArch: ArchetypeDef = {
   buff: { type: 'spellConcoctMultiplier', value: 3.0 },
 };
 
-export const assassinArch: ArchetypeDef = {
-  id: 'assassin',
-  name: 'Assassin',
+export const archerArch: ArchetypeDef = {
+  id: 'archer',
+  name: 'Archer',
   description: '0.4x capture cost',
   buff: { type: 'captureCostMultiplier', value: 0.4 },
 };
@@ -221,9 +221,9 @@ export function makeContent(overrides: Partial<ContentLibrary> = {}): ContentLib
     archetypes: {
       infantry: infantryArch,
       cavalry: cavalryArch,
-      elite: eliteArch,
+      knight: knightArch,
       mage: mageArch,
-      assassin: assassinArch,
+      archer: archerArch,
       ...(overrides.archetypes ?? {}),
     },
     ai: {
@@ -257,8 +257,8 @@ export function makeLevel(nodeSeeds: NodeSeed[], opts: {
   aiId?: string;
   humanFaction?: string;
   aiFaction?: string;
-  humanArchetype?: 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
-  aiArchetype?: 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
+  humanArchetype?: 'infantry' | 'cavalry' | 'knight' | 'mage' | 'archer';
+  aiArchetype?: 'infantry' | 'cavalry' | 'knight' | 'mage' | 'archer';
 } = {}): LevelDef {
   const humanId = opts.humanId ?? 'p1';
   const aiId = opts.aiId ?? 'ai1';

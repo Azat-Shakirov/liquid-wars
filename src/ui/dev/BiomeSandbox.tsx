@@ -146,7 +146,7 @@ function buildPanel(biome: BiomeId, panelY: number): Container {
   }
 
   // Sample unit — frame 0 only, no walk cycle in the sandbox.
-  const unitTex = getUnitFrame(SAMPLE_UNIT.faction, 0);
+  const unitTex = getUnitFrame('infantry', SAMPLE_UNIT.faction, 0);
   if (unitTex) {
     const u = new Sprite(unitTex);
     u.anchor.set(0.5, 0.55);

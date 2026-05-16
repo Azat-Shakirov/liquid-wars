@@ -13,6 +13,7 @@ import { GameView } from './ui/GameView';
 import { EditorView } from './ui/editor/EditorView';
 import { VariantSandbox } from './ui/dev/VariantSandbox';
 import { BiomeSandbox } from './ui/dev/BiomeSandbox';
+import { UnitSandbox } from './ui/dev/UnitSandbox';
 
 const DEV = import.meta.env.DEV;
 
@@ -41,6 +42,8 @@ export default function App() {
       navigate('variantSandbox');
     } else if (params.has('biomes')) {
       navigate('biomeSandbox');
+    } else if (params.has('units')) {
+      navigate('unitSandbox');
     }
   }, [startLevel, navigate]);
 
@@ -67,5 +70,8 @@ export default function App() {
     case 'biomeSandbox':
       if (!DEV) return <MainMenu />;
       return <BiomeSandbox />;
+    case 'unitSandbox':
+      if (!DEV) return <MainMenu />;
+      return <UnitSandbox />;
   }
 }

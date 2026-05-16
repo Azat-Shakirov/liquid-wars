@@ -92,11 +92,11 @@ describe('CombatSystem', () => {
     expect(world.nodes.get('b')!.faction).toBe('crimson');
   });
 
-  it('assassin captureCostMultiplier 0.4 amplifies attack power (v2.8.0)', () => {
+  it('archer captureCostMultiplier 0.4 amplifies attack power (v2.8.7)', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'ai1', faction: 'azure', units: 10 },
-    ], { humanArchetype: 'assassin' });
+    ], { humanArchetype: 'archer' });
     const world = buildWorldFromLevel(level, content);
     // 5 attacker units / 0.4 = 12.5 effective; defender 10 − 12.5 = −2.5, flips.
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 5, sourceFaction: 'crimson' }));
@@ -109,13 +109,13 @@ describe('CombatSystem', () => {
     expect(node.units).toBeCloseTo(2.5, 3);
   });
 
-  it('elite incomingDamageMultiplier does NOT apply to friendly arrivals (v2.8.0)', () => {
-    // Regression analogue of the prior ink-on-friendlies bug: elite
+  it('knight incomingDamageMultiplier does NOT apply to friendly arrivals (v2.8.7)', () => {
+    // Regression analogue of the prior ink-on-friendlies bug: knight
     // (0.3×) on the defender should NOT halve friendly reinforcements.
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'p1', units: 10 },
-    ], { humanArchetype: 'elite' });
+    ], { humanArchetype: 'knight' });
     const world = buildWorldFromLevel(level, content);
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceFaction: 'azure' }));
     const sys = new CombatSystem(content);
@@ -126,11 +126,11 @@ describe('CombatSystem', () => {
     expect(world.nodes.get('b')!.units).toBe(22);
   });
 
-  it('elite incomingDamageMultiplier 0.3 reduces attacker effectiveness (v2.8.0)', () => {
+  it('knight incomingDamageMultiplier 0.3 reduces attacker effectiveness (v2.8.7)', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'ai1', units: 10 },
-    ], { aiArchetype: 'elite' });
+    ], { aiArchetype: 'knight' });
     const world = buildWorldFromLevel(level, content);
     // 12 attacker units × 0.3 = 3.6 effective; defender 10 − 3.6 = 6.4, holds.
     world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 12, sourceFaction: 'azure' }));

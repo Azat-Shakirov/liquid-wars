@@ -1,9 +1,0 @@
-{
-  "id": "elite",
-  "name": "Elite",
-  "description": "Heavily armored knights — hard to kill on capture.",
-  "buff": {
-    "type": "incomingDamageMultiplier",
-    "value": 0.3
-  }
-}

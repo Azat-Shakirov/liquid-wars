@@ -102,7 +102,13 @@ export class UnitGroupView {
     else if (dx < -0.5) this.facingRight = false;
 
     const frame = Math.floor(nowMs / WALK_FRAME_MS) & 1;
-    const tex = getUnitFrame(ug.sourceFaction, frame);
+    // Resolve archetype from the owning player (player → archetype, not
+    // unit-group → archetype, because the unit group inherits the player's
+    // archetype at spawn time). Fall back to 'infantry' if the lookup fails
+    // (shouldn't happen — every player has an archetype as of v2.8.0).
+    const ownerPlayer = world.players.find((p) => p.id === ug.ownerId);
+    const archetype = ownerPlayer?.archetype ?? 'infantry';
+    const tex = getUnitFrame(archetype, ug.sourceFaction, frame);
 
     // Distance moved this tick — used as the "is the unit moving?" gate for
     // bob/lean/foot-puff. Stationary clumps (e.g. just-arrived) don't bob.

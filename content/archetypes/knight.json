@@ -1,0 +1,9 @@
+{
+  "id": "knight",
+  "name": "Knight",
+  "description": "Heavy plate — hard to kill on capture.",
+  "buff": {
+    "type": "incomingDamageMultiplier",
+    "value": 0.3
+  }
+}

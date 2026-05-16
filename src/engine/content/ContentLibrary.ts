@@ -8,7 +8,7 @@
 
 import type { FactionId, NodeTypeId, PlayerId, SpellId, Vec2 } from '../../types';
 
-export type ArchetypeId = 'infantry' | 'cavalry' | 'elite' | 'mage' | 'assassin';
+export type ArchetypeId = 'infantry' | 'cavalry' | 'knight' | 'mage' | 'archer';
 
 export interface FactionEffect {
   type: string;
