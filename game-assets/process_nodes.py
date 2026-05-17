@@ -125,32 +125,26 @@ def recolor_to_neutral(rgba: np.ndarray, mask: np.ndarray) -> np.ndarray:
     return out
 
 
-def make_neutral_tower(src_path: Path, dst: Path) -> None:
-    """Generate tower-neutral.png by full-image desaturation of an existing
-    tower PNG (we use tower-azure.png as the seed since it's the canonical
-    blue source). Towers are mono-tinted (no isolated team-color mask),
-    so the entire tower needs to become grey rather than just a banner.
+def make_neutral_tower_from_source(src_jpeg: Path, dst: Path, sessions: dict) -> None:
+    """Generate tower-neutral.png from tower-blue.jpeg by isolating the
+    blue elements (roof dome, banner, window glow) via the same HSV mask
+    used for house/barracks/lab, then desaturating ONLY those pixels to
+    grey. Stone walls + base + door retain their original warm-tan color.
 
-    Procedure: load → HSV-convert per pixel → set sat to 0 → lerp value
-    toward 0.55 (mid-grey) by 30% so the tower doesn't end up pure
-    black/white, just stone-toned.
+    Without this, a full-image desaturate would also grey out the stone
+    walls — losing the "castle masonry under a faction roof" visual that
+    the colored tower variants share.
     """
-    img = Image.open(src_path).convert("RGBA")
-    arr = np.array(img)
-    alpha = arr[..., 3]
-    rgb = arr[..., :3].astype(np.float32) / 255.0
-    for y in range(arr.shape[0]):
-        for x in range(arr.shape[1]):
-            if alpha[y, x] == 0:
-                continue
-            r, g, b = rgb[y, x]
-            _, sat, val = colorsys.rgb_to_hsv(r, g, b)
-            target_val = val * 0.70 + 0.55 * 0.30
-            nr, ng, nb = colorsys.hsv_to_rgb(0.0, 0.0, target_val)
-            rgb[y, x] = (nr, ng, nb)
-    arr[..., :3] = np.clip(rgb * 255.0, 0, 255).astype(np.uint8)
-    Image.fromarray(arr, mode="RGBA").save(dst, format="PNG", optimize=True)
-    print(f"  -> {dst.relative_to(ROOT)}  ({arr.shape[1]}x{arr.shape[0]})  (tower desat)")
+    img = Image.open(src_jpeg).convert("RGBA")
+    if "u2net" not in sessions:
+        sessions["u2net"] = new_session("u2net")
+    cut = remove(img, session=sessions["u2net"], post_process_mask=True)
+    arr = np.array(cut)
+    mask = blue_mask(arr)
+    pct = 100.0 * mask.sum() / max(1, mask.size)
+    print(f"  tower-blue blue mask covers {pct:.2f}% of pixels")
+    recolored = recolor_to_neutral(arr, mask)
+    finalize(recolored, dst)
 
 
 def colorkey_remove(img: Image.Image) -> Image.Image:
@@ -212,10 +206,16 @@ def main() -> int:
         finalize(recolor_to_shadow(arr, mask), OUT_DIR / f"{node_type}-{INK_FACTION}.png")
         finalize(recolor_to_neutral(arr, mask), OUT_DIR / f"{node_type}-{NEUTRAL_FACTION}.png")
 
-    # Tower neutral: full-image desaturate of tower-azure.png (no isolated
-    # team-color mask to drive a per-element recolor like the other types).
-    print("tower: desaturating tower-azure.png → tower-neutral.png")
-    make_neutral_tower(OUT_DIR / "tower-azure.png", OUT_DIR / "tower-neutral.png")
+    # Tower neutral: isolate the blue elements on tower-blue.jpeg (roof
+    # dome, banner, window glow) and desaturate ONLY those, leaving the
+    # stone walls + base intact. Reuses the same HSV blue mask the other
+    # node types use.
+    print("tower: blue-mask recolor on tower-blue.jpeg → tower-neutral.png")
+    make_neutral_tower_from_source(
+        SRC_DIR / "tower-blue.jpeg",
+        OUT_DIR / "tower-neutral.png",
+        sessions,
+    )
 
     print("done.")
     return 0

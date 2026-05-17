@@ -55,10 +55,11 @@ export class UnitGroupView {
   private readonly sprite: Sprite;
   private readonly label: Text;
   private readonly groupId: string;
-  // Source-image soldiers face their LEFT (sword + cape on their left side).
-  // We treat that as the "natural" heading; if the group is moving right we
-  // flip horizontally so the soldier faces right.
-  private facingRight = false;
+  // Source-image soldiers face their RIGHT (v2.8.7 sources: spear / sword /
+  // bow held forward toward viewer's right). Natural heading = right; we
+  // flip horizontally only when the group is moving left. Default true so
+  // a stationary unit shows the source orientation unmirrored.
+  private facingRight = true;
   // Walk animation state. lastPuffMs gates new puff emission (every
   // PUFF_INTERVAL_MS while moving).
   private lastPuffMs = 0;
@@ -130,7 +131,7 @@ export class UnitGroupView {
       const cs = countScale(ug.count);
       const displayH = SPRITE_BASE_DISPLAY_HEIGHT * world.visualScale * cs;
       const baseScale = displayH / tex.height;
-      this.sprite.scale.set(this.facingRight ? -baseScale : baseScale, baseScale);
+      this.sprite.scale.set(this.facingRight ? baseScale : -baseScale, baseScale);
       this.droplet.clear();
 
       const spriteHalfH = (tex.height * baseScale) / 2;
@@ -146,7 +147,7 @@ export class UnitGroupView {
         const bobY = -Math.abs(Math.sin(bobPhase)) * BOB_AMPLITUDE * world.visualScale;
         const wobble = Math.sin(bobPhase) * WOBBLE_AMPLITUDE;
         this.sprite.position.set(0, bobY);
-        this.sprite.rotation = this.facingRight ? -wobble : wobble;
+        this.sprite.rotation = this.facingRight ? wobble : -wobble;
       } else {
         this.sprite.position.set(0, 0);
         this.sprite.rotation = 0;
