@@ -142,15 +142,22 @@ export function buildWorldFromLevel(
     nodeOrder.push(node.id);
   }
 
-  const pathCache = buildPathCache(nodeOrder, nodes, walls, {
-    width: level.map.width,
-    height: level.map.height,
-  });
-
   const visualScale = computeVisualScale(
     Array.from(nodes.values()),
     walls,
     { width: level.map.width, height: level.map.height },
+  );
+
+  // PathSystem clearance + corner buffer scale with the level's
+  // visualScale so sparse levels (where rendered sprites are larger)
+  // get wider path margins, while dense levels (smaller sprites) keep
+  // tight chokepoints traversable.
+  const pathCache = buildPathCache(
+    nodeOrder,
+    nodes,
+    walls,
+    { width: level.map.width, height: level.map.height },
+    visualScale,
   );
 
   return {

@@ -14,26 +14,49 @@
 import type { NodeId, Vec2 } from '../types';
 import type { Wall } from './entities/Wall';
 import type { Node } from './entities/Node';
-import { segmentBlockedByWalls, pointNearWall } from './geometry';
+import { segmentBlockedByWalls, pointNearWall, segmentTooCloseToWalls } from './geometry';
 
-// Buffer history:
-//   v2.7.7 — bumped 40 → 56 to clear v2.7.6's procedural unit droplet
-//   (radius 21 at max visualScale 1.5 × base 14). Rejection threshold =
-//   buffer * 0.5 = 28 px > 24.5 needed (droplet 21 + wall half-width 3.5).
+// Pathing clearance + buffer are sized per-level from the level's
+// computed visualScale. The reasoning:
 //
-//   v2.8.7-followup — bumped 56 → 88 because raster sprite units
-//   (v2.8.1 nodes, v2.8.7 5-archetype roster) are MUCH larger than the
-//   old droplet. At max visualScale × max countScale a cavalry sprite's
-//   half-width reaches ~37 px (source 128 × baseScale 0.5 ≈ 64 × 0.5 +
-//   visualScale 1.5 × countScale 1.5). Old rejection 28 left waypoints
-//   inside the cavalry transit corridor, so visual sprites grazed wall
-//   corners. New rejection 44 (> 37 + 3.5 wall + small safety margin)
-//   keeps waypoints outside the largest sprite's swept volume.
+// Path clearance (`pathClearance`) — minimum distance any path segment
+// must keep from every wall edge. Catches the "second turn" brush bug:
+// segments that don't INTERSECT a wall but pass close enough that the
+// rendered unit sprite skims it as the unit returns from a corner
+// waypoint toward its destination. Sized from the worst-case unit
+// half-width (cavalry, max countScale) at the level's visualScale,
+// plus the wall half-width and a small safety margin.
 //
-//   The bigger buffer also pushes corner waypoints further out, so the
-//   path's elbow bends wider around wall ends — reads as "rounded
-//   around the corner" instead of "skimming the brick."
-const CORNER_BUFFER_PX = 88;
+// Corner buffer (`cornerBuffer`) — distance from a wall vertex to the
+// corresponding visibility-graph corner waypoint. Sized at 1.6× the
+// clearance so segments departing/arriving at the waypoint comfortably
+// pass the clearance check on the wall vertex they're routing around.
+//
+// History:
+//   v2.7.7 — global CORNER_BUFFER_PX bumped 40 → 56 for v2.7.6 droplet.
+//   v2.8.7-followup (first attempt) — bumped to 88 to handle raster
+//   sprites, but made the "first turn" arc unnecessarily wide on dense
+//   levels (user feedback) AND didn't fix the second-turn brush.
+//   v2.8.7-followup (this rewrite) — both buffer and clearance become
+//   visualScale-aware, AND segment clearance is enforced on every
+//   adjacency edge (not just at waypoint placement).
+//
+// Cavalry is the widest archetype; its source is 128w × 117h, rendered
+// at displayH = 30 * visualScale * countScale. Width = displayH * 128/117,
+// halfW = displayH * 64/117. At countScale max (1.5) and visualScale 1.0:
+// halfW = 30 * 1.5 * 64/117 ≈ 24.6 px. This is the per-scale-unit
+// half-width that drives clearance.
+const UNIT_HALFW_AT_SCALE_1 = 24.6;
+const WALL_HALF_WIDTH = 3.5;
+const SAFETY_MARGIN = 4;
+
+function pathClearance(visualScale: number): number {
+  return UNIT_HALFW_AT_SCALE_1 * visualScale + WALL_HALF_WIDTH + SAFETY_MARGIN;
+}
+
+function cornerBuffer(visualScale: number): number {
+  return pathClearance(visualScale) * 1.6;
+}
 const QUADRANTS: Array<[number, number]> = [
   [1, -1], // NE
   [1, 1],  // SE
@@ -64,7 +87,16 @@ export function buildPathCache(
   // endpoint sits on (or near) the edge — i.e. cannot visibly "pass
   // underneath" a top/bottom wall.
   canvas?: { width: number; height: number },
+  // v2.8.7-followup: per-level visualScale drives the path clearance
+  // and waypoint corner-buffer. Sparse levels (visualScale 1.5) get
+  // wide margins so cavalry doesn't brush wall corners; dense levels
+  // (visualScale 1.0, e.g. L012 chokepoint) get tighter clearance so
+  // narrow gaps stay traversable. Default 1.0 for callers that pre-
+  // date this parameter.
+  visualScale: number = 1.0,
 ): PathCache {
+  const CORNER_BUFFER_PX = cornerBuffer(visualScale);
+  const SEGMENT_CLEARANCE_PX = pathClearance(visualScale);
   const cache: PathCache = new Map();
 
   if (walls.length === 0) {
@@ -129,6 +161,7 @@ export function buildPathCache(
       const a = points[i]!.pos;
       const b = points[j]!.pos;
       if (segmentBlockedByWalls(a, b, walls)) continue;
+      if (segmentTooCloseToWalls(a, b, walls, SEGMENT_CLEARANCE_PX)) continue;
       const d = Math.hypot(b.x - a.x, b.y - a.y);
       adj[i]![j] = d;
       adj[j]![i] = d;

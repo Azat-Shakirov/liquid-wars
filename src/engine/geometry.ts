@@ -77,3 +77,41 @@ export function pointNearWall(p: Vec2, walls: Wall[], tolerance: number): boolea
   }
   return false;
 }
+
+// Minimum distance between two line segments.
+// 0 if they intersect; otherwise the smallest of the four
+// endpoint-to-other-segment distances (which is exact for
+// non-intersecting segments in 2D).
+export function segmentDistToSegment(
+  a: Vec2,
+  b: Vec2,
+  c: Vec2,
+  d: Vec2,
+): number {
+  if (segmentsCross(a, b, c, d)) return 0;
+  return Math.min(
+    distPointToSegment(a, c, d),
+    distPointToSegment(b, c, d),
+    distPointToSegment(c, a, b),
+    distPointToSegment(d, a, b),
+  );
+}
+
+// True iff segment (a,b) passes within `clearance` of any wall edge.
+// Different from segmentBlockedByWalls (which only checks INTERSECTION):
+// this catches segments that thread past a wall's body or corner so
+// close that a unit-sized sprite would visually brush the wall, even
+// though the geometric center never crosses it.
+export function segmentTooCloseToWalls(
+  a: Vec2,
+  b: Vec2,
+  walls: Wall[],
+  clearance: number,
+): boolean {
+  for (const w of walls) {
+    for (const [e1, e2] of wallEdges(w)) {
+      if (segmentDistToSegment(a, b, e1, e2) < clearance) return true;
+    }
+  }
+  return false;
+}
