@@ -1,12 +1,12 @@
 {
   "id": 22,
-  "name": "Black Lake",
+  "name": "Iron Wall",
   "tutorialKey": "ink_practice",
   "tutorial": {
-    "title": "Ink at scale",
-    "body": "The Ink enemy has built a deep defensive network. Brute force costs you twice as many units. Plan with spells, or accept the grind.\n\nNote: when you capture an Ink node, it becomes YOUR liquid \u2014 Ink defense is gone the moment you flip it."
+    "title": "Knight at scale",
+    "body": "The Knight enemy has built a deep defensive network. Brute force costs you ~3\u00d7 as many units. Plan with spells, or accept the grind.\n\nNote: when you capture a Knight node, the buff transfers to you \u2014 your captures become Knight nodes too. Use that."
   },
-  "objective": "Break the Ink network and capture everything red.",
+  "objective": "Break the Knight network and capture everything red.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "knight"
     }
   ],
   "nodes": [

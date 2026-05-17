@@ -1,12 +1,12 @@
 {
   "id": 20,
-  "name": "Bloodflood",
+  "name": "Archer Flood",
   "tutorialKey": "blood_practice",
   "tutorial": {
-    "title": "Blood spreads",
-    "body": "Every node you capture becomes Blood. Soon your whole front line is sending cheap-capture attackers.\n\nThe enemy has fortified \u2014 more nodes, higher levels. Lean on the snowball."
+    "title": "Archer: scale the cost advantage",
+    "body": "Your Archers shave 30% off every capture. The more nodes you own, the more this compounds.\n\nThe enemy has fortified \u2014 more nodes, deeper defense. Drown them in cheap captures."
   },
-  "objective": "Snowball Blood across the map until red is gone.",
+  "objective": "Snowball Archer captures across the map until red is gone.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "archer"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

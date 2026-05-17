@@ -1,10 +1,10 @@
 {
   "id": 25,
-  "name": "Venomous",
-  "tutorialKey": "venom",
+  "name": "Lightning Strike",
+  "tutorialKey": "cavalry",
   "tutorial": {
-    "title": "Venom: faster strikes",
-    "body": "You are Venom. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react. The enemy has a Tower covering the approach \u2014 speed past it before it can intercept enough."
+    "title": "Cavalry: faster strikes",
+    "body": "Your soldiers are Cavalry. Units sent from your nodes travel 40% faster.\n\nFast units mean less time for towers to chip them, less time for the enemy to react, and faster reinforcements when you need them."
   },
   "objective": "Strike fast and overrun the red side.",
   "introducesNodeTypes": [],
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "cavalry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

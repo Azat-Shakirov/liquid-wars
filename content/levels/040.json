@@ -4,7 +4,7 @@
   "tutorialKey": "apex",
   "tutorial": {
     "title": "Apex",
-    "body": "Four factions: Water, Ink, Slime, Blood. All hostile to you AND each other.\n\nThey will not unite against you. They will fight each other while you maneuver. Pick your liquid, pick your moment.\n\nFinish them."
+    "body": "Four archetypes: Infantry, Knight, Mage, Archer (the four AI enemies); plus your own Cavalry on a 5th-slot challenge. All hostile to you AND each other.\n\nThey will not unite against you. They will fight each other while you maneuver. End the campaign."
   },
   "objective": "Four factions. One survivor. Be it.",
   "introducesNodeTypes": [],

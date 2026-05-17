@@ -4,7 +4,7 @@
   "tutorialKey": "multi_faction_practice",
   "tutorial": {
     "title": "Four corners, one center",
-    "body": "The map is split into four quadrants by a stone cross. Each corner holds a faction \u2014 you (Water), Water (red), Slime (green), and Blood (crimson). The only way between quadrants is through the central crossroads, and a neutral tower stands at its heart, attacking anyone who crosses.\n\nSlime concocts fast. Blood captures cheaply. Water out-produces. They'll fight each other through the center if you let them \u2014 or you can seize the central tower and dictate the engagement.\n\nYou win when all three enemy factions are gone."
+    "body": "The map is split into four quadrants by a stone cross. Each corner holds a different archetype \u2014 you (Infantry), Archer, Mage, and Cavalry. The center holds neutral nodes.\n\nThree enemies, three buffs. Watch the Mage \u2014 they spell-spam faster than anyone. The Cavalry will arrive at your border before you expect."
   },
   "objective": "Outlast or outplay all three factions. The center tower is the key.",
   "introducesNodeTypes": [],

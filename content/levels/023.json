@@ -1,10 +1,10 @@
 {
   "id": 23,
   "name": "Quick & Sticky",
-  "tutorialKey": "slime",
+  "tutorialKey": "mage",
   "tutorial": {
-    "title": "Slime: 2\u00d7 spell speed",
-    "body": "You are Slime. Spell concoction runs at double speed (15s \u2192 ~7.5s).\n\nWith Lab L2/L3 you can Bleed every 7.5s or Recruit every 7.5s. Win by tempo if you keep the Lab fed.\n\nThe red side has the numbers. You have the rhythm."
+    "title": "Mage: 3\u00d7 spell speed",
+    "body": "Your soldiers are Mages. Lab spell concoction runs at triple speed (15s \u2192 5s).\n\nWith Lab L2/L3 you can Starve every 5s or Sabotage every 5s. Win by tempo, not by stack size."
   },
   "objective": "Spell-spam the red side into collapse.",
   "introducesNodeTypes": [],
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "mage"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

@@ -1,12 +1,12 @@
 {
   "id": 21,
-  "name": "Inkwell",
-  "tutorialKey": "ink",
+  "name": "Bulwark",
+  "tutorialKey": "knight",
   "tutorial": {
-    "title": "Ink: hostile arrivals halved",
-    "body": "The red side is Ink. Every hostile arrival on an Ink node hits for HALF its count. A 20-unit attack lands as 10.\n\nInk is brittle vs sustained pressure. Stack waves, use Bleed to halt production, or use Freeze to bypass the defense entirely."
+    "title": "Knight: hostile arrivals reduced",
+    "body": "The red enemy is Knight-archetype. Every hostile arrival on a Knight node lands at 30% of its count \u2014 a 20-unit attack hits for 6.\n\nKnight is brittle vs sustained pressure but punishes any single big push. Plan for many small attacks or use spells."
   },
-  "objective": "Crack the Ink-defended red side.",
+  "objective": "Crack the Knight-defended red side.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "knight"
     }
   ],
   "nodes": [

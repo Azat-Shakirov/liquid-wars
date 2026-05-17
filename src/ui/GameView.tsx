@@ -294,28 +294,19 @@ function nextLevelId(current: number, available: number[]): number | null {
 // capture (§4.5) still applies as usual once the player takes enemy
 // territory.
 //
-// v2.8.7-followup: also swaps archetype to match the new faction.
-// The campaign uses a deterministic faction→archetype mapping so each
-// banner color has a coherent identity (azure=infantry, crimson=archer,
-// verdant=mage, amethyst=cavalry, shadow=knight). Letting the human's
-// faction change without the archetype would break that contract — a
-// "crimson archer-themed" run would render azure infantry sprites.
-const ARCHETYPE_BY_FACTION: Record<string, 'infantry' | 'archer' | 'mage' | 'cavalry' | 'knight'> = {
-  azure:    'infantry',
-  crimson:  'archer',
-  verdant:  'mage',
-  amethyst: 'cavalry',
-  shadow:   'knight',
-};
-
+// v2.8.7-followup (later): banner color and unit archetype are now
+// independent dimensions. A crimson banner can be either an Archer or
+// a Knight depending on what the level was designed to teach. The
+// runtime faction picker therefore only swaps the player's faction
+// (color, team ring, banner sprites); the archetype stays whatever
+// the level designer set — i.e., what the player is meant to PLAY AS
+// for that level. If a future archetype picker UI lands, it will be
+// surfaced separately (LevelDef.letPlayerChooseArchetype).
 function applyPlayerFactionOverride(level: LevelDef, factionId: FactionId): LevelDef {
-  const newArchetype = ARCHETYPE_BY_FACTION[factionId];
   return {
     ...level,
     players: level.players.map((p) =>
-      p.type === 'human'
-        ? { ...p, faction: factionId, archetype: newArchetype ?? p.archetype }
-        : p,
+      p.type === 'human' ? { ...p, faction: factionId } : p,
     ),
   };
 }

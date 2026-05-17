@@ -1,12 +1,12 @@
 {
   "id": 16,
   "name": "Slow Death",
-  "tutorialKey": "bleed_practice",
+  "tutorialKey": "starve_practice",
   "tutorial": {
-    "title": "Bleed multiple key nodes",
-    "body": "The enemy has spread production across several strong nodes. Bleed each one in turn \u2014 once their network stops producing, your push becomes trivial.\n\nKeep your Lab fed. It can't produce its own units."
+    "title": "Starve multiple key nodes",
+    "body": "The enemy has spread production across several strong nodes. Starve each one in turn \u2014 once their network stops producing, your push becomes inevitable.\n\nCast order matters: hit the highest-production targets first."
   },
-  "objective": "Bleed the enemy network until it collapses.",
+  "objective": "Starve the enemy network until it collapses.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

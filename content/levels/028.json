@@ -4,7 +4,7 @@
   "tutorialKey": "multi_faction",
   "tutorial": {
     "title": "Walled sectors, guarded gaps",
-    "body": "Two stone walls split the map into three sectors: you on the left, Water (red) in the middle, Ink (black) on the right. The only way across is through the narrow gaps \u2014 and a neutral tower sits in each gap, shooting at anyone trying to pass.\n\nYou win when BOTH enemy factions are eliminated. You can let Water and Ink fight each other through the right gap, or capture a neutral tower yourself to turn its guns on them.\n\nNeutral nodes don't count toward the win condition \u2014 only enemies do."
+    "body": "Two stone walls split the map into three sectors: you on the left, an infantry enemy in the middle, and a Knight-archetype enemy on the right. The only way across is through the wall gaps \u2014 each guarded by neutral towers.\n\nCapture the towers or route around them. Don't fight both enemies at once; let them weaken each other first."
   },
   "objective": "Eliminate both enemy factions. Neutral towers guard the gaps \u2014 capture or avoid them.",
   "introducesNodeTypes": [],
@@ -82,14 +82,14 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     },
     {
       "id": "ai2",
       "type": "ai",
       "color": "#5cd65c",
       "faction": "verdant",
-      "archetype": "mage"
+      "archetype": "knight"
     }
   ],
   "nodes": [

@@ -1,10 +1,10 @@
 {
   "id": 27,
-  "name": "Liquid Lattice",
+  "name": "Banner Lattice",
   "tutorialKey": "auto_convert",
   "tutorial": {
-    "title": "Auto-conversion: liquid follows the capture",
-    "body": "Four neutral nodes sit between you and the enemy, each on a different liquid. Capturing any of them converts the node to YOUR liquid \u2014 the special liquid is GONE.\n\nIf you want to OWN a Slime Lab or an Ink Tower, you'd need to be Slime or Ink yourself first. (The dev liquid picker lets you experiment.)\n\nCapturing in different orders builds different early empires."
+    "title": "Auto-conversion: faction follows the capture",
+    "body": "Four neutral nodes sit between you and the enemy, each on a different faction banner. Capturing any of them converts the node to YOUR faction \u2014 the sprite, the team ring, the affiliation all flip on capture.\n\nUse this to consolidate the field under one banner before the final push."
   },
   "objective": "Capture all red nodes. Read the neutrals carefully.",
   "introducesNodeTypes": [],
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

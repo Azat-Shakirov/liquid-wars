@@ -2,7 +2,7 @@
   "id": 37,
   "name": "Siege",
   "tutorialKey": null,
-  "objective": "An Ink fortress behind walls.",
+  "objective": "A Knight fortress behind walls.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -78,7 +78,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "knight"
     }
   ],
   "nodes": [

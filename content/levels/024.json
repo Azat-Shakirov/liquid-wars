@@ -1,10 +1,10 @@
 {
   "id": 24,
-  "name": "Slime Storm",
+  "name": "Mage Storm",
   "tutorialKey": "slime_practice",
   "tutorial": {
-    "title": "Lab L3 + Slime",
-    "body": "Your Lab is L3 on Slime. Every spell \u2014 Freeze, Bleed, Recruit \u2014 concocts in 7.5 seconds.\n\nThe enemy is bigger than you. Use Recruit aggressively: every flip changes the unit balance by twice the captured units."
+    "title": "Lab L3 + Mage",
+    "body": "Your Lab is L3 and you command Mages. Every spell \u2014 Freeze, Starve, Sabotage \u2014 concocts in ~5 seconds.\n\nThe enemy is bigger than you. Use Sabotage aggressively \u2014 flip their strongest nodes from the inside."
   },
   "objective": "Tempo the red side into submission.",
   "introducesNodeTypes": [],
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "mage"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

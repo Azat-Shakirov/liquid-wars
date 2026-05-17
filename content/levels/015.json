@@ -1,12 +1,12 @@
 {
   "id": 15,
   "name": "Hemorrhage",
-  "tutorialKey": "bleed",
+  "tutorialKey": "starve",
   "tutorial": {
-    "title": "Bleed: permanent production halt",
-    "body": "Lab L2 unlocks Bleed (35 units).\n\nBleed targets a node and drains 1 unit/sec from it permanently \u2014 until that node is captured by someone other than its current owner. Production halts while bleeding.\n\nThe enemy's main base produces too fast to take by force. Bleed it. Push in."
+    "title": "Starve: permanent production halt",
+    "body": "Lab L2 unlocks Starve (35 units).\n\nStarve targets a node and drains 1 unit/sec from it permanently \u2014 until that node is captured by someone other than the caster.\n\nCast on the enemy's strongest barracks: they stop scaling, you keep scaling. Then attack."
   },
-  "objective": "Bleed the strong red base, then capture it.",
+  "objective": "Starve the strong red base, then capture it.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

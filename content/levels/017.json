@@ -1,12 +1,12 @@
 {
   "id": 17,
   "name": "Defection",
-  "tutorialKey": "recruit",
+  "tutorialKey": "sabotage",
   "tutorial": {
-    "title": "Recruit: flip a node",
-    "body": "Lab L3 unlocks Recruit (50 units).\n\nRecruit converts the target node to YOUR side. Units stay on it. Active bleed clears. In-progress concoction on the target is cancelled.\n\nThe red side has more nodes than you. Recruit their strongest one to even the odds."
+    "title": "Sabotage: flip a node",
+    "body": "Lab L3 unlocks Sabotage (50 units).\n\nSabotage converts the target node to YOUR side. Units stay on it. Active starve clears. In-progress concoctions on the target reset.\n\nBest targets: a high-level enemy barracks deep behind the front line."
   },
-  "objective": "Recruit a key red barracks, then take the rest.",
+  "objective": "Sabotage a key red barracks, then take the rest.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

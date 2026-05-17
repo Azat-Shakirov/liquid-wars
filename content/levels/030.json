@@ -4,9 +4,9 @@
   "tutorialKey": "campaign_finale",
   "tutorial": {
     "title": "The campaign closer",
-    "body": "Everything you've learned, in one fight.\n\nYou are Slime \u2014 fast spells, weaker production. The enemy is fortified Ink with Towers and a strong keep. You have a Lab L3 and full toolkit access.\n\nBreak them. Then prepare for the challenge tier \u2014 every level beyond this, YOU choose the liquid."
+    "body": "Everything you've learned, in one fight.\n\nYour soldiers are Mages \u2014 fast spells, weaker production. The enemy is fortified Knights with Towers and stronger nodes than you. Use Sabotage to crack their walls, Starve to slow their production, Freeze to time your push."
   },
-  "objective": "End the Ink fortress. Close the campaign.",
+  "objective": "End the Knight fortress. Close the campaign.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -49,14 +49,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "mage"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "knight"
     }
   ],
   "nodes": [

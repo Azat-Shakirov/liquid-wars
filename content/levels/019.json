@@ -1,10 +1,10 @@
 {
   "id": 19,
   "name": "Crimson Tide",
-  "tutorialKey": "blood",
+  "tutorialKey": "archer",
   "tutorial": {
-    "title": "Blood: cheaper captures",
-    "body": "You are Blood. Attackers sent from your nodes spend ~30% fewer units to flip a target (captureCostMultiplier 0.7).\n\nThe buff travels with the units. When you capture a node, it converts to YOUR liquid \u2014 Blood spreads as you push.\n\nUse the cost advantage to crack open the enemy's economy."
+    "title": "Archer: cheaper captures",
+    "body": "Your soldiers are Archers. Marksmen soften defenders from range, so captures cost ~30% less (captureCostMultiplier 0.7).\n\nThe buff applies to every attack you send. Snowball: capture nodes, send more attacks, capture more nodes."
   },
   "objective": "Sweep the red side with cheap rolling captures.",
   "introducesNodeTypes": [],
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "archer"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

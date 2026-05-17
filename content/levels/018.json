@@ -1,12 +1,12 @@
 {
   "id": 18,
   "name": "Turncoat",
-  "tutorialKey": "recruit_practice",
+  "tutorialKey": "sabotage_practice",
   "tutorial": {
-    "title": "Recruit a chain reaction",
-    "body": "Recruit is most powerful when the flipped node is BEHIND enemy lines \u2014 suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node tucked deep inside their territory. Recruit it and watch the chaos."
+    "title": "Sabotage a chain reaction",
+    "body": "Sabotage is most powerful when the flipped node is BEHIND enemy lines \u2014 suddenly the enemy is fighting on two fronts.\n\nLook for an enemy node whose neighbors are also enemies. Flipping it splits their attention."
   },
-  "objective": "Recruit deep, then sweep the rest.",
+  "objective": "Sabotage deep, then sweep the rest.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,
@@ -29,7 +29,7 @@
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [

@@ -4,9 +4,9 @@
   "tutorialKey": "challenge_open",
   "tutorial": {
     "title": "Challenge tier",
-    "body": "From here on, YOU pick your liquid for each level.\n\nOpen Ground: symmetric layout, single enemy faction. Test how each liquid feels in a clean fight."
+    "body": "From here on, YOU pick your banner color for each level.\n\nOpen Ground: symmetric layout, single enemy. Test how the level plays out against an Archer AI. The picker affects your color and team-ring; your archetype is set by the level."
   },
-  "objective": "Pick a liquid and win the field.",
+  "objective": "Pick a faction and win the field.",
   "introducesNodeTypes": [],
   "map": {
     "width": 1280,

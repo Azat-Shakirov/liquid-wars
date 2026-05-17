@@ -4,7 +4,7 @@
   "tutorialKey": "venom_practice",
   "tutorial": {
     "title": "Raid-heavy playstyle",
-    "body": "Venom suits raids: hit and retreat before the enemy can counter. With 40% faster travel, your reinforcements arrive before theirs.\n\nThe enemy has multiple bases. Pick one off at a time."
+    "body": "Cavalry suits raids: hit and retreat before the enemy can counter. With 40% faster travel, your reinforcements arrive before theirs.\n\nThe enemy is spread out. Pick the weakest red base, take it, and move on before they can mass."
   },
   "objective": "Pick the red bases off one by one.",
   "introducesNodeTypes": [],
@@ -22,14 +22,14 @@
       "type": "human",
       "color": "#3da9fc",
       "faction": "azure",
-      "archetype": "infantry"
+      "archetype": "cavalry"
     },
     {
       "id": "ai1",
       "type": "ai",
       "color": "#a01010",
       "faction": "crimson",
-      "archetype": "archer"
+      "archetype": "infantry"
     }
   ],
   "nodes": [
