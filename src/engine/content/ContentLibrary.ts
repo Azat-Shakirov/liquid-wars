@@ -134,7 +134,7 @@ export interface TutorialDef {
   body: string;
 }
 
-export type BiomeId = 'grass' | 'desert' | 'snow' | 'jungle' | 'ruins' | 'stone';
+export type BiomeId = 'grass' | 'desert' | 'snow' | 'jungle' | 'stone';
 
 export interface LevelDef {
   id: number;

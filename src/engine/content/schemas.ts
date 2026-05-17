@@ -187,7 +187,7 @@ export const LevelSchema = z.object({
     width: z.number().positive(),
     height: z.number().positive(),
     // v2.8.0 — typed biome enum (was free-form string).
-    background: z.enum(['grass', 'desert', 'snow', 'jungle', 'ruins', 'stone']),
+    background: z.enum(['grass', 'desert', 'snow', 'jungle', 'stone']),
   }),
   terrain: z.object({
     walls: z.array(WallSchema),

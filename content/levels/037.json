@@ -7,7 +7,7 @@
   "map": {
     "width": 1280,
     "height": 720,
-    "background": "ruins"
+    "background": "snow"
   },
   "terrain": {
     "walls": [

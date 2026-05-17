@@ -35,7 +35,7 @@ const LABEL_H = 36;
 const PADDING_X = 24;
 const PADDING_Y = 24;
 
-const BIOMES: BiomeId[] = ['grass', 'desert', 'snow', 'jungle', 'ruins'];
+const BIOMES: BiomeId[] = ['grass', 'desert', 'snow', 'jungle'];
 
 const BIOME_ALPHA = 0.92;
 
