@@ -29,7 +29,13 @@ SOURCES = [
     # confuse the AI model (house: warm yellow ground halo gets eaten by
     # rembg/isnet both, leaving the walls in pieces).
     ("house-blue.jpeg", "house", "u2net"),
-    ("barracks-blue.jpeg", "barracks", "u2net"),
+    # barracks: switched from barracks-blue.jpeg → barracks.jpeg in
+    # v2.8.7-followup. The new source is a fully blue-stone fortified
+    # building (vs the old tan-walls + single-banner layout); blue_mask's
+    # s >= 0.35 threshold still confines recoloring to the saturated
+    # banner / flags / shield without touching the lower-saturation
+    # blue-grey wall stones.
+    ("barracks.jpeg", "barracks", "u2net"),
     ("lab-blue.jpeg", "lab", "u2net"),
 ]
 
