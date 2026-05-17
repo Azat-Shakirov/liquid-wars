@@ -4,6 +4,6 @@
   "description": "Marksmen — soften defenders from range; captures cost less.",
   "buff": {
     "type": "captureCostMultiplier",
-    "value": 0.4
+    "value": 0.7
   }
 }

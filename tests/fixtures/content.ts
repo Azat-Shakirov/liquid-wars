@@ -94,8 +94,8 @@ export const mageArch: ArchetypeDef = {
 export const archerArch: ArchetypeDef = {
   id: 'archer',
   name: 'Archer',
-  description: '0.4x capture cost',
-  buff: { type: 'captureCostMultiplier', value: 0.4 },
+  description: '0.7x capture cost',
+  buff: { type: 'captureCostMultiplier', value: 0.7 },
 };
 
 export const barracks: NodeTypeDef = {

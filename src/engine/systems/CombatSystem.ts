@@ -120,7 +120,7 @@ export class CombatSystem {
 
     // Step 3+: hostile / neutral. Apply capture-cost multiplier from
     // attacker's faction (legacy liquid-era effect) AND from attacker's
-    // archetype (v2.8.0 — e.g., Archer 0.4×).
+    // archetype (v2.8.0 — e.g., Archer 0.7×).
     let attackPower = effectiveCount;
     if (sourceFaction) {
       const captureCostMult = effectValueForFaction(sourceFaction, 'captureCostMultiplier');

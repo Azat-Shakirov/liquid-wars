@@ -92,21 +92,21 @@ describe('CombatSystem', () => {
     expect(world.nodes.get('b')!.faction).toBe('crimson');
   });
 
-  it('archer captureCostMultiplier 0.4 amplifies attack power (v2.8.7)', () => {
+  it('archer captureCostMultiplier 0.7 amplifies attack power (v2.8.7)', () => {
     const content = makeContent();
     const level = makeLevel([
       { id: 'b', position: [100, 0], ownerId: 'ai1', faction: 'azure', units: 10 },
     ], { humanArchetype: 'archer' });
     const world = buildWorldFromLevel(level, content);
-    // 5 attacker units / 0.4 = 12.5 effective; defender 10 − 12.5 = −2.5, flips.
-    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 5, sourceFaction: 'crimson' }));
+    // 10 attacker units / 0.7 ≈ 14.286 effective; defender 10 − 14.286 ≈ −4.286, flips.
+    world.unitGroups.push(ug({ ownerId: 'p1', toNodeId: 'b', count: 10, sourceFaction: 'crimson' }));
     const sys = new CombatSystem(content);
 
     sys.update(world, TICK_MS);
 
     const node = world.nodes.get('b')!;
     expect(node.ownerId).toBe('p1');
-    expect(node.units).toBeCloseTo(2.5, 3);
+    expect(node.units).toBeCloseTo(10 / 0.7 - 10, 3);
   });
 
   it('knight incomingDamageMultiplier does NOT apply to friendly arrivals (v2.8.7)', () => {
