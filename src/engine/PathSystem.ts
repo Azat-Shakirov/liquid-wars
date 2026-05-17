@@ -16,14 +16,24 @@ import type { Wall } from './entities/Wall';
 import type { Node } from './entities/Node';
 import { segmentBlockedByWalls, pointNearWall } from './geometry';
 
-// v2.7.7 — bumped 40 → 56 because v2.7.6 element scaling can grow unit
-// droplets to radius 21 (1.5× × 14) on sparse levels. With wall half-
-// width 3.5, that's 24.5px needed clearance — the previous 40-buffer's
-// rejection radius (20) wasn't enough; the new 56 gives rejection 28
-// (> 24.5) so candidate waypoints inside a scaled unit's transit
-// corridor get dropped. Also makes the visual route bend wider out
-// from the corner, which reads as "rounder", not "cutting close."
-const CORNER_BUFFER_PX = 56;
+// Buffer history:
+//   v2.7.7 — bumped 40 → 56 to clear v2.7.6's procedural unit droplet
+//   (radius 21 at max visualScale 1.5 × base 14). Rejection threshold =
+//   buffer * 0.5 = 28 px > 24.5 needed (droplet 21 + wall half-width 3.5).
+//
+//   v2.8.7-followup — bumped 56 → 88 because raster sprite units
+//   (v2.8.1 nodes, v2.8.7 5-archetype roster) are MUCH larger than the
+//   old droplet. At max visualScale × max countScale a cavalry sprite's
+//   half-width reaches ~37 px (source 128 × baseScale 0.5 ≈ 64 × 0.5 +
+//   visualScale 1.5 × countScale 1.5). Old rejection 28 left waypoints
+//   inside the cavalry transit corridor, so visual sprites grazed wall
+//   corners. New rejection 44 (> 37 + 3.5 wall + small safety margin)
+//   keeps waypoints outside the largest sprite's swept volume.
+//
+//   The bigger buffer also pushes corner waypoints further out, so the
+//   path's elbow bends wider around wall ends — reads as "rounded
+//   around the corner" instead of "skimming the brick."
+const CORNER_BUFFER_PX = 88;
 const QUADRANTS: Array<[number, number]> = [
   [1, -1], // NE
   [1, 1],  // SE
